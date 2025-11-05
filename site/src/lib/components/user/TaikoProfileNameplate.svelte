@@ -18,7 +18,8 @@
         const context = canvasElement?.getContext("2d");
         if (!canvasElement || !context) return;
 
-        await new FontFace('Dela Gothic One', 'url(/font/Dela-Gothic-One.ttf)').load();
+        const DelaGothicOne = await new FontFace('Dela Gothic One', 'url(/font/Dela-Gothic-One.ttf)').load();
+        document.fonts.add(DelaGothicOne);
 
         const width = 500;
         const height = 500;
@@ -93,24 +94,15 @@
             width * 0.035,
             height * 0.47,
         );
-        context.fillText(
-            CONST.DANI.DAN_JPN[dani.dan][0],
-            width * 0.035,
-            height * 0.47,
-        );
-        context.lineWidth = 12;
-        context.strokeStyle = "black";
-        context.strokeText(
-            CONST.DANI.DAN_JPN[dani.dan][0],
-            width * 0.035,
-            height * 0.47,
-        );
-        context.lineWidth = 30;
-        context.strokeStyle = textGradient;
         context.strokeText(
             CONST.DANI.DAN_JPN[dani.dan][1],
             width * 0.51,
             height * 0.7,
+        );
+        context.fillText(
+            CONST.DANI.DAN_JPN[dani.dan][0],
+            width * 0.035,
+            height * 0.47,
         );
         context.fillText(
             CONST.DANI.DAN_JPN[dani.dan][1],
@@ -119,6 +111,11 @@
         );
         context.lineWidth = 12;
         context.strokeStyle = "black";
+        context.strokeText(
+            CONST.DANI.DAN_JPN[dani.dan][0],
+            width * 0.035,
+            height * 0.47,
+        );
         context.strokeText(
             CONST.DANI.DAN_JPN[dani.dan][1],
             width * 0.51,

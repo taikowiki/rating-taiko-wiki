@@ -22,7 +22,7 @@
 <style>
     .container{
         width: 100%;
-        max-width: 500px;
+        max-width: 400px;
 
         display:flex;
         flex-direction: column;
@@ -31,7 +31,8 @@
     }
 
     .mydon{
-        width: 150px;
+        width: calc(100% / 2);
+        max-width: 200px;
         height: auto;
     }
 </style>
