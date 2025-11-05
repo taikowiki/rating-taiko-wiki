@@ -21,6 +21,7 @@ declare global {
 			WIKI_DB_DATABASE: string;
 			WIKI_DB_USER: string;
 			WIKI_DB_TIMEZONE: string;
+			WIKI_DB_PASSWORD: string;
 			AUTH_KEY: string;
 		}
 	}

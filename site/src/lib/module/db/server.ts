@@ -1,12 +1,13 @@
-import { WIKI_DB_DATABASE, WIKI_DB_HOST, WIKI_DB_PASSWORD, WIKI_DB_PORT, WIKI_DB_USER } from "$env/static/private";
+import type { SongData } from "@taiko-wiki/taikowiki-api/types";
 import { DBConnector, QueryBuilder } from "@yowza/db-handler";
+import type { InferDBSchema } from "@yowza/db-handler/types";
 
 export const wikiDBConnector = new DBConnector({
-    host: WIKI_DB_HOST,
-    port: WIKI_DB_PORT,
-    user: WIKI_DB_USER,
-    database: WIKI_DB_DATABASE,
-    password: WIKI_DB_PASSWORD
+    host: process.env.WIKI_DB_HOST,
+    port: process.env.WIKI_DB_PORT,
+    user: process.env.WIKI_DB_USER,
+    database: process.env.WIKI_DB_DATABASE,
+    password: process.env.WIKI_DB_PASSWORD
 });
 
 export const wikiQueryBuilder = new QueryBuilder({
@@ -38,8 +39,29 @@ export const wikiQueryBuilder = new QueryBuilder({
         lastUpdate: ['date'],
         ratingData: ['string', 'null'],
         lastRatingCalculate: ['date', 'null']
-    }
+    },
+    song: {
+        songNo: ['string'],
+        order: ['number'],
+        title: ['string'],
+        titleKo: ['string', 'null'],
+        aliasKo: ['string', 'null'],
+        titleEn: ['string', 'null'],
+        aliasEn: ['string', 'null'],
+        romaji: ['string', 'null'],
+        bpm: ['string'],
+        bpmShiver: ['number'],
+        version: ['string'],
+        isAsiaBanned: ['number'],
+        isKrBanned: ['number'],
+        genre: ['string'],
+        artists: ['string'],
+        addedDate: ['number', 'null'],
+        courses: ['string'],
+        isDeleted: ['number']
+    },
 });
+export type WikiDBSchema = InferDBSchema<typeof wikiQueryBuilder['dbSchema']>;
 
 export const queryBuilder = new QueryBuilder({
     'user/profile': {
@@ -48,4 +70,42 @@ export const queryBuilder = new QueryBuilder({
         nickname: ['string'],
         bio: ['string']
     }
-})
+});
+export type DBSchema = InferDBSchema<typeof queryBuilder['dbSchema']>;
+
+export const dbConverter = {
+    fromDB: {
+        song<K extends keyof WikiDBSchema['song']>(data: Pick<WikiDBSchema['song'], K>): Pick<SongData, Exclude<K, 'order'>> {
+            const songData: Partial<SongData> = {};
+            Object.keys(data).forEach((_) => {
+                const key = _ as K;
+                if (key === "courses") {
+                    songData.courses = JSON.parse((data as WikiDBSchema['song']).courses);
+                    if (songData.courses && !songData.courses?.ura) {
+                        songData.courses.ura = null;
+                    }
+                }
+                else if (key === "bpm") {
+                    songData.bpm = JSON.parse((data as WikiDBSchema['song']).bpm);
+                }
+                else if (key === "version") {
+                    songData.version = JSON.parse((data as WikiDBSchema['song']).version)
+                }
+                else if (key === "genre") {
+                    songData.genre = JSON.parse((data as WikiDBSchema['song']).genre)
+                }
+                else if (key === "artists") {
+                    songData.artists = JSON.parse((data as WikiDBSchema['song']).artists)
+                }
+                else if (key === "order") {
+                    return;
+                }
+                else {
+                    //@ts-expect-error
+                    songData[key] = data[key];
+                }
+            });
+            return songData as Pick<SongData, Exclude<K, 'order'>>;
+        }
+    }
+}
