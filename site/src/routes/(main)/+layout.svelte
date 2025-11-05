@@ -3,12 +3,13 @@
     import Favicon from "$lib/components/layout/main/Favicon.svelte";
     import Header from "$lib/components/layout/main/Header.svelte";
     import Meta from "$lib/components/layout/main/Meta.svelte";
-    import { getTheme, initIsMobile, initTheme } from "$lib/module/layout/index.js";
+    import { getTheme, initIsMobile, initTheme, setTimezone } from "$lib/module/layout/index.js";
 
     let { children, data } = $props();
 
     initTheme(data.theme);
     initIsMobile(data.isMobile);
+    setTimezone(data.timezone);
 
     const theme = getTheme();
 </script>

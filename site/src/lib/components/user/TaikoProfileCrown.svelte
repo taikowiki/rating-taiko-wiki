@@ -45,7 +45,7 @@
             background-color: #cf4844;
         }
         &.theme-dark {
-            background-color: #1c1c1c;
+            background-color: #0f0f0f;
         }
     }
 

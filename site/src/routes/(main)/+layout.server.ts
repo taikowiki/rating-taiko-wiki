@@ -7,6 +7,7 @@ export async function load(event: RequestEvent) {
 
     return {
         theme,
-        isMobile
+        isMobile,
+        timezone: process.env.TIMEZONE
     }
 }

@@ -7,7 +7,7 @@ export namespace COLOR {
         };
         export const DARK = {
             HEADER: '#332e2e',
-            MAIN: '#1c1c1c',
+            MAIN: '#0f0f0f',
             BG: '#282828'
         };
     };

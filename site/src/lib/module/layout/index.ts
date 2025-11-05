@@ -61,3 +61,16 @@ export function initIsMobile(initValue?: boolean) {
 export function getIsMobile() {
     return getContext('isMobile') as Writable<boolean>;
 }
+
+/**
+ * Time zone을 context에 저장
+ */
+export function setTimezone(tz: string){
+    setContext('timezone', tz);
+}
+/**
+ * Context에서 time zone 가져오기
+ */
+export function getTimezone(){
+    return getContext('timezone') as string;
+}

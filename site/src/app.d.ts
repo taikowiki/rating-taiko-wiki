@@ -23,6 +23,7 @@ declare global {
 			WIKI_DB_TIMEZONE: string;
 			WIKI_DB_PASSWORD: string;
 			AUTH_KEY: string;
+			TIMEZONE: string;
 		}
 	}
 }

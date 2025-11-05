@@ -87,7 +87,7 @@
         context.font = "230px 'Dela Gothic One'";
         context.fillStyle = dani.type === "red" ? "red" : "#ffb411";
         context.scale(1, 1.2);
-        context.lineWidth = 30;
+        context.lineWidth = 40;
         context.strokeStyle = textGradient;
         context.strokeText(
             CONST.DANI.DAN_JPN[dani.dan][0],
@@ -127,7 +127,7 @@
     const isMobile = getIsMobile();
 </script>
 
-<div class={`container theme-${$theme}`}>
+<a class={`container theme-${$theme}`}  href={`https://donderhiroba.jp/user_profile.php?taiko_no=${taikoNo}`}>
     {#if dani}
         <canvas bind:this={canvasElement}></canvas>
     {/if}
@@ -139,7 +139,7 @@
             {nickname}
         </div>
     </div>
-</div>
+</a>
 
 <style>
     .container {
@@ -148,18 +148,20 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        column-gap: 20px;
+        column-gap: 30px;
 
         padding-block: 10px;
         box-sizing: border-box;
 
         border-radius: 10px;
 
+        text-decoration: none;
+
         &.theme-light {
             background-color: #cf4844;
         }
         &.theme-dark {
-            background-color: #1c1c1c;
+            background-color: #0f0f0f;
         }
     }
 
