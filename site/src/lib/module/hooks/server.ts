@@ -1,6 +1,7 @@
 import type { Handle } from "@sveltejs/kit";
 import { userDBController } from "../user/server";
 import auth from "@sveltekit-board/oauth";
+import { getThemeCookie } from "../layout/server";
 
 /**
  * 특정 Origin에서의 요청 허용
@@ -59,4 +60,16 @@ export const userDataHook: Handle = async ({ event, resolve }) => {
 
 export interface AllowOriginOption {
     credentials?: boolean
+}
+
+/**
+ * 
+ */
+export const themeHook: Handle = async ({ event, resolve }) => {
+    const theme = getThemeCookie(event);
+    return resolve(event, {
+        transformPageChunk({ html }) {
+            return html.replace('$theme$', theme ?? 'light');
+        },
+    })
 }

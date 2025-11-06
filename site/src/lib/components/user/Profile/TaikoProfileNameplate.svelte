@@ -12,9 +12,18 @@
 
     let { nickname, taikoNo, dani }: Props = $props();
 
-    let canvasElement = $state<HTMLCanvasElement>();
+    let daniImgSrc = $state<string>();
     onMount(async () => {
         if (!dani) return;
+
+        const cacheKey = `${dani.dan}|${dani.type}|${dani.frame}`;
+        const cached = window.localStorage.getItem(cacheKey);
+        if(cached){
+            daniImgSrc = cached;
+            return;
+        }
+
+        const canvasElement = document.createElement('canvas');
         const context = canvasElement?.getContext("2d");
         if (!canvasElement || !context) return;
 
@@ -121,15 +130,21 @@
             width * 0.51,
             height * 0.7,
         );
+
+        daniImgSrc = canvasElement.toDataURL();
+        window.localStorage.setItem(`${dani.dan}|${dani.type}|${dani.frame}`, daniImgSrc);
     });
 
     const theme = getTheme();
-    const isMobile = getIsMobile();
 </script>
 
-<a class={`container theme-${$theme}`}  href={`https://donderhiroba.jp/user_profile.php?taiko_no=${taikoNo}`}>
+<a class={`container theme-${$theme}`} href={`https://donderhiroba.jp/user_profile.php?taiko_no=${taikoNo}`} target="_blank">
     {#if dani}
-        <canvas bind:this={canvasElement}></canvas>
+        {#if daniImgSrc}
+            <img class="dani-img" src={daniImgSrc} alt="dani">
+        {:else}
+            <div class="dani-img"></div>
+        {/if}
     {/if}
     <div class="taiko-profile">
         <div class="taikoNo">
@@ -180,7 +195,7 @@
         margin-top: -7px;
     }
 
-    canvas {
+    .dani-img {
         width: 80px;
         height: 80px;
     }

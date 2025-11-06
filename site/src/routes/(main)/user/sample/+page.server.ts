@@ -29,7 +29,7 @@ const taikoProfile: User.TaikoProfile = {
 const profile: User.Profile = {
     nickname: 'sample',
     UUID: 'sample',
-    bio: ''
+    bio: '안녕하세요 저는 태고의 달인을 하고 있는'
 };
 const songRatingDatas = sampleRatingData.songRatingDatas as unknown as User.SongRatingData[];
 const ratingData: User.RatingData = {
@@ -38,7 +38,8 @@ const ratingData: User.RatingData = {
     songRatingDatas,
     ratingScoreHistory: [],
     lastUpload: new Date(),
-    scoreData: sampleScoreData as unknown as User.ScoreData
+    scoreData: sampleScoreData as unknown as User.ScoreData,
+    ranking: 100
 };
 
 export async function load() {

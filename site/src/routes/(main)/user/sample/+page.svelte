@@ -1,5 +1,6 @@
 <script lang="ts">
-    import Profile from "$lib/components/user/Profile.svelte";
+    import Profile from "$lib/components/user/Profile/Profile.svelte";
+    import RatingScore from "$lib/components/user/RatingScore/RatingScore.svelte";
     import { getIsMobile } from "$lib/module/layout/index.js";
 
     let { data } = $props();
@@ -13,6 +14,11 @@
         taikoProfile={data.taikoProfile}
         lastUpdate={data.ratingData.lastUpload}
     />
+    <RatingScore
+        currentRatingScore={data.ratingData.currentRatingScore}
+        currentExp={data.ratingData.currentExp}
+        ranking={data.ratingData.ranking}
+    />
 </div>
 
 <style>
@@ -21,5 +27,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        padding-inline: max(calc((100% - 1000px) / 2), 0px);
+        box-sizing: border-box;
+        row-gap: 10px;
     }
 </style>

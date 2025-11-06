@@ -17,7 +17,20 @@ export namespace COLOR {
             'silver': ['silver'],
             'gold': ["rgba(222, 189, 0, 1)", "rgba(255, 228, 74, 1)", "rgba(255, 238, 143, 1)", "rgba(255, 228, 74, 1)", "rgba(222, 189, 0, 1)"],
             'rainbow': RAINBOW
-        }
+        } as const;
+    }
+    export namespace RATING {
+        export const TIER = {
+            omega: ["#ffa0fe", "#56fbb9", "#63abf8"],
+            grandmaster: "#a11313",
+            master: "#7d00d9",
+            sapphire: "#0e76e6",
+            ruby: "#ff005d",
+            gold: "#e6ac00",
+            silver: "#7a7a7a",
+            bronze: "#734300",
+            pearl: "#e0d7ad"
+        } as const;
     }
 }
 
@@ -68,6 +81,32 @@ export namespace CONST {
             '4kyu': '四級',
             '5kyu': '五級'
         } as const;
+    };
+    export namespace RATING {
+        export const TIER_NAME = ['pearl', 'bronze', 'silver', 'gold', 'ruby', 'sapphire', 'master', 'grandmaster', 'omega'] as const;
+        export const TIER_INTERVAL = 2150;
+        export const GRADE_INTERVAL = TIER_INTERVAL / 5;
+        export const TIER_BORDER = {
+            omega: TIER_INTERVAL * 6,
+            grandmaster: TIER_INTERVAL * 5 + GRADE_INTERVAL * 4,
+            master: TIER_INTERVAL * 5 + GRADE_INTERVAL * 3,
+            sapphire: TIER_INTERVAL * 5,
+            ruby: TIER_INTERVAL * 4,
+            gold: TIER_INTERVAL * 3,
+            silver: TIER_INTERVAL * 2,
+            bronze: TIER_INTERVAL * 1,
+            pearl: 0
+        } as const;
     }
+}
 
+/* String.prototype.capitalize */
+declare global {
+    interface String {
+        capitalize(): string;
+    }
+}
+String.prototype.capitalize = function () {
+    if (!this) return this;
+    return this[0].toUpperCase() + this.slice(1);
 }

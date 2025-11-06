@@ -4,6 +4,9 @@ import { getSongRating } from '@taiko-wiki/taiko-rating';
 import type { Measure } from "@taiko-wiki/taiko-rating/types";
 import { CONST } from "../util";
 
+/**
+ * 레이팅 계산
+ */
 export function calcualteRating(scoreData: User.ScoreData, measures: Measure[], songDatas: SongData[]): Pick<User.RatingData, 'currentRatingScore' | 'currentExp' | 'songRatingDatas'> {
     const songRatingDatas: User.SongRatingData[] = [];
     measures.forEach((measure) => {
@@ -68,6 +71,150 @@ export function calcualteRating(scoreData: User.ScoreData, measures: Measure[], 
         currentExp,
         songRatingDatas
     }
+}
+
+/**
+ * 현재 티어를 계산
+ */
+export function getTier(ratingScore: number) {
+    const { TIER_BORDER, GRADE_INTERVAL } = CONST.RATING;
+    let tierName: User.TierName;
+    if (ratingScore < TIER_BORDER.bronze) {
+        tierName = 'pearl';
+    }
+    else if (ratingScore < TIER_BORDER.silver) {
+        tierName = 'bronze';
+    }
+    else if (ratingScore < TIER_BORDER.gold) {
+        tierName = 'silver'
+    }
+    else if (ratingScore < TIER_BORDER.ruby) {
+        tierName = 'gold'
+    }
+    else if (ratingScore < TIER_BORDER.sapphire) {
+        tierName = 'ruby'
+    }
+    else if (ratingScore < TIER_BORDER.master) {
+        tierName = 'sapphire'
+    }
+    else if (ratingScore < TIER_BORDER.grandmaster) {
+        tierName = "master"
+    }
+    else if (ratingScore < TIER_BORDER.omega) {
+        tierName = "grandmaster"
+    }
+    else {
+        tierName = 'omega';
+    }
+
+    let tierGrade: 1 | 2 | 3 | 4 | 5 | null;
+    if (tierName === 'omega' || tierName === 'pearl' || tierName === "master" || tierName === "grandmaster") {
+        tierGrade = null;
+    }
+    else if (tierName === "sapphire") {
+        const startBorder = TIER_BORDER[tierName];
+
+        if (ratingScore < startBorder + GRADE_INTERVAL) {
+            tierGrade = 3;
+        }
+        else if (ratingScore < startBorder + GRADE_INTERVAL * 2) {
+            tierGrade = 2;
+        }
+        else {
+            tierGrade = 1;
+        }
+    }
+    else {
+        const startBorder = TIER_BORDER[tierName];
+
+        if (ratingScore < startBorder + GRADE_INTERVAL) {
+            tierGrade = 5;
+        }
+        else if (ratingScore < startBorder + GRADE_INTERVAL * 2) {
+            tierGrade = 4;
+        }
+        else if (ratingScore < startBorder + GRADE_INTERVAL * 3) {
+            tierGrade = 3;
+        }
+        else if (ratingScore < startBorder + GRADE_INTERVAL * 4) {
+            tierGrade = 2;
+        }
+        else {
+            tierGrade = 1;
+        }
+    }
+
+    return {
+        tierName,
+        tierGrade
+    }
+}
+
+/**
+ * 다음 티어를 계산
+ */
+export function getNextTier(tierName: User.TierName, grade: number | null) {
+    let nextTierName: User.TierName;
+    let nextGrade: { tierName: User.TierName, grade: number | null };
+
+    if (tierName === 'pearl') {
+        nextTierName = 'bronze';
+        nextGrade = {
+            tierName: 'bronze',
+            grade: 5
+        }
+    }
+    else if (tierName === 'bronze') {
+        nextTierName = 'silver';
+        nextGrade = {
+            tierName: grade === 1 ? 'silver' : 'bronze',
+            grade: grade === 1 ? 5 : (grade ?? 5) - 1
+        }
+    }
+    else if (tierName === 'silver') {
+        nextTierName = 'gold'
+        nextGrade = {
+            tierName: grade === 1 ? 'gold' : 'silver',
+            grade: grade === 1 ? 5 : (grade ?? 5) - 1
+        }
+    }
+    else if (tierName === 'gold') {
+        nextTierName = 'ruby'
+        nextGrade = {
+            tierName: grade === 1 ? 'ruby' : 'gold',
+            grade: grade === 1 ? 5 : (grade ?? 5) - 1
+        }
+    }
+    else if (tierName === 'ruby') {
+        nextTierName = 'sapphire'
+        nextGrade = {
+            tierName: grade === 1 ? 'sapphire' : 'ruby',
+            grade: grade === 1 ? 3 : (grade ?? 5) - 1
+        }
+    }
+    else if (tierName === 'sapphire') {
+        nextTierName = 'master'
+        nextGrade = {
+            tierName: grade === 1 ? 'master' : 'sapphire',
+            grade: grade === 1 ? null : (grade ?? 3) - 1
+        }
+    }
+    else if (tierName === "master") {
+        nextTierName = "grandmaster";
+        nextGrade = {
+            tierName: "grandmaster",
+            grade: null
+        }
+    }
+    else {
+        nextTierName = 'omega'
+        nextGrade = {
+            tierName: "omega",
+            grade: null
+        }
+    }
+
+    return { nextTierName, nextGrade };
 }
 
 export namespace User {
@@ -151,8 +298,11 @@ export namespace User {
             ratingScoreHistory: z.array(z.tuple([z.date(), z.number()])),
             lastUpload: z.date(),
             scoreData: ScoreData,
-            songRatingDatas: z.array(SongRatingData)
+            songRatingDatas: z.array(SongRatingData),
+            ranking: z.number()
         });
+
+        export const TierName = z.literal(CONST.RATING.TIER_NAME);
     }
 
     export type Data = z.infer<typeof Schema.Data>;
@@ -166,4 +316,6 @@ export namespace User {
     export type RatingData = z.infer<typeof Schema.RatingData>;
     export type Crown = z.infer<typeof Schema.Crown>;
     export type Badge = z.infer<typeof Schema.Badge>;
+
+    export type TierName = z.infer<typeof Schema.TierName>;
 }

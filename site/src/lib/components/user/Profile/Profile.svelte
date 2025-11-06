@@ -103,7 +103,7 @@
     .no-bio {
         flex: 1 0 auto;
         box-sizing: border-box;
-        padding: 10px;
+        padding: 20px;
         border-radius: 10px;
 
         &.theme-light {

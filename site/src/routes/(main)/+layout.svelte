@@ -23,6 +23,7 @@
 
 <style>
     main{
-        padding: 5px;
+        padding-inline: 5px;
+        padding-block: 10px;
     }
 </style>
