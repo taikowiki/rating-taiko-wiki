@@ -1,39 +1,198 @@
+import type { Genre } from "@taiko-wiki/taikowiki-api";
+import type { Difficulty } from "hiroba-js";
+import type { User } from "../user";
+
 export namespace COLOR {
+    export class RGB {
+        r: number;
+        g: number;
+        b: number;
+        a?: number;
+
+        constructor(r: number, g: number, b: number, a?: number) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
+        }
+
+        toString() {
+            return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a ?? 1})`
+        }
+
+        [Symbol.toPrimitive](hint: string){
+            if(hint === "string"){
+                return this.toString();
+            }
+        }
+    }
     export namespace THEME {
         export const LIGHT = {
-            HEADER: '#cf4844',
-            MAIN: '#cf4844',
-            BG: '#ffffff'
+            HEADER: new RGB(207, 72, 68),
+            MAIN: new RGB(207, 72, 68),
+            BG: new RGB(255, 255, 255)
         };
         export const DARK = {
-            HEADER: '#332e2e',
-            MAIN: '#0f0f0f',
-            BG: '#282828'
+            HEADER: new RGB(51, 46, 46),
+            MAIN: new RGB(15, 15, 15),
+            BG: new RGB(40, 40, 40)
         };
     };
-    export const RAINBOW = ['#ff67ff', '#ffb120', '#fffc2b', '#ffffdf', '#b4ff1f', '#31e9fa', '#9299f6'];
+    export const RAINBOW = [new RGB(255, 103, 255), new RGB(255, 177, 32), new RGB(255, 252, 43), new RGB(255, 255, 223), new RGB(180, 255, 31), new RGB(49, 233, 250), new RGB(146, 153, 246)];
     export namespace DANI {
         export const FRAME = {
             'silver': ['silver'],
             'gold': ["rgba(222, 189, 0, 1)", "rgba(255, 228, 74, 1)", "rgba(255, 238, 143, 1)", "rgba(255, 228, 74, 1)", "rgba(222, 189, 0, 1)"],
             'rainbow': RAINBOW
         } as const;
+        export const BG = {
+            LIGHT: {
+                kyu: new RGB(255, 240, 211),
+                lowdan: new RGB(226, 235, 238),
+                highdan: new RGB(238, 226, 226),
+                jin: new RGB(229, 242, 245),
+                tatsujin: new RGB(248, 237, 200),
+                jiho: new RGB(255, 208, 150),
+                chiuken: new RGB(186, 151, 121),
+                fukusho: new RGB(82, 76, 74),
+                gaiden: new RGB(157, 189, 173)
+            },
+            DARK: {
+                kyu: new RGB(93, 90, 64),
+                lowdan: new RGB(64, 86, 93),
+                highdan: new RGB(95, 66, 66),
+                jin: new RGB(128, 149, 156),
+                tatsujin: new RGB(142, 140, 81),
+                jiho: new RGB(255, 208, 150),
+                chiuken: new RGB(186, 151, 121),
+                fukusho: new RGB(82, 76, 74),
+                gaiden: new RGB(99, 128, 114)
+            }
+        } as const;
+        export const LIGHT = {
+            kyu: new RGB(237, 193, 111),
+            lowdan: new RGB(115, 197, 255),
+            highdan: new RGB(230, 82, 82),
+            jin: new RGB(145, 163, 168),
+            tatsujin: new RGB(244, 188, 43),
+            jiho: new RGB(246, 174, 84),
+            chiuken: new RGB(188, 119, 63),
+            fukusho: new RGB(43, 40, 39),
+            gaiden: new RGB(85, 143, 114)
+        } as const;
+        export const DARK = {
+            kyu: new RGB(216, 185, 127),
+            lowdan: new RGB(79, 146, 207),
+            highdan: new RGB(188, 83, 83),
+            jin: new RGB(145, 163, 168),
+            tatsujin: new RGB(244, 188, 43),
+            jiho: new RGB(246, 174, 84),
+            chiuken: new RGB(188, 119, 63),
+            fukusho: new RGB(43, 40, 39),
+            gaiden: new RGB(85, 143, 114)
+        } as const;
     }
     export namespace RATING {
         export const TIER = {
-            omega: ["#ffa0fe", "#56fbb9", "#63abf8"],
-            grandmaster: "#a11313",
-            master: "#7d00d9",
-            sapphire: "#0e76e6",
-            ruby: "#ff005d",
-            gold: "#e6ac00",
-            silver: "#7a7a7a",
-            bronze: "#734300",
-            pearl: "#e0d7ad"
+            omega: [new RGB(255, 160, 254), new RGB(86, 251, 185), new RGB(99, 171, 248)],
+            grandmaster: new RGB(161, 19, 19),
+            master: new RGB(125, 0, 217),
+            sapphire: new RGB(14, 118, 230),
+            ruby: new RGB(255, 0, 93),
+            gold: new RGB(230, 172, 0),
+            silver: new RGB(122, 122, 122),
+            bronze: new RGB(115, 67, 0),
+            pearl: new RGB(224, 215, 173)
         } as const;
-    }
-}
 
+        export function TIER_BG(tierName: User.TierName) {
+            if (tierName === "omega") {
+                return `linear-gradient(to right, ${COLOR.RATING.TIER.omega.map((c, i, a) => `${c} ${(i / (a.length - 1)) * 100}%`).join(", ")})`;
+            } else {
+                return `linear-gradient(to right, ${COLOR.RATING.TIER[tierName]})`;
+            }
+        }
+
+        export const dani = {
+            backgroundColor: {
+                light: {
+                    kyu: new RGB(255, 240, 211),
+                    lowdan: new RGB(226, 235, 238),
+                    highdan: new RGB(238, 226, 226),
+                    jin: new RGB(229, 242, 245),
+                    tatsujin: new RGB(248, 237, 200),
+                    jiho: new RGB(255, 208, 150),
+                    chiuken: new RGB(186, 151, 121),
+                    fukusho: new RGB(82, 76, 74),
+                    gaiden: new RGB(157, 189, 173)
+                } as const,
+                dark: {
+                    kyu: new RGB(93, 90, 64),
+                    lowdan: new RGB(64, 86, 93),
+                    highdan: new RGB(95, 66, 66),
+                    jin: new RGB(128, 149, 156),
+                    tatsujin: new RGB(142, 140, 81),
+                    jiho: new RGB(255, 208, 150),
+                    chiuken: new RGB(186, 151, 121),
+                    fukusho: new RGB(82, 76, 74),
+                    gaiden: new RGB(99, 128, 114)
+                } as const
+            } as const,
+            color: {
+                light: {
+                    kyu: new RGB(237, 193, 111),
+                    lowdan: new RGB(115, 197, 255),
+                    highdan: new RGB(230, 82, 82),
+                    jin: new RGB(145, 163, 168),
+                    tatsujin: new RGB(244, 188, 43),
+                    jiho: new RGB(246, 174, 84),
+                    chiuken: new RGB(188, 119, 63),
+                    fukusho: new RGB(43, 40, 39),
+                    gaiden: new RGB(85, 143, 114)
+                } as const,
+                dark: {
+                    kyu: new RGB(216, 185, 127),
+                    lowdan: new RGB(79, 146, 207),
+                    highdan: new RGB(188, 83, 83),
+                    jin: new RGB(145, 163, 168),
+                    tatsujin: new RGB(244, 188, 43),
+                    jiho: new RGB(246, 174, 84),
+                    chiuken: new RGB(188, 119, 63),
+                    fukusho: new RGB(43, 40, 39),
+                    gaiden: new RGB(85, 143, 114)
+                } as const
+            } as const
+        } as const;
+    };
+
+    export const GENRE: Record<Genre, RGB> = {
+        pops: new RGB(79, 181, 189),
+        vocaloid: new RGB(167, 171, 199),//"#a5d1da",
+        anime: new RGB(226, 141, 200),
+        namco: new RGB(235, 107, 106),
+        game: new RGB(182, 151, 211),
+        variety: new RGB(64, 201, 119),
+        classic: new RGB(204, 189, 74),
+        kids: new RGB(235, 184, 80)
+    } as const;
+
+    export const DIFFICULTY: Record<Difficulty | "oniura", string | RGB> = {
+        "easy": new RGB(255, 39, 3),
+        "normal": new RGB(100, 126, 47),
+        "hard": new RGB(54, 73, 56),
+        "oni": new RGB(219, 24, 133),
+        "ura": new RGB(113, 53, 219),
+        "oniura": "linear-gradient(rgb(219, 24, 133) 0%, rgb(219, 24, 133) 50%, rgb(113, 53, 219) 50%, rgb(113, 53, 219) 100% )"
+    } as const;
+
+    export const DARK_DIFFICULTY: Record<Difficulty, RGB> = {
+        "easy": new RGB(255, 39, 3),
+        "normal": new RGB(100, 126, 47),
+        "hard": new RGB(54, 73, 56),
+        "oni": new RGB(214, 77, 154),
+        "ura": new RGB(148, 106, 222)
+    } as const;
+}
 export namespace CONST {
     export namespace SONG {
         export const GENRE = ["pops", "anime", "kids", "game", "variety", "namco", "vocaloid", "classic"] as const

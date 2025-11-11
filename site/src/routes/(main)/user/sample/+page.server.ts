@@ -29,7 +29,7 @@ const taikoProfile: User.TaikoProfile = {
 const profile: User.Profile = {
     nickname: 'sample',
     UUID: 'sample',
-    bio: '안녕하세요 저는 태고의 달인을 하고 있는'
+    bio: 'Hello!'
 };
 const songRatingDatas = sampleRatingData.songRatingDatas as unknown as User.SongRatingData[];
 const ratingData: User.RatingData = {

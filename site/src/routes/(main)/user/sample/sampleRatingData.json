@@ -1,5 +1,5 @@
 {
-    "currentRatingScore": 6500,
+    "currentRatingScore": 10223,
     "currentExp": 15866,
     "songRatingDatas": [
         {
@@ -1543,7 +1543,7 @@
             "ratingScore": 9339
         },
         {
-            "title": "D's Adventure Note",
+            "title": "D′s Adventure Note",
             "songNo": "128",
             "difficulty": "oni",
             "measureValue": 9.2,
@@ -1853,7 +1853,7 @@
             "ratingScore": 9201
         },
         {
-            "title": "初音ミクの激唱(裏)",
+            "title": "初音ミクの激唱",
             "songNo": "1357",
             "difficulty": "ura",
             "measureValue": 8.4,
@@ -3693,7 +3693,7 @@
             "ratingScore": 8388
         },
         {
-            "title": "案山子姫 -Princess Scarecrow-(裏)",
+            "title": "案山子姫 -Princess Scarecrow-",
             "songNo": "1412",
             "difficulty": "ura",
             "measureValue": 10,
@@ -3783,7 +3783,7 @@
             "ratingScore": 8362
         },
         {
-            "title": "ファタール(裏)",
+            "title": "ファタール",
             "songNo": "1353",
             "difficulty": "ura",
             "measureValue": 7.8,
@@ -4203,7 +4203,7 @@
             "ratingScore": 8109
         },
         {
-            "title": "SORA-VI 火ノ鳥",
+            "title": "SORA‐Ⅵ 火ノ鳥",
             "songNo": "391",
             "difficulty": "oni",
             "measureValue": 7.4,
@@ -5093,7 +5093,7 @@
             "ratingScore": 7636
         },
         {
-            "title": "おはようメルちゃん(裏)",
+            "title": "おはようメルちゃん",
             "songNo": "1343",
             "difficulty": "ura",
             "measureValue": 7,
@@ -5293,7 +5293,7 @@
             "ratingScore": 7516
         },
         {
-            "title": "宝の丘(裏)",
+            "title": "宝の丘",
             "songNo": "1366",
             "difficulty": "ura",
             "measureValue": 8,
@@ -6583,7 +6583,7 @@
             "ratingScore": 6826
         },
         {
-            "title": "SORA-I アースライズ",
+            "title": "SORA‐Ⅰ アースライズ",
             "songNo": "389",
             "difficulty": "oni",
             "measureValue": 6.2,
@@ -6993,7 +6993,7 @@
             "ratingScore": 6567
         },
         {
-            "title": "トルコ行進曲(モーツァルト)",
+            "title": "トルコ行進曲",
             "songNo": "1345",
             "difficulty": "ura",
             "measureValue": 7.6,
@@ -9383,7 +9383,7 @@
             "ratingScore": 5288
         },
         {
-            "title": "SORA-II グリーゼ581",
+            "title": "SORA‐Ⅱ グリーゼ581",
             "songNo": "390",
             "difficulty": "oni",
             "measureValue": 4.8,
@@ -9923,7 +9923,7 @@
             "ratingScore": 4940
         },
         {
-            "title": "トルコ行進曲(モーツァルト)",
+            "title": "トルコ行進曲",
             "songNo": "1345",
             "difficulty": "oni",
             "measureValue": 4.5,

@@ -1,6 +1,7 @@
 <script lang="ts">
     import Profile from "$lib/components/user/Profile/Profile.svelte";
     import RatingScore from "$lib/components/user/RatingScore/RatingScore.svelte";
+    import RatingSong from "$lib/components/user/RatingSong/RatingSong.svelte";
     import { getIsMobile } from "$lib/module/layout/index.js";
 
     let { data } = $props();
@@ -19,6 +20,7 @@
         currentExp={data.ratingData.currentExp}
         ranking={data.ratingData.ranking}
     />
+    <RatingSong songRatingDatas={data.ratingData.songRatingDatas} />
 </div>
 
 <style>
