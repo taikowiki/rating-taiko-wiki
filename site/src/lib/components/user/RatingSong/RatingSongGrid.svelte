@@ -10,7 +10,7 @@
     import donderfullCrown from "$lib/assets/icon/crown/dfc.svg";
     import goldCrown from "$lib/assets/icon/crown/fc.svg";
     import silverCrown from "$lib/assets/icon/crown/clear.svg";
-    import { getTheme } from "$lib/module/layout";
+    import { getIsMobile, getTheme } from "$lib/module/layout";
     import { COLOR } from "$lib/module/util";
 
     const crownImg = {
@@ -35,6 +35,7 @@
     let { songRatingDatas }: Props = $props();
 
     const theme = getTheme();
+    const isMobile = getIsMobile();
 
     function diffColor(diff: "oni" | "ura") {
         if ($theme === "light") return COLOR.DIFFICULTY[diff];
@@ -42,7 +43,7 @@
     }
 </script>
 
-<div class="ratingsong-grid-container">
+<div class="ratingsong-grid-container" class:isMobile={$isMobile}>
     {#each songRatingDatas as data}
         {@render songRatingDataView(data)}
     {/each}
@@ -50,9 +51,6 @@
 
 {#snippet songRatingDataView(data: User.SongRatingData)}
     {@const diffcolor = diffColor(data.difficulty)}
-    {@const tiercolor = COLOR.RATING.TIER_BG(
-        getTier(data.ratingScore).tierName,
-    )}
     <div
         class={`ratingsong-data ${data.difficulty}`}
         style={`background-color: ${diffcolor};`}
@@ -100,15 +98,22 @@
         width: 100%;
         display: grid;
         grid-template-columns: repeat(auto-fill, 188px);
+        justify-content: center;
         flex-wrap: wrap;
         
         column-gap: 15px;
         row-gap: 15px;
         padding-block: 10px;
+
+        &.isMobile{
+            display:flex;
+            flex-direction: column;
+            row-gap: 10px;
+        }
     }
 
     .ratingsong-data {
-        width: 188px;
+        width: 100%;
         border-radius: 5px;
         box-sizing: border-box;
         overflow: hidden;
