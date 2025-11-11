@@ -20,8 +20,8 @@ const taikoProfile: User.TaikoProfile = {
         white: 4
     },
     dani: {
-        dan: '1dan',
-        type: 'red',
+        dan: 'tatsujin',
+        type: 'gold',
         frame: 'rainbow'
     }
 };
