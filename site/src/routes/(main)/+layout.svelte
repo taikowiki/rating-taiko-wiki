@@ -1,5 +1,6 @@
 <script lang="ts">
     import "$lib/assets/css/standard.scss";
+    import '$lib/assets/css/main.scss';
     import Favicon from "$lib/components/layout/main/Favicon.svelte";
     import Header from "$lib/components/layout/main/Header.svelte";
     import Meta from "$lib/components/layout/main/Meta.svelte";

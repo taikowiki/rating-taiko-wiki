@@ -2,9 +2,12 @@
     import Profile from "$lib/components/user/Profile/Profile.svelte";
     import RatingScore from "$lib/components/user/RatingScore/RatingScore.svelte";
     import RatingSong from "$lib/components/user/RatingSong/RatingSong.svelte";
+    import Statistics from "$lib/components/user/Statistics/Statistics.svelte";
     import { getIsMobile } from "$lib/module/layout/index.js";
 
     let { data } = $props();
+    let top50 = $derived(data.ratingData.songRatingDatas.slice(0, 50));
+    let ratingScoreHistory = $derived(data.ratingData.ratingScoreHistory);
 
     const isMobile = getIsMobile();
 </script>
@@ -25,7 +28,11 @@
         ranking={data.ratingData.ranking}
     />
     -->
-    <RatingSong songRatingDatas={data.ratingData.songRatingDatas} scoreData={data.ratingData.scoreData}/>
+    <RatingSong
+        songRatingDatas={data.ratingData.songRatingDatas}
+        scoreData={data.ratingData.scoreData}
+    />
+    <Statistics {top50} {ratingScoreHistory} />
 </div>
 
 <style>

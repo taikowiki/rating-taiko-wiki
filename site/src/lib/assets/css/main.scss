@@ -1,0 +1,45 @@
+/* font */
+// Kaisei Decol
+@import url('https://fonts.googleapis.com/css2?family=Kaisei+Decol&display=swap');
+// Mochiy Pop One
+@import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap');
+// Dela Gothic One
+@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap');
+// Noto Sans JP
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
+// Noto Sans KR
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+html,
+body {
+    margin: 0;
+    font-family: 'Noto Sans JP', 'Noto Sans KR';
+    font-size: 16px;
+}
+
+@media (prefers-color-scheme: dark) {
+
+    body,
+    body.theme-dark {
+        color: white;
+        background-color: #282828;
+    }
+
+    body.theme-light {
+        color: black;
+        background-color: white;
+    }
+}
+
+body.theme-dark {
+    color: white;
+    background-color: #282828;
+}
+
+h1 {
+    margin-block: 10px;
+}
+
+h2 {
+    margin-block: 5px;
+}
