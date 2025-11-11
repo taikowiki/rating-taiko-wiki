@@ -14,13 +14,18 @@
         profile={data.profile}
         taikoProfile={data.taikoProfile}
         lastUpdate={data.ratingData.lastUpload}
+        currentRatingScore={data.ratingData.currentRatingScore}
+        currentExp={data.ratingData.currentExp}
+        ranking={data.ratingData.ranking}
     />
+    <!--
     <RatingScore
         currentRatingScore={data.ratingData.currentRatingScore}
         currentExp={data.ratingData.currentExp}
         ranking={data.ratingData.ranking}
     />
-    <RatingSong songRatingDatas={data.ratingData.songRatingDatas} />
+    -->
+    <RatingSong songRatingDatas={data.ratingData.songRatingDatas} scoreData={data.ratingData.scoreData}/>
 </div>
 
 <style>

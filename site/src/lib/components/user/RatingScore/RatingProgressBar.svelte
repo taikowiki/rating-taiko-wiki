@@ -16,22 +16,21 @@
     }
 
     let { ratingScore, currentTier, nextTier }: Props = $props();
+    const currentTierBorder = CONST.RATING.TIER_BORDER[currentTier.tierName];
     const currentGradeBorder =
         CONST.RATING.TIER_BORDER[currentTier.tierName] +
         (currentTier.tierGrade
-            ? (5 - currentTier.tierGrade) * CONST.RATING.GRADE_INTERVAL
+            ? (currentTier.tierName === "sapphire"
+                  ? 3 - currentTier.tierGrade
+                  : 5 - currentTier.tierGrade) * CONST.RATING.GRADE_INTERVAL
             : 0);
     const nextTierBorder = CONST.RATING.TIER_BORDER[nextTier.nextTierName];
-    const nextGradeBorder =
-        CONST.RATING.TIER_BORDER[nextTier.nextGrade.tierName] +
-        (nextTier.nextGrade.grade
-            ? (5 - nextTier.nextGrade.grade) * CONST.RATING.GRADE_INTERVAL
-            : 0);
+    const nextGradeBorder = currentGradeBorder + CONST.RATING.GRADE_INTERVAL;
 
     function getPercent(fromBorder: number, toBorder: number, current: number) {
         const p =
             Math.round(
-                (10000 * (toBorder - current)) / (toBorder - fromBorder),
+                (10000 * (current - fromBorder)) / (toBorder - fromBorder),
             ) / 100;
         if (!Number.isFinite(p)) return "";
         return p + "%";
@@ -43,7 +42,7 @@
         {
             name: currentTier.tierName,
             grade: currentTier.tierGrade,
-            border: currentGradeBorder,
+            border: currentTierBorder,
         },
         {
             name: nextTier.nextTierName,
@@ -78,10 +77,9 @@
             </div>
         </div>
         <div class="layer-2">
-            
             <div
                 class="bar"
-                style={`background:${getBG(from.name)}; width: calc(100% * ${to.border - currentRatingScore} / ${to.border - from.border});`}
+                style={`background:${getBG(from.name)}; width: calc(100% * ${currentRatingScore - from.border} / ${to.border - from.border});`}
             ></div>
         </div>
     </div>

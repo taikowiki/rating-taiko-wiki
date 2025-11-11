@@ -94,7 +94,8 @@
 <style>
     .info-container {
         display: flex;
-        flex-direction: row;
+        /*flex-direction: row;*/
+        flex-direction: column;
         row-gap: 10px;
         column-gap: 10px;
 
@@ -105,7 +106,8 @@
 
     .layer-1,
     .layer-2 {
-        width: calc(50% - 5px);
+        /*width: calc(50% - 5px);*/
+        width: 100%;
         display: flex;
         flex-direction: row;
         justify-content: space-between;

@@ -1,6 +1,8 @@
 <script lang="ts">
     import { getIsMobile, getTheme, getTimezone } from "$lib/module/layout";
     import { User } from "$lib/module/user";
+    import RatingInfo from "../RatingScore/RatingInfo.svelte";
+    import RatingScore from "../RatingScore/RatingScore.svelte";
     import TaikoProfile from "./TaikoProfile.svelte";
     import { DateTime } from "luxon";
 
@@ -8,9 +10,19 @@
         profile: User.Profile;
         taikoProfile: User.TaikoProfile;
         lastUpdate: Date;
+        currentRatingScore: number;
+        currentExp: number;
+        ranking: number;
     }
 
-    let { profile, taikoProfile, lastUpdate }: Props = $props();
+    let {
+        profile,
+        taikoProfile,
+        lastUpdate,
+        currentRatingScore,
+        currentExp,
+        ranking,
+    }: Props = $props();
     let lastUpdateString = $derived(
         DateTime.fromJSDate(lastUpdate, { zone: getTimezone() }).toFormat(
             "yyyy-MM-dd HH:mm:ss",
@@ -33,15 +45,18 @@
             </div>
         {/if}
     </div>
-    {#if profile.bio}
-        <div class={`bio theme-${$theme}`}>
-            {profile.bio}
-        </div>
-    {:else}
-        <div class={`no-bio theme-${$theme}`}>
-            {"상태메시지가 없습니다."}
-        </div>
-    {/if}
+    <div class="right-container">
+        <RatingScore {currentExp} {currentRatingScore} {ranking} />
+        {#if profile.bio}
+            <div class={`bio theme-${$theme}`}>
+                {profile.bio}
+            </div>
+        {:else}
+            <div class={`no-bio theme-${$theme}`}>
+                {"상태메시지가 없습니다."}
+            </div>
+        {/if}
+    </div>
     {#if $isMobile}
         <div class="lastupdate">
             마지막 업데이트: {lastUpdateString} (UTC+9)
@@ -74,6 +89,13 @@
         }
     }
 
+    .right-container {
+        flex: 1 0 auto;
+        display:flex;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+
     .nickname {
         width: 100%;
 
@@ -101,10 +123,11 @@
 
     .bio,
     .no-bio {
-        flex: 1 0 auto;
+        width: 100%;
         box-sizing: border-box;
         padding: 20px;
         border-radius: 10px;
+        flex: 1 0 auto;
 
         &.theme-light {
             border: 1px solid #cf4844;

@@ -8,18 +8,24 @@
 
     interface Props {
         songRatingDatas: User.RatingData["songRatingDatas"];
+        scoreData: User.ScoreData;
     }
 
-    let { songRatingDatas }: Props = $props();
+    let { songRatingDatas, scoreData }: Props = $props();
 
     let top50 = $derived(songRatingDatas.slice(0, 50));
     let after50 = $derived(songRatingDatas.slice(50));
 
     let mode = $state<"grid" | "list">("grid");
+    let after50Opened = $state(false);
+
     const theme = getTheme();
 
     function setMode(mode_: "grid" | "list") {
         mode = mode_;
+    }
+    function toggleAfter50Opened(){
+        after50Opened = !after50Opened;
     }
 </script>
 
@@ -27,15 +33,17 @@
     {@render mainHeading()}
     {@render top50Heading()}
     {#if mode === "grid"}
-        <RatingSongGrid songRatingDatas={top50} />
+        <RatingSongGrid songRatingDatas={top50} {scoreData}/>
     {:else}
         <RatingSongList songRatingDatas={top50} />
     {/if}
-    <h2>이외의 곡</h2>
-    {#if mode === "grid"}
-        <RatingSongGrid songRatingDatas={after50} />
-    {:else}
-        <RatingSongList songRatingDatas={after50} />
+    {@render after50Heading()}
+    {#if after50Opened}
+        {#if mode === "grid"}
+            <RatingSongGrid songRatingDatas={after50} {scoreData} />
+        {:else}
+            <RatingSongList songRatingDatas={after50} />
+        {/if}
     {/if}
 </div>
 
@@ -64,6 +72,11 @@
     <h2>
         <div class="left">상위 50곡</div>
         <div class="right download">다운로드</div>
+    </h2>
+{/snippet}
+{#snippet after50Heading()}
+    <h2 class="after50Heading" onclick={toggleAfter50Opened}>
+        이외의 곡 {after50Opened ? "▲" : "▼"}
     </h2>
 {/snippet}
 
@@ -118,6 +131,10 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+
+        &.after50Heading{
+            cursor: pointer;
+        }
     }
 
     .left,
@@ -129,7 +146,7 @@
         column-gap: 10px;
     }
 
-    .download{
+    .download {
         font-size: 14px;
         cursor: pointer;
     }

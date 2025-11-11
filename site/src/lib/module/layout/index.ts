@@ -46,7 +46,7 @@ export function getTheme() {
  */
 export function initIsMobile(initValue?: boolean) {
     if (browser) {
-        const isMobile = writable(initValue ?? window.innerWidth <= 767);
+        const isMobile = writable(window.innerWidth <= 767);
         window.addEventListener('resize', () => {
             isMobile.set(window.innerWidth <= 767);
         }); setContext('isMobile', isMobile);
