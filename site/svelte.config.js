@@ -16,6 +16,17 @@ const config = {
 		experimental: {
 			async: true
 		}
+	},
+	onwarn(warning, defaultHandler) {
+		switch (warning.code) {
+			case "a11y_click_events_have_key_events":
+			case "a11y_no_noninteractive_element_interactions": {
+				return;
+			}
+			default: {
+				defaultHandler(warning);
+			}
+		}
 	}
 };
 

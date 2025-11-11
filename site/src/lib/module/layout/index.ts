@@ -18,6 +18,7 @@ export function initTheme(initValue?: 'light' | 'dark') {
                 document.body.classList.add('theme-dark');
             }
             window.cookieStore.set('theme', value);
+            window.localStorage.setItem('theme', value);
         })
     }
     setContext('theme', theme);

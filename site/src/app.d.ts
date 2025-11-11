@@ -26,6 +26,15 @@ declare global {
 			TIMEZONE: string;
 		}
 	}
+	interface Window {
+		localStorage: KeyedStorage<'theme'>;
+	}
+}
+
+interface KeyedStorage<Keys extends string> extends Storage {
+	getItem(key: Keys | (string & {})): string | null;
+	removeItem(key: Keys | (string & {})): void;
+	setItem(key: Keys | (string & {}), value: string): void;
 }
 
 export { };
