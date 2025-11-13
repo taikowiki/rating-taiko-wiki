@@ -32,6 +32,7 @@
 		"chart.js": "^4.5.1",
 		"css-filter-converter": "^1.0.110",
 		"hiroba-js": "^2.0.19",
+		"html2canvas": "^1.4.1",
 		"luxon": "^3.7.2",
 		"ua-parser-js": "^2.0.6",
 		"vite-plugin-mkcert": "^1.17.9",

@@ -7,9 +7,9 @@
     import pink from "$lib/assets/icon/badge/pink.png";
     import purple from "$lib/assets/icon/badge/purple.png";
     import rainbow from "$lib/assets/icon/badge/rainbow.png";
-    import donderfullCrown from "$lib/assets/icon/crown/dfc.svg";
-    import goldCrown from "$lib/assets/icon/crown/fc.svg";
-    import silverCrown from "$lib/assets/icon/crown/clear.svg";
+    import donderfullCrown from "$lib/assets/icon/crown/dfc.avif";
+    import goldCrown from "$lib/assets/icon/crown/fc.avif";
+    import silverCrown from "$lib/assets/icon/crown/clear.avif";
     import { getIsMobile, getTheme } from "$lib/module/layout";
     import { COLOR } from "$lib/module/util";
 

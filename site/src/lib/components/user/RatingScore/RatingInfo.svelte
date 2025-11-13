@@ -1,13 +1,3 @@
-<script lang="ts" module>
-    export function getBG(tierName: User.TierName) {
-        if (tierName === "omega") {
-            return `linear-gradient(to right, ${COLOR.RATING.TIER.omega.map((c, i, a) => `${c} ${(i / (a.length - 1)) * 100}%`).join(", ")})`;
-        } else {
-            return `linear-gradient(to right, ${COLOR.RATING.TIER[tierName]})`;
-        }
-    }
-</script>
-
 <script lang="ts">
     import { getIsMobile, getTheme } from "$lib/module/layout";
     import type { getNextTier, getTier, User } from "$lib/module/user";
@@ -69,7 +59,7 @@
         <div class="tier-header">현재 티어</div>
         <div
             class="tier"
-            style={`background-image:${getBG(currentTier.tierName)};`}
+            style={`background-image:${COLOR.RATING.TIER_BG(currentTier.tierName)};`}
         >
             {currentTier.tierName.capitalize() +
                 (currentTier.tierGrade ? ` ${currentTier.tierGrade}` : "")}
@@ -84,7 +74,7 @@
         <div class="rating-header">레이팅</div>
         <div
             class="rating"
-            style={`background-image:${getBG(currentTier.tierName)};`}
+            style={`background-image:${COLOR.RATING.TIER_BG(currentTier.tierName)};`}
         >
             {ratingScore}
         </div>
@@ -173,6 +163,8 @@
             transform: translateY(-2px);
             background-clip: text;
             color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     }
 
@@ -192,6 +184,8 @@
             transform: translateY(-5px);
             background-clip: text;
             color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     }
 </style>

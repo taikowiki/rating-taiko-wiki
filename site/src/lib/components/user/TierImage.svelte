@@ -2,8 +2,8 @@
     import omega from "$lib/assets/icon/tier/omega.avif";
     import gm from "$lib/assets/icon/tier/grandmaster.avif";
     import master from "$lib/assets/icon/tier/master.avif";
-    import sapphire from "$lib/assets/icon/tier/sapphire.svg";
-    import ruby from "$lib/assets/icon/tier/ruby.svg";
+    import sapphire from "$lib/assets/icon/tier/sapphire.avif";
+    import ruby from "$lib/assets/icon/tier/ruby.avif";
     import plate from "$lib/assets/icon/tier/plate.avif";
     import type { User } from "$lib/module/user";
     import CssFilterConveter from "css-filter-converter";
@@ -44,7 +44,7 @@
             });
 
             const filter = CssFilterConveter.hexToFilter(
-                COLOR.RATING.TIER[tierName],
+                COLOR.RATING.TIER[tierName].toString(),
             ).color;
             if (filter) {
                 ctx.filter = filter;

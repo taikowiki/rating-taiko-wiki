@@ -2,6 +2,7 @@
     import { getIsMobile, getTheme } from "$lib/module/layout";
     import type { User } from "$lib/module/user";
     import { COLOR, CONST } from "$lib/module/util";
+    import { createDaniImage } from "$lib/module/util/client";
     import { onMount } from "svelte";
 
     interface Props {
@@ -18,130 +19,33 @@
 
         const cacheKey = `${dani.dan}|${dani.type}|${dani.frame}`;
         const cached = window.localStorage.getItem(cacheKey);
-        if(cached){
+        if (cached) {
             daniImgSrc = cached;
             return;
         }
 
-        const canvasElement = document.createElement('canvas');
+        const canvasElement = document.createElement("canvas");
         const context = canvasElement?.getContext("2d");
         if (!canvasElement || !context) return;
 
-        const DelaGothicOne = await new FontFace('Dela Gothic One', 'url(/font/Dela-Gothic-One.ttf)').load();
-        document.fonts.add(DelaGothicOne);
-
-        const width = 500;
-        const height = 500;
-        canvasElement.width = width;
-        canvasElement.height = height;
-
-        // frame
-        const frameOuterRadius = 200;
-        const frameInnerRadius = 110;
-        context.beginPath();
-        context.arc(width / 2, height / 2, frameOuterRadius, 0, Math.PI * 2);
-        context.moveTo(width / 2 + frameInnerRadius, height / 2);
-        context.arc(
-            width / 2,
-            height / 2,
-            frameInnerRadius,
-            0,
-            Math.PI * 2,
-            true,
+        daniImgSrc = await createDaniImage({ canvasElement, context, dani });
+        window.localStorage.setItem(
+            `${dani.dan}|${dani.type}|${dani.frame}`,
+            daniImgSrc,
         );
-        // fill
-        const frameGradient = context.createLinearGradient(
-            width / 2,
-            height / 2 - frameOuterRadius,
-            width / 2,
-            height / 2 + frameOuterRadius,
-        );
-        frameGradient.addColorStop(0, COLOR.DANI.FRAME[dani.frame][0]);
-        for (let i = 1; i < COLOR.DANI.FRAME[dani.frame].length - 1; i++) {
-            frameGradient.addColorStop(
-                i / (COLOR.DANI.FRAME[dani.frame].length - 2),
-                COLOR.DANI.FRAME[dani.frame][i],
-            );
-        }
-        frameGradient.addColorStop(
-            1,
-            COLOR.DANI.FRAME[dani.frame].at(-1) ?? "",
-        );
-        context.fillStyle = frameGradient;
-        context.fill();
-        // stroke
-        context.strokeStyle = "black";
-        context.lineWidth = 12;
-        context.stroke();
-        context.closePath();
-
-        // text
-        const textGradient = context.createLinearGradient(
-            width / 2,
-           ( height / 2 - frameOuterRadius) / 1.2,
-            width / 2,
-            (height / 2 + frameOuterRadius) / 1.2,
-        );
-        textGradient.addColorStop(0, COLOR.DANI.FRAME[dani.frame][0]);
-        for (let i = 1; i < COLOR.DANI.FRAME[dani.frame].length - 1; i++) {
-            textGradient.addColorStop(
-                i / (COLOR.DANI.FRAME[dani.frame].length - 2),
-                COLOR.DANI.FRAME[dani.frame][i],
-            );
-        }
-        textGradient.addColorStop(
-            1,
-            COLOR.DANI.FRAME[dani.frame].at(-1) ?? "",
-        );
-        context.font = "230px 'Dela Gothic One'";
-        context.fillStyle = dani.type === "red" ? "red" : "#ffb411";
-        context.scale(1, 1.2);
-        context.lineWidth = 40;
-        context.strokeStyle = textGradient;
-        context.strokeText(
-            CONST.DANI.DAN_JPN[dani.dan][0],
-            width * 0.035,
-            height * 0.47,
-        );
-        context.strokeText(
-            CONST.DANI.DAN_JPN[dani.dan][1],
-            width * 0.51,
-            height * 0.7,
-        );
-        context.fillText(
-            CONST.DANI.DAN_JPN[dani.dan][0],
-            width * 0.035,
-            height * 0.47,
-        );
-        context.fillText(
-            CONST.DANI.DAN_JPN[dani.dan][1],
-            width * 0.51,
-            height * 0.7,
-        );
-        context.lineWidth = 12;
-        context.strokeStyle = "black";
-        context.strokeText(
-            CONST.DANI.DAN_JPN[dani.dan][0],
-            width * 0.035,
-            height * 0.47,
-        );
-        context.strokeText(
-            CONST.DANI.DAN_JPN[dani.dan][1],
-            width * 0.51,
-            height * 0.7,
-        );
-
-        daniImgSrc = canvasElement.toDataURL();
-        window.localStorage.setItem(`${dani.dan}|${dani.type}|${dani.frame}`, daniImgSrc);
     });
 
     const theme = getTheme();
 </script>
 
-<a class={`container theme-${$theme}`} href={`https://donderhiroba.jp/user_profile.php?taiko_no=${taikoNo}`} target="_blank">
+<a
+    class={`container theme-${$theme}`}
+    href={`https://donderhiroba.jp/user_profile.php?taiko_no=${taikoNo}`}
+    target="_blank"
+>
     {#if dani}
         {#if daniImgSrc}
-            <img class="dani-img" src={daniImgSrc} alt="dani">
+            <img class="dani-img" src={daniImgSrc} alt="dani" />
         {:else}
             <div class="dani-img"></div>
         {/if}
@@ -180,18 +84,18 @@
         }
     }
 
-    .taiko-profile{
+    .taiko-profile {
         display: flex;
         flex-direction: column;
         align-items: center;
         color: white;
     }
-    .taikoNo{
+    .taikoNo {
         font-size: 13px;
     }
-    .nickname{
+    .nickname {
         font-size: 30px;
-        font-family: 'Mochiy Pop One';
+        font-family: "Mochiy Pop One";
         margin-top: -7px;
     }
 

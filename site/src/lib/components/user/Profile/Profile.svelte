@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getIsMobile, getTheme, getTimezone } from "$lib/module/layout";
-    import { User } from "$lib/module/user";
+    import { type getNextTier, type getTier, User } from "$lib/module/user";
     import RatingInfo from "../RatingScore/RatingInfo.svelte";
     import RatingScore from "../RatingScore/RatingScore.svelte";
     import TaikoProfile from "./TaikoProfile.svelte";
@@ -13,6 +13,8 @@
         currentRatingScore: number;
         currentExp: number;
         ranking: number;
+        currentTier: ReturnType<typeof getTier>;
+        nextTier: ReturnType<typeof getNextTier>;
     }
 
     let {
@@ -22,6 +24,8 @@
         currentRatingScore,
         currentExp,
         ranking,
+        currentTier,
+        nextTier
     }: Props = $props();
     let lastUpdateString = $derived(
         DateTime.fromJSDate(lastUpdate, { zone: getTimezone() }).toFormat(
@@ -46,7 +50,7 @@
         {/if}
     </div>
     <div class="right-container">
-        <RatingScore {currentExp} {currentRatingScore} {ranking} />
+        <RatingScore {currentExp} {currentRatingScore} {ranking} {currentTier} {nextTier}/>
         {#if profile.bio}
             <div class={`bio theme-${$theme}`}>
                 {profile.bio}

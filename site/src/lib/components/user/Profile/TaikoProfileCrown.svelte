@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { User } from "$lib/module/user";
-    import donderfull from "$lib/assets/icon/crown/dfc.svg";
-    import gold from "$lib/assets/icon/crown/fc.svg";
-    import silver from "$lib/assets/icon/crown/clear.svg";
+    import donderfull from "$lib/assets/icon/crown/dfc.avif";
+    import gold from "$lib/assets/icon/crown/fc.avif";
+    import silver from "$lib/assets/icon/crown/clear.avif";
     import { getIsMobile, getTheme } from "$lib/module/layout";
 
     const crownImg = {
@@ -23,7 +23,7 @@
 <div class={`container theme-${$theme}`}>
     {#each ["donderfull", "gold", "silver"] as const as crownType}
         <div class="box">
-            <img class="crown-img" src={crownImg[crownType]} alt={crownType} />
+            <img class="crown-img" src={crownImg[crownType]} alt={crownType} width="30" height="26.3"/>
             <div class="crown-count">{crown[crownType]}</div>
         </div>
     {/each}
@@ -59,7 +59,7 @@
 
     .crown-img {
         width: 30px;
-        height: auto;
+        height: 26.3px;
     }
     .crown-count {
         font-size: 18px;

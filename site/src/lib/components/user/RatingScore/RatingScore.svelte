@@ -6,12 +6,11 @@
         currentRatingScore: number;
         currentExp: number;
         ranking: number;
+        currentTier: ReturnType<typeof getTier>;
+        nextTier: ReturnType<typeof getNextTier>;
     }
 
-    let { currentRatingScore, currentExp, ranking }: Props = $props();
-
-    const currentTier = getTier(currentRatingScore);
-    const nextTier = getNextTier(currentTier.tierName, currentTier.tierGrade);
+    let { currentRatingScore, currentExp, ranking, currentTier, nextTier }: Props = $props();
 </script>
 
 <div class="container">

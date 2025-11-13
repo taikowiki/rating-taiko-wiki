@@ -1,7 +1,6 @@
 <script lang="ts">
     import type { getTier, getNextTier, User } from "$lib/module/user";
-    import { CONST } from "$lib/module/util";
-    import { getBG } from "./RatingInfo.svelte";
+    import { COLOR, CONST } from "$lib/module/util";
 
     interface Props {
         ratingScore: number;
@@ -69,17 +68,17 @@
 {#snippet progressBar(from: T, to: T, currentRatingScore: number)}
     <div class="progress-container">
         <div class="layer-1">
-            <div class="left" style={`background:${getBG(from.name)} text;`}>
+            <div class="left" style={`background:${COLOR.RATING.TIER_BG(from.name)} text;`}>
                 {getPercent(from.border, to.border, currentRatingScore)}
             </div>
-            <div class="right" style={`background:${getBG(to.name)} text;`}>
+            <div class="right" style={`background:${COLOR.RATING.TIER_BG(to.name)} text;`}>
                 {to.name.capitalize() + (to.grade ? " " + to.grade : "")}
             </div>
         </div>
         <div class="layer-2">
             <div
                 class="bar"
-                style={`background:${getBG(from.name)}; width: calc(100% * ${currentRatingScore - from.border} / ${to.border - from.border});`}
+                style={`background:${COLOR.RATING.TIER_BG(from.name)}; width: calc(100% * ${currentRatingScore - from.border} / ${to.border - from.border});`}
             ></div>
         </div>
     </div>

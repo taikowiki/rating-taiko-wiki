@@ -2,16 +2,17 @@
     import { User } from "$lib/module/user";
     import RatingSongGrid from "./RatingSongGrid.svelte";
     import RatingSongList from "./RatingSongList.svelte";
-    import gridImg from "$lib/assets/icon/rating-song-mode/grid.svg";
-    import listImg from "$lib/assets/icon/rating-song-mode/list.svg";
+    // import gridImg from "$lib/assets/icon/rating-song-mode/grid.svg";
+    // import listImg from "$lib/assets/icon/rating-song-mode/list.svg";
     import { getTheme } from "$lib/module/layout";
 
     interface Props {
         songRatingDatas: User.RatingData["songRatingDatas"];
         scoreData: User.ScoreData;
+        downloadImg: () => any;
     }
 
-    let { songRatingDatas, scoreData }: Props = $props();
+    let { songRatingDatas, scoreData, downloadImg }: Props = $props();
 
     let top50 = $derived(songRatingDatas.slice(0, 50));
     let after50 = $derived(songRatingDatas.slice(50));
@@ -24,7 +25,7 @@
     function setMode(mode_: "grid" | "list") {
         mode = mode_;
     }
-    function toggleAfter50Opened(){
+    function toggleAfter50Opened() {
         after50Opened = !after50Opened;
     }
 </script>
@@ -33,7 +34,7 @@
     {@render mainHeading()}
     {@render top50Heading()}
     {#if mode === "grid"}
-        <RatingSongGrid songRatingDatas={top50} {scoreData}/>
+        <RatingSongGrid songRatingDatas={top50} {scoreData} />
     {:else}
         <RatingSongList songRatingDatas={top50} />
     {/if}
@@ -51,6 +52,7 @@
     <h1>
         <div class="left">곡 레이팅</div>
         <div class="right">
+            <!--
             <img
                 class={`grid-img theme-${$theme}`}
                 class:selected={mode === "grid"}
@@ -65,13 +67,14 @@
                 alt="list"
                 onclick={() => setMode("list")}
             />
+            -->
         </div>
     </h1>
 {/snippet}
 {#snippet top50Heading()}
     <h2>
         <div class="left">상위 50곡</div>
-        <div class="right download">다운로드</div>
+        <div class="right download" onclick={downloadImg}>다운로드</div>
     </h2>
 {/snippet}
 {#snippet after50Heading()}
@@ -93,6 +96,7 @@
         align-items: center;
         margin-block: 10px;
 
+        /*
         & img {
             cursor: pointer;
 
@@ -123,6 +127,7 @@
             width: 30px;
             height: 30px;
         }
+        */
     }
 
     h2 {
@@ -132,7 +137,7 @@
         justify-content: space-between;
         align-items: center;
 
-        &.after50Heading{
+        &.after50Heading {
             cursor: pointer;
         }
     }
