@@ -83,7 +83,7 @@
     }
 
     .profile-container {
-        width: 300px;
+        width: 250px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -115,7 +115,7 @@
         }
 
         & .mydon {
-            width: 65%;
+            width: 70%;
             height: auto;
         }
     }

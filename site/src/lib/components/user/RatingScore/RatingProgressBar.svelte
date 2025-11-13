@@ -50,28 +50,36 @@
         },
         ratingScore,
     )}
-    {@render progressBar(
-        {
-            name: currentTier.tierName,
-            grade: currentTier.tierGrade,
-            border: currentGradeBorder,
-        },
-        {
-            name: nextTier.nextGrade.tierName,
-            grade: nextTier.nextGrade.grade,
-            border: nextGradeBorder,
-        },
-        ratingScore,
-    )}
+    {#if currentTier.tierName !== "master" && currentTier.tierName !== "grandmaster"}
+        {@render progressBar(
+            {
+                name: currentTier.tierName,
+                grade: currentTier.tierGrade,
+                border: currentGradeBorder,
+            },
+            {
+                name: nextTier.nextGrade.tierName,
+                grade: nextTier.nextGrade.grade,
+                border: nextGradeBorder,
+            },
+            ratingScore,
+        )}
+    {/if}
 </div>
 
 {#snippet progressBar(from: T, to: T, currentRatingScore: number)}
     <div class="progress-container">
         <div class="layer-1">
-            <div class="left" style={`background:${COLOR.RATING.TIER_BG(from.name)} text;`}>
+            <div
+                class="left"
+                style={`background:${COLOR.RATING.TIER_BG(from.name)} text;`}
+            >
                 {getPercent(from.border, to.border, currentRatingScore)}
             </div>
-            <div class="right" style={`background:${COLOR.RATING.TIER_BG(to.name)} text;`}>
+            <div
+                class="right"
+                style={`background:${COLOR.RATING.TIER_BG(to.name)} text;`}
+            >
                 {to.name.capitalize() + (to.grade ? " " + to.grade : "")}
             </div>
         </div>
