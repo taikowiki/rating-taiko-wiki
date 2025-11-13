@@ -1,6 +1,8 @@
 import type { SongData } from "@taiko-wiki/taikowiki-api/types";
 import { DBConnector, QueryBuilder } from "@yowza/db-handler";
 import type { InferDBSchema } from "@yowza/db-handler/types";
+import type { User } from "../user";
+import { CONST } from "../util";
 
 export const wikiDBConnector = new DBConnector({
     host: process.env.WIKI_DB_HOST,
@@ -69,7 +71,27 @@ export const queryBuilder = new QueryBuilder({
         UUID: ['string'],
         nickname: ['string'],
         bio: ['string']
-    }
+    },
+    'user/taikoProfile': {
+        order: ['number'],
+        UUID: ['string'],
+        taikoNumber: ['string'],
+        nickname: ['string'],
+        dan: ['number', 'null'],
+        danType: ['number', 'null'],
+        danFrame: ['number', 'null'],
+        dfc: ['number', 'null'],
+        fc: ['number', 'null'],
+        clear: ['number', 'null'],
+        rainbow: ['number', 'null'],
+        purple: ['number', 'null'],
+        pink: ['number', 'null'],
+        gold: ['number', 'null'],
+        silver: ['number', 'null'],
+        bronze: ['number', 'null'],
+        white: ['number', 'null'],
+    },
+    
 });
 export type DBSchema = InferDBSchema<typeof queryBuilder['dbSchema']>;
 
@@ -106,6 +128,52 @@ export const dbConverter = {
                 }
             });
             return songData as Pick<SongData, Exclude<K, 'order'>>;
+        },
+        taikoProfile(data: DBSchema['user/taikoProfile']): User.TaikoProfile {
+            return {
+                taikoNo: data.taikoNumber,
+                nickname: data.nickname,
+                dani: (data.dan && data.danType && data.danFrame) ? {
+                    dan: CONST.DANI.NIJIIRO_REGULAR_DAN[data.dan - 1],
+                    frame: (['silver', 'gold', 'rainbow'] as const)[data.danFrame - 1],
+                    type: (['red', 'gold'] as const)[data.danType - 1]
+                } : null,
+                crown: {
+                    donderfull: data.dfc ?? 0,
+                    gold: data.fc ?? 0,
+                    silver: data.clear ?? 0
+                },
+                badge: {
+                    rainbow: data.rainbow ?? 0,
+                    purple: data.purple ?? 0,
+                    pink: data.pink ?? 0,
+                    gold: data.gold ?? 0,
+                    silver: data.silver ?? 0,
+                    bronze: data.bronze ?? 0,
+                    white: data.white ?? 0,
+                }
+            }
+        }
+    },
+    toDB: {
+        taikoProfile(taikoProfile: User.TaikoProfile): Omit<DBSchema['user/taikoProfile'], 'order' | 'UUID'> {
+            return {
+                taikoNumber: taikoProfile.taikoNo,
+                nickname: taikoProfile.nickname,
+                dan: taikoProfile.dani ? CONST.DANI.NIJIIRO_REGULAR_DAN.indexOf(taikoProfile.dani.dan) + 1 : null,
+                danFrame: taikoProfile.dani ? ['silver', 'gold', 'rainbow'].indexOf(taikoProfile.dani.frame) + 1 : null,
+                danType: taikoProfile.dani ? ['red', 'gold'].indexOf(taikoProfile.dani.type) + 1 : null,
+                dfc: taikoProfile.crown.donderfull,
+                fc: taikoProfile.crown.gold,
+                clear: taikoProfile.crown.silver,
+                rainbow: taikoProfile.badge.rainbow,
+                purple: taikoProfile.badge.purple,
+                pink: taikoProfile.badge.pink,
+                gold: taikoProfile.badge.gold,
+                silver: taikoProfile.badge.rainbow,
+                bronze: taikoProfile.badge.bronze,
+                white: taikoProfile.badge.white,
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { User } from "$lib/module/user";
-    import CoefDet from "./CoefDet.svelte";
+    import Top50Statistics from "./Top50Statistics.svelte";
     import RatingHistory from "./RatingHistory.svelte";
 
     interface Props {
@@ -12,7 +12,7 @@
 </script>
 
 <h1>통계</h1>
-<CoefDet {top50} />
+<Top50Statistics {top50} />
 {#if ratingScoreHistory.length}
     <RatingHistory {ratingScoreHistory} />
 {/if}

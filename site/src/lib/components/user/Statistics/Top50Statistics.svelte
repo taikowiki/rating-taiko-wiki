@@ -23,8 +23,7 @@
     onMount(() => {
         const ctx = canvas?.getContext("2d");
         if (!ctx) return;
-        Chart.defaults.color = $theme === "light" ? "black" : "white";
-        Chart.defaults.borderColor = "gray";
+        Chart.defaults.borderColor = 'gray';
         const chart = new Chart(ctx, {
             type: "line",
             data: {
@@ -47,6 +46,8 @@
             },
             options: {
                 responsive: false,
+                backgroundColor: $theme === "light" ? 'white' : '#282828',
+                color: $theme === "light" ? "black" : "white"
             },
         });
         unsubscriber = theme.subscribe((value) => {
@@ -60,6 +61,7 @@
                     chart.options.scales.y.ticks.color =
                         value === "light" ? "black" : "white";
                 }
+                chart.options.backgroundColor = value === "light" ? 'white' : '#282828';
             }
             chart.update();
         });
