@@ -5,11 +5,16 @@ import type { User } from "../user";
  * 알림용 Dialog 띄우기
  */
 export function alertDialog(stringLike: any) {
+    const theme = window.localStorage.getItem('theme') ?? 'light';
+
     const dialog = document.createElement('dialog');
     dialog.classList.add('standard');
+    dialog.classList.add(`theme-${theme}`);
     dialog.innerText = `${stringLike}`;
 
     const closeBtn = document.createElement('button');
+    closeBtn.classList.add('standard');
+    closeBtn.classList.add(`theme-${theme}`);
     closeBtn.innerText = '닫기';
     closeBtn.addEventListener('click', () => {
         dialog?.close();

@@ -63,7 +63,7 @@
             <RatingScore {currentExp} {currentRatingScore} {ranking} {currentTier} {nextTier} />
         </div>
     </div>
-    <RatingSongGrid songRatingDatas={top50} {scoreData} />
+    <RatingSongGrid songRatingDatas={top50} {scoreData} forCapture={true}/>
 </div>
 
 <style lang="scss">

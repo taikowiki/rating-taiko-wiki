@@ -31,9 +31,10 @@
     interface Props {
         songRatingDatas: User.SongRatingData[];
         scoreData: User.ScoreData;
+        forCapture?: boolean;
     }
 
-    let { songRatingDatas, scoreData }: Props = $props();
+    let { songRatingDatas, scoreData, forCapture }: Props = $props();
     let scoreDataOpened = $state(songRatingDatas.map(() => false));
 
     const theme = getTheme();
@@ -53,7 +54,7 @@
     }
 </script>
 
-<div class="ratingsong-grid-container" class:isMobile={$isMobile}>
+<div class="ratingsong-grid-container" class:isMobile={typeof(forCapture) === "boolean" ? !forCapture : $isMobile}>
     {#each songRatingDatas as data, i}
         {@render songRatingDataView(data, i)}
     {/each}

@@ -20,9 +20,9 @@ const taikoProfile: User.TaikoProfile = {
         white: 4
     },
     dani: {
-        dan: 'kuroto',
+        dan: '1dan',
         type: 'gold',
-        frame: 'gold'
+        frame: 'rainbow'
     }
 };
 
@@ -36,7 +36,7 @@ const ratingData: User.RatingData = {
     currentRatingScore: sampleRatingData.currentRatingScore,
     currentExp: sampleRatingData.currentExp,
     songRatingDatas,
-    ratingScoreHistory: [],
+    ratingScoreHistory: [[new Date('2025-09-30'), sampleRatingData.currentRatingScore - 100],[new Date(), sampleRatingData.currentRatingScore]],
     lastUpload: new Date(),
     scoreData: sampleScoreData as unknown as User.ScoreData,
     ranking: 100
