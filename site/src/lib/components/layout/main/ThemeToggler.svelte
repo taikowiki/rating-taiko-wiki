@@ -62,7 +62,7 @@
             left: 0;
         }
         &.theme-dark {
-            background-color: #1c1c1c;
+            background-color: #0f0f0f;
             left: calc(100% - 22px);
         }
     }

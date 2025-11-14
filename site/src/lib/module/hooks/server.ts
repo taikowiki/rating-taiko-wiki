@@ -1,8 +1,7 @@
 import type { Handle } from "@sveltejs/kit";
 import { userDBController } from "../user/server";
 import auth from "@sveltekit-board/oauth";
-import { AUTH_KEY } from "$env/static/private";
-import { wikiDBConnector } from "../db/server";
+import { getThemeCookie } from "../layout/server";
 
 /**
  * 특정 Origin에서의 요청 허용
@@ -38,7 +37,7 @@ export function allowOrigin(allowedOrigin: string, allowedPath: string, option?:
 };
 
 export const authHook = auth([], {
-    key: AUTH_KEY,
+    key: process.env.AUTH_KEY,
     maxAge: 3600 * 24 * 7,
     autoRefreshMaxAge: true,
     withCredentials: true
@@ -61,4 +60,16 @@ export const userDataHook: Handle = async ({ event, resolve }) => {
 
 export interface AllowOriginOption {
     credentials?: boolean
+}
+
+/**
+ * 
+ */
+export const themeHook: Handle = async ({ event, resolve }) => {
+    const theme = getThemeCookie(event);
+    return resolve(event, {
+        transformPageChunk({ html }) {
+            return html.replace('$theme$', theme ?? 'light');
+        },
+    })
 }

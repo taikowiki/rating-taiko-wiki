@@ -18,6 +18,7 @@ export function initTheme(initValue?: 'light' | 'dark') {
                 document.body.classList.add('theme-dark');
             }
             window.cookieStore.set('theme', value);
+            window.localStorage.setItem('theme', value);
         })
     }
     setContext('theme', theme);
@@ -45,7 +46,7 @@ export function getTheme() {
  */
 export function initIsMobile(initValue?: boolean) {
     if (browser) {
-        const isMobile = writable(initValue ?? window.innerWidth <= 767);
+        const isMobile = writable(window.innerWidth <= 767);
         window.addEventListener('resize', () => {
             isMobile.set(window.innerWidth <= 767);
         }); setContext('isMobile', isMobile);
@@ -60,4 +61,17 @@ export function initIsMobile(initValue?: boolean) {
  */
 export function getIsMobile() {
     return getContext('isMobile') as Writable<boolean>;
+}
+
+/**
+ * Time zone을 context에 저장
+ */
+export function setTimezone(tz: string){
+    setContext('timezone', tz);
+}
+/**
+ * Context에서 time zone 가져오기
+ */
+export function getTimezone(){
+    return getContext('timezone') as string;
 }

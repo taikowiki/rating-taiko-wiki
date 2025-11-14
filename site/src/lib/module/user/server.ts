@@ -6,7 +6,7 @@ export const userDBController = {
     getDataByProvider: wikiDBConnector.defineDBHandler<[provider: string, providerId: string], User.Data | null>((provider, providerId) => {
         return async (run) => {
             const rows = await wikiQueryBuilder
-                .select('user/data', '*')
+                .select('user/data', () => ({ provider: 'provider', providerId: 'providerId', UUID: 'UUID', lang: 'lang' }))
                 .where(({ compare, column, value }) => [
                     compare(column('provider'), '=', value(provider)),
                     compare(column('providerId'), '=', value(providerId))
@@ -26,14 +26,17 @@ function parseUserData<const T extends Partial<InferDBSchema<typeof wikiQueryBui
     type Return = T extends Partial<InferDBSchema<typeof wikiQueryBuilder.dbSchema>['user/data']> ? Pick<User.Data, Extract<keyof T, keyof User.Data>> : never;
 
     const userData: Partial<User.Data> = {};
-    for (const key in data) {
-        if (key === "registerTimeStamp") continue;
-        if (key === "providerUserData") {
-            userData.providerUserData = JSON.parse(data[key] as string)
-        }
-        else {
-            userData[key as keyof User.Data] = data[key] as any;
-        }
+    if (data.UUID) {
+        userData.UUID = data.UUID;
+    }
+    if (data.provider) {
+        userData.provider = data.provider;
+    }
+    if (data.providerId) {
+        userData.providerId = data.providerId;
+    }
+    if (data.lang) {
+        userData.lang = data.lang;
     }
 
     return userData as Return;
