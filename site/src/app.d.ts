@@ -5,7 +5,9 @@ import { User } from "@sveltekit-board/oauth";
 
 declare global {
 	namespace App {
-		// interface Error {}
+		interface Error {
+			reason?: string;
+		}
 		interface Locals {
 			user?: User<any>;
 			userData: UserModule.Data | null;

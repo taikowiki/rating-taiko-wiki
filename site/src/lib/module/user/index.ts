@@ -278,7 +278,13 @@ export namespace User {
         export const SongScoreData = z.object({
             songNo: z.string(),
             title: z.string(),
-            difficulty: z.partialRecord(Difficulty, DifficultyScoreData)
+            difficulty: z.object({
+                easy: z.optional(DifficultyScoreData),
+                normal: z.optional(DifficultyScoreData),
+                hard: z.optional(DifficultyScoreData),
+                oni: z.optional(DifficultyScoreData),
+                ura: z.optional(DifficultyScoreData)
+            })
         });
         export const ScoreData = z.record(z.string(), SongScoreData);
 
