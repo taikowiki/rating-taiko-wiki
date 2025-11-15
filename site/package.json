@@ -24,6 +24,7 @@
 		"vite": "^7.1.10"
 	},
 	"dependencies": {
+		"@sveltejs/adapter-node": "^5.4.0",
 		"@sveltekit-board/oauth": "^0.8.0",
 		"@taiko-wiki/taiko-rating": "^1.9.1",
 		"@taiko-wiki/taikowiki-api": "1.1.2",
