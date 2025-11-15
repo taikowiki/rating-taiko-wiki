@@ -1,5 +1,5 @@
 import type { Handle } from "@sveltejs/kit";
-import { userDBController } from "../user/server";
+import { wikiUserDBController } from "../user/server";
 import auth from "@sveltekit-board/oauth";
 import { getThemeCookie } from "../layout/server";
 
@@ -48,7 +48,7 @@ export const authHook = auth([], {
  */
 export const userDataHook: Handle = async ({ event, resolve }) => {
     if (event.locals.user) {
-        let userData = await userDBController.getDataByProvider(event.locals.user.provider, event.locals.user.providerId);
+        let userData = await wikiUserDBController.getDataByProvider(event.locals.user.provider, event.locals.user.providerId);
         event.locals.userData = userData;
     }
     else {
