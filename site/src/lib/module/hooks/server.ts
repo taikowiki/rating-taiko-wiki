@@ -39,9 +39,8 @@ export function allowOrigin(allowedOrigin: string, allowedPath: string, option?:
 export const authHook = auth([], {
     key: process.env.AUTH_KEY,
     maxAge: 3600 * 24 * 7,
-    autoRefreshMaxAge: true,
+    autoRefreshMaxAge: false,
     withCredentials: true,
-    useSubdomain: true
 });
 
 /**
