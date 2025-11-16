@@ -8,6 +8,9 @@ export async function load(event: RequestEvent) {
     return {
         theme,
         isMobile,
-        timezone: process.env.TIMEZONE
+        timezone: process.env.TIMEZONE,
+        user: event.locals.userData ? {
+            UUID: event.locals.userData.UUID
+        } : null
     }
 }

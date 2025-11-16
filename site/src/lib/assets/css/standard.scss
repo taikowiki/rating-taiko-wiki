@@ -18,7 +18,7 @@ dialog.standard {
     }
 
     &.theme-dark {
-        background-color: black;
+        background-color: rgb(40, 40, 40);
         color: white;
         border: 2px solid rgb(105, 105, 105);
 
@@ -46,7 +46,7 @@ button.standard {
     }
 
     &.theme-dark {
-        background-color: rgb(48, 48, 48);
+        background-color: black;
         cursor: pointer;
 
         &:active {

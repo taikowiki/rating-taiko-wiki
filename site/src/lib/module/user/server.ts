@@ -89,6 +89,21 @@ export namespace userDBController {
             return (rows?.[0]?.count ?? 0) + 1;
         }
     });
+    export const updateProfile = defineDBHandler<[UUID: string, profile: Omit<User.Profile, 'UUID'>]>((UUID, profile) => {
+        const query = queryBuilder.insert('user/profile')
+            .set(({ value }) => ({
+                UUID: value(UUID),
+                nickname: value(profile.nickname),
+                bio: value(profile.bio)
+            }))
+            .onDuplicate('update', ({ raw }) => ({
+                nickname: raw('VALUES(`nickname`)'),
+                bio: raw('VALUES(`bio`)')
+            }));
+        return async (run) => {
+            await query.execute(run);
+        }
+    })
     export const updateRatingData = defineDBHandler<[UUID: string, ratingData: User.RatingData]>((UUID, ratingData) => {
         const dbRatingData = dbConverter.toDB.ratingData(ratingData);
         const ratingDataQuery = queryBuilder.insert('user/rating_data')
@@ -226,6 +241,19 @@ export namespace userDBController {
             await query.execute(run);
         }
     });
+    export const getProfile = defineDBHandler<[UUID: string], User.Profile | null>((UUID) => {
+        const query = queryBuilder.select('user/profile', '*')
+            .where(({ compare, column, value }) => [compare(column('UUID'), '=', value(UUID))]);
+        return async (run) => {
+            const rows = await query.execute(run);
+            if (rows.length === 0) return null;
+            return {
+                UUID: rows[0].UUID,
+                nickname: rows[0].nickname,
+                bio: rows[0].bio
+            }
+        }
+    })
     export const getTaikoProfile = defineDBHandler<[UUID: string], User.TaikoProfile | null>((UUID) => {
         const query = queryBuilder.select('user/taiko_profile', '*')
             .where(({ compare, column, value }) => [compare(column('UUID'), '=', value(UUID))]);
@@ -304,7 +332,7 @@ export async function migrateRatingData(UUID: string) {
         const scoreData: User.ScoreData = JSON.parse(donderData.scoreData) as Record<string, ScoreData>;
         Object.values(scoreData).forEach((songScoreData) => {
             Object.keys(songScoreData.difficulty).forEach((diff) => {
-                if(diff === "oni" || diff === "ura") return;
+                if (diff === "oni" || diff === "ura") return;
                 delete songScoreData.difficulty[diff as keyof typeof songScoreData.difficulty];
             })
         })
@@ -362,6 +390,10 @@ export async function migrateRatingData(UUID: string) {
             dani: null
         }
 
+        await userDBController.updateProfile(UUID, {
+            nickname: taikoProfile.nickname,
+            bio: ''
+        });
         await userDBController.updateTaikoProfile(UUID, taikoProfile);
         await userDBController.updateRatingData(UUID, ratingData);
 

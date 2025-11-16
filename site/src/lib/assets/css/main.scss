@@ -18,13 +18,11 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-
     body,
     body.theme-dark {
         color: white;
         background-color: #282828;
     }
-
     body.theme-light {
         color: black;
         background-color: white;
@@ -34,6 +32,17 @@ body {
 body.theme-dark {
     color: white;
     background-color: #282828;
+}
+
+// anchor
+a, a:visited{
+    text-decoration: none;
+}
+body.theme-light a{
+    color: #cf4844;
+}
+body.theme-dark a{
+    color: #e1a743;
 }
 
 h1 {
