@@ -33,6 +33,11 @@ jobs:
             - name: Zip builded application
               run: zip -r build.zip ./package.json ./build
 
+            - name: Check zip
+              run: |
+                pwd
+                ls -al
+
             - name: Package version
               id: pkg
               run: echo "version=$(bun --eval 'console.log(require(`./package.json`).version)')" >> $GITHUB_OUTPUT
