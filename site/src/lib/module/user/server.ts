@@ -186,7 +186,7 @@ export namespace userDBController {
         const rankingUpdateQuery = queryBuilder.update('user/rating_data', ({ raw }) => ({
             ranking: raw('`ranking` + 1')
         }))
-            .where(({ compare, column, value }) => [compare(column('ranking'), '>', value(dbRatingData.ranking))]);
+            .where(({ compare, column, value }) => [compare(value(dbRatingData.currentRatingScore), '>', column('currentRatingScore'))]);
 
         return async (run) => {
             await ratingDataQuery.execute(run);
