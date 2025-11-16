@@ -1,6 +1,6 @@
-import { error } from "console";
 import type { RequestEvent } from "../$types";
 import { userDBController, wikiUserDBController } from "$lib/module/user/server";
+import { error } from "@sveltejs/kit";
 
 export async function load({ locals }: RequestEvent) {
     if (!locals.userData) {

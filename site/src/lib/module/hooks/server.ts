@@ -40,7 +40,8 @@ export const authHook = auth([], {
     key: process.env.AUTH_KEY,
     maxAge: 3600 * 24 * 7,
     autoRefreshMaxAge: true,
-    withCredentials: true
+    withCredentials: true,
+    useSubdomain: true
 });
 
 /**
