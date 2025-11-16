@@ -36,7 +36,7 @@ jobs:
             - name: Check zip
               run: |
                 pwd
-                ls -al
+                ls
 
             - name: Package version
               id: pkg
