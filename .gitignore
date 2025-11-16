@@ -1,3 +1,7 @@
 statistics/**/*.json
 .DS_Store
+
 build-manager
+key
+
+.env
