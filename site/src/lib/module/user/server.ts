@@ -390,10 +390,13 @@ export async function migrateRatingData(UUID: string) {
             dani: null
         }
 
-        await userDBController.updateProfile(UUID, {
+        const profile = (await userDBController.getProfile(UUID)) ?? {
+            UUID,
             nickname: taikoProfile.nickname,
             bio: ''
-        });
+        }
+
+        await userDBController.updateProfile(UUID, profile);
         await userDBController.updateTaikoProfile(UUID, taikoProfile);
         await userDBController.updateRatingData(UUID, ratingData);
 

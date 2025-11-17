@@ -1,20 +1,58 @@
-import type { User } from '$lib/module/user/index.js';
-import { userDBController } from '$lib/module/user/server.js';
-import { error } from '@sveltejs/kit';
+import { userDBController, wikiUserDBController } from '$lib/module/user/server.js';
+import { error, redirect } from '@sveltejs/kit';
+import type { RequestEvent } from './$types';
 
-export async function load({ params }) {
+export async function load({ params, locals }: RequestEvent) {
     const UUID = params.UUID;
 
     const profile = await userDBController.getProfile(UUID);
-    if(!profile) throw error(404);
+    if (!profile) return await checkCanMigrateAndRedirect();
     const taikoProfile = await userDBController.getTaikoProfile(UUID);
-    if (!taikoProfile) throw error(404);
+    if (!taikoProfile) return await checkCanMigrateAndRedirect();
     const ratingData = await userDBController.getRatingData(UUID);
-    if (!ratingData) throw error(404);
+    if (!ratingData) return await checkCanMigrateAndRedirect();
 
     return {
         taikoProfile,
         profile,
         ratingData
+    }
+
+    async function checkCanMigrateAndRedirect() {
+        if (!locals.userData || locals.userData.UUID !== UUID) {
+            throw error(404)
+        }
+
+        const { canMigrate } = await testMigrate(UUID);
+        if (canMigrate) {
+            throw redirect(302, '/migrate');
+        }
+        throw error(404)
+    }
+}
+
+async function testMigrate(UUID: string) {
+    const donderData = await wikiUserDBController.getDonderData(UUID);
+    if (!donderData) {
+        return {
+            canMigrate: false,
+            reason: 'DONDER_DATA_NOT_EXISTS'
+        }
+    }
+    if (!donderData.scoreData) {
+        return {
+            canMigrate: false,
+            reason: 'SCORE_DATA_NOT_EXISTS'
+        }
+    }
+    if (!donderData.ratingData || typeof (donderData.currentRating) !== "number" || typeof (donderData.currentExp) !== "number") {
+        return {
+            canMigrate: false,
+            reason: `RATING_DATA_NOT_EXISTS`
+        }
+    }
+
+    return {
+        canMigrate: true
     }
 }
