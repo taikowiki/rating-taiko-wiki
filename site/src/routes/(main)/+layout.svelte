@@ -1,16 +1,25 @@
 <script lang="ts">
     import "$lib/assets/css/standard.scss";
-    import '$lib/assets/css/main.scss';
+    import "$lib/assets/css/main.scss";
     import Favicon from "$lib/components/layout/main/Favicon.svelte";
     import Header from "$lib/components/layout/main/Header.svelte";
     import Meta from "$lib/components/layout/main/Meta.svelte";
-    import { getTheme, initIsMobile, initTheme, setTimezone } from "$lib/module/layout/index.js";
+    import {
+        getTheme,
+        initIsMobile,
+        initTheme,
+        setProfile,
+        setTimezone,
+    } from "$lib/module/layout/index.js";
+    import { navigating, page } from "$app/state";
+    import loading from "$lib/assets/icon/loading.svg";
 
     let { children, data } = $props();
 
     initTheme(data.theme);
     initIsMobile(data.isMobile);
     setTimezone(data.timezone);
+    setProfile(data.user?.profile);
 
     const theme = getTheme();
 </script>
@@ -19,12 +28,32 @@
 <Favicon />
 <Header />
 <main class={`theme-${$theme}`}>
-    {@render children()}
+    {#if navigating.type}
+        <div class="loading-container">
+            <img class="loading" src={loading} alt="loading" />
+        </div>
+    {:else}
+        {@render children()}
+    {/if}
 </main>
 
 <style>
-    main{
-        padding-inline: 5px;
+    main {
+        width: 100%;
+        max-width: 1020px;
+        padding-inline: 10px;
         padding-block: 10px;
+        box-sizing: border-box;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .loading-container {
+        width: 100%;
+        text-align: center;
+    }
+    .loading {
+        width: 100%;
+        max-width: 200px;
     }
 </style>

@@ -1,6 +1,7 @@
 import { browser } from "$app/environment";
 import { getContext, setContext } from "svelte";
 import { writable, type Writable } from "svelte/store";
+import type { User } from "../user";
 
 /**
  * 테마 초기화 후 store을 context에 저장
@@ -66,12 +67,26 @@ export function getIsMobile() {
 /**
  * Time zone을 context에 저장
  */
-export function setTimezone(tz: string){
+export function setTimezone(tz: string) {
     setContext('timezone', tz);
 }
 /**
  * Context에서 time zone 가져오기
  */
-export function getTimezone(){
+export function getTimezone() {
     return getContext('timezone') as string;
+}
+
+/**
+ * context에 profile store 저장
+ */
+export function setProfile(profile?: User.Profile | null) {
+    const profileStore = writable(profile ?? null);
+    setContext('profile', profileStore);
+}
+/**
+ * context에서 profile store 가져오기
+ */
+export function getProfile() {
+    return getContext('profile') as Writable<User.Profile | null>;
 }
