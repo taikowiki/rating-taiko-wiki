@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { page } from "$app/state";
-    import PageTitle from "$lib/components/layout/main/PageTitle.svelte";
+    import PageTitle from '$lib/components/layout/main/Page-title.svelte';
     import TaikoProfileBadge from "$lib/components/user/Profile/TaikoProfileBadge.svelte";
     import TaikoProfileCrown from "$lib/components/user/Profile/TaikoProfileCrown.svelte";
     import TaikoProfileNameplate from "$lib/components/user/Profile/TaikoProfileNameplate.svelte";
