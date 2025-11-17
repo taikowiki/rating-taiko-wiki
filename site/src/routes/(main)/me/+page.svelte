@@ -1,6 +1,6 @@
 <script lang="ts">
     import { page } from "$app/state";
-    import PageTItle from "$lib/components/layout/main/PageTItle.svelte";
+    import PageTitle from "$lib/components/layout/main/PageTitle.svelte";
     import TaikoProfileBadge from "$lib/components/user/Profile/TaikoProfileBadge.svelte";
     import TaikoProfileCrown from "$lib/components/user/Profile/TaikoProfileCrown.svelte";
     import TaikoProfileNameplate from "$lib/components/user/Profile/TaikoProfileNameplate.svelte";
@@ -26,7 +26,7 @@
     }
 </script>
 
-<PageTItle title="내 프로필" />
+<PageTitle title="내 프로필" />
 
 <h1>프로필</h1>
 <div class="profile-container">
