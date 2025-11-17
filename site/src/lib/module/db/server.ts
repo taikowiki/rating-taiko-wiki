@@ -128,6 +128,14 @@ export const queryBuilder = new QueryBuilder({
         ratingScoreHistory: ['string'],
         lastUpload: ['date'],
         ranking: ['number']
+    },
+    'log': {
+        order: ['number'],
+        time: ['date'],
+        UUID: ['string', 'null'],
+        url: ['string'],
+        status: ['number'],
+        error: ['string', 'null']
     }
 });
 export type DBSchema = InferDBSchema<typeof queryBuilder['dbSchema']>;

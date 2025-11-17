@@ -39,6 +39,8 @@
         {:else}
             데이터 이전 오류
         {/if}
+    {:else if data.reason === "RATING_DATA_ALREADY_EXISTS"}
+        이미 레이팅 데이터가 존재합니다.
     {:else}
         데이터 이전이 불가능합니다.
     {/if}

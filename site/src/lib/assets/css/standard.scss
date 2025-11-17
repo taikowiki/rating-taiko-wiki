@@ -29,28 +29,75 @@ dialog.standard {
     }
 }
 
+// button
 button.standard {
     border-radius: 5px;
     color: white;
-    border: 1px solid black;
+    border: 1px solid;
     outline: 0;
     padding: 5px;
+}
 
-    &.theme-light {
-        background-color: rgb(207, 72, 68);
-        cursor: pointer;
+body.theme-light button.standard {
+    border-color: transparent;
+    background-color: rgb(207, 72, 68);
+    cursor: pointer;
 
-        &:active {
-            background-color: rgb(225, 114, 110);
-        }
+    &:active {
+        background-color: rgb(225, 114, 110);
     }
+}
 
-    &.theme-dark {
-        background-color: black;
-        cursor: pointer;
+body.theme-dark button.standard {
+    border-color: black;
+    background-color: black;
+    cursor: pointer;
 
-        &:active {
-            background-color: rgb(100, 100, 100);
-        }
+    &:active {
+        background-color: rgb(100, 100, 100);
+    }
+}
+
+// input - text
+input[type="text"].standard{
+    border-radius: 5px;
+    border: 1px solid;
+    outline: 0;
+    padding: 8px;
+}
+body.theme-light input[type="text"].standard{
+    border-color: rgb(207, 72, 68);
+    &:focus{
+        outline: 1px solid rgb(207, 72, 68);
+    }
+}
+body.theme-dark input[type="text"].standard{
+    color: white;
+    background-color: rgb(15, 15, 15);
+    border-color: rgb(100, 100, 100);
+    &:focus{
+        outline: 1px solid rgb(100, 100, 100);
+    }
+}
+
+// textarea
+textarea.standard{
+    border-radius: 5px;
+    border: 1px solid;
+    outline: 0;
+    padding: 8px;
+}
+body.theme-light textarea.standard{
+    border-color: rgb(207, 72, 68);
+    &:focus{
+        outline: 1px solid rgb(207, 72, 68);
+    }
+}
+body.theme-dark textarea.standard{
+    color: white;
+    background-color: rgb(15, 15, 15);
+    border-color: rgb(100, 100, 100);
+    &:focus{
+        outline: 1px solid rgb(100, 100, 100);
     }
 }

@@ -1,5 +1,5 @@
 import type { Handle } from "@sveltejs/kit";
-import { wikiUserDBController } from "../user/server";
+import { userDBController, wikiUserDBController } from "../user/server";
 import auth from "@sveltekit-board/oauth";
 import { getThemeCookie } from "../layout/server";
 
@@ -53,6 +53,11 @@ export const userDataHook: Handle = async ({ event, resolve }) => {
     }
     else {
         event.locals.userData = null;
+    }
+
+    if(event.locals.userData){
+        const profile = await userDBController.getProfile(event.locals.userData.UUID);
+        event.locals.profile = profile ?? null;
     }
 
     return await resolve(event);

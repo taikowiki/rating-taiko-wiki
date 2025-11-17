@@ -136,3 +136,11 @@ export async function createDaniImage({ canvasElement, context, dani }: { canvas
 
     return canvasElement.toDataURL();
 }
+
+export type RequestResult<T> = {
+    status: 'success',
+    data: T;
+} | {
+    status: 'error',
+    reason?: string;
+}
