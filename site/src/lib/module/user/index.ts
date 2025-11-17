@@ -309,6 +309,22 @@ export namespace User {
         });
 
         export const TierName = z.literal(CONST.RATING.TIER_NAME);
+
+        const Clear = z.object({
+            crown: z.nullable(Crown),
+            badge: z.nullable(Badge)
+        })
+        export const ClearData = z.object({
+            title: z.string(),
+            songNo: z.string(),
+            difficulty: z.object({
+                easy: z.optional(Clear),
+                normal: z.optional(Clear),
+                hard: z.optional(Clear),
+                oni: z.optional(Clear),
+                ura: z.optional(Clear)
+            })
+        })
     }
 
     export type Data = z.infer<typeof Schema.Data>;
@@ -324,4 +340,6 @@ export namespace User {
     export type Badge = z.infer<typeof Schema.Badge>;
 
     export type TierName = z.infer<typeof Schema.TierName>;
+
+    export type ClearData = z.infer<typeof Schema.ClearData>;
 }

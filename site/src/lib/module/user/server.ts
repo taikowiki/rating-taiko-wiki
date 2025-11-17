@@ -35,6 +35,30 @@ export namespace wikiUserDBController {
             return rows[0];
         }
     });
+    export const updateClearData = wikiDBConnector.defineDBHandler<[UUID: string, taikoProfile: User.TaikoProfile, clearDatas: User.ClearData[]]>((UUID, taikoProfile, clearDatas) => {
+        const clearDatasJson = JSON.stringify(clearDatas);
+        const donder = {
+            nickname: taikoProfile.nickname,
+            taikoNumber: taikoProfile.taikoNo,
+            myDon: `https://img.taiko-p.jp/imgsrc.php?v=&kind=mydon&fn=mydon_${taikoProfile.taikoNo}`
+        };
+
+        const query = wikiQueryBuilder.insert('user/donder_data')
+            .set(({ value }) => ({
+                UUID: value(UUID),
+                donder: value(JSON.stringify(donder)),
+                clearData: value(clearDatasJson)
+            }))
+            .onDuplicate('update', ({raw}) => ({
+                UUID: raw('VALUES(`UUID`)'),
+                donder: raw('VALUES(`donder`)'),
+                clearData: raw('VALUES(`clearData`)')
+            }))
+
+        return async (run) => {
+            await query.execute(run);
+        }
+    })
     function parseWikiUserData<const T extends Partial<InferDBSchema<typeof wikiQueryBuilder.dbSchema>['user/data']>>(data: T) {
         type Return = T extends Partial<InferDBSchema<typeof wikiQueryBuilder.dbSchema>['user/data']> ? Pick<User.Data, Extract<keyof T, keyof User.Data>> : never;
 

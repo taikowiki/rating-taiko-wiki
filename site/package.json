@@ -1,7 +1,7 @@
 {
 	"name": "rating.taiko.wiki",
 	"private": true,
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
@@ -32,7 +32,7 @@
 		"@yowza/db-handler": "^1.1.2",
 		"chart.js": "^4.5.1",
 		"css-filter-converter": "^1.0.110",
-		"hiroba-js": "^2.0.19",
+		"hiroba-js": "2.2.0",
 		"html2canvas": "^1.4.1",
 		"luxon": "^3.7.2",
 		"lzutf8": "^0.6.3",

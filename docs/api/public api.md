@@ -12,14 +12,16 @@ type Header = {
 };
 type Body = {
     taikoProfile: User.TaikoProfile;
-    scoreData: User.ScoreData;
+    scoreData?: User.ScoreData;
+    clearData?: ClearData[]; // from 'hiroba-js'
 }
 type ReturnBody = {
-    currentRatingScore: number;
+    currentRatingScore: number | null;
 }
 ```
 레이팅 계산을 위한 데이터를 업로드.
 서버에서는 업로드한 데이터로 새로 레이팅을 계산하여 업데이트.
+만약 clearData가 있을 경우 taiko.wiki의 db에 clearData를 업데이트.
 - 인증
     - 유저가 확인되지 않으면 403 응답
 - 압축
