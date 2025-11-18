@@ -6,8 +6,8 @@ export async function load(event: RequestEvent) {
     const theme = getThemeCookie(event);
     const isMobile = getIsMobileFromUA(event);
 
-    if(event.url.pathname !== "/me" && event.locals.userData && !event.locals.profile){
-        throw redirect(302, '/me');
+    if(event.url.pathname !== "/start" && event.locals.userData && !event.locals.profile){
+        throw redirect(302, '/start');
     }
 
     return {
