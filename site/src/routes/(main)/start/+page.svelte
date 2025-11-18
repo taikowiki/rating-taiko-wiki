@@ -1,9 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import PageTitle from "$lib/components/layout/main/Page-title.svelte";
-    import TaikoProfileBadge from "$lib/components/user/Profile/TaikoProfileBadge.svelte";
-    import TaikoProfileCrown from "$lib/components/user/Profile/TaikoProfileCrown.svelte";
-    import TaikoProfileNameplate from "$lib/components/user/Profile/TaikoProfileNameplate.svelte";
     import { getIsMobile, getProfile } from "$lib/module/layout";
     import { userRequestor } from "$lib/module/user/client.js";
     import { alertDialog } from "$lib/module/util/client.js";
@@ -11,8 +8,7 @@
     let { data } = $props();
     let profile = $state(data.profile);
     let agree = $state(false);
-
-    const isMobile = getIsMobile();
+    
     const profileStore = getProfile();
 
     async function updateProfile() {

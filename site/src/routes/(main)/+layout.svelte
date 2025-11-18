@@ -11,7 +11,7 @@
         setProfile,
         setTimezone,
     } from "$lib/module/layout/index.js";
-    import { navigating, page } from "$app/state";
+    import { navigating } from "$app/state";
     import loading from "$lib/assets/icon/loading.svg";
 
     let { children, data } = $props();
@@ -27,14 +27,13 @@
 <Meta />
 <Favicon />
 <Header />
+{#if navigating.type}
+    <div class="loading-container">
+        <img class="loading" src={loading} alt="loading" />
+    </div>
+{/if}
 <main class={`theme-${$theme}`}>
-    {#if navigating.type}
-        <div class="loading-container">
-            <img class="loading" src={loading} alt="loading" />
-        </div>
-    {:else}
-        {@render children()}
-    {/if}
+    {@render children()}
 </main>
 
 <style>

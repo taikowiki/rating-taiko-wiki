@@ -7,7 +7,7 @@
     let { data } = $props();
 </script>
 
-<PageTitle title={`랭킹 ${data.page}`}/>
+<PageTitle title={`랭킹 ${data.page}`} />
 <div class="container">
     {#each data.rankingData.datas as d}
         <RankingView

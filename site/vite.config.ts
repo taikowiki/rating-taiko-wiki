@@ -1,9 +1,9 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
-import viteMkcert from 'vite-plugin-mkcert';
+import mkcert from 'vite-plugin-mkcert';
 
 export default defineConfig({
-	plugins: [sveltekit(), viteMkcert()],
+	plugins: [mkcert(), sveltekit()],
 	server: {
 		https: true
 	}

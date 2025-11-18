@@ -12,11 +12,6 @@ const config = {
 		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 		adapter: adapter()
 	},
-	compilerOptions: {
-		experimental: {
-			async: true
-		}
-	},
 	onwarn(warning, defaultHandler) {
 		switch (warning.code) {
 			case "a11y_click_events_have_key_events":
