@@ -49,7 +49,7 @@ export namespace wikiUserDBController {
                 donder: value(JSON.stringify(donder)),
                 clearData: value(clearDatasJson)
             }))
-            .onDuplicate('update', ({raw}) => ({
+            .onDuplicate('update', ({ raw }) => ({
                 UUID: raw('VALUES(`UUID`)'),
                 donder: raw('VALUES(`donder`)'),
                 clearData: raw('VALUES(`clearData`)')
@@ -311,7 +311,30 @@ export namespace userDBController {
 
             return ratingData;
         }
-    })
+    });
+    export const getRankingData = defineDBHandler<[page: number], { datas: (Pick<User.RatingData, 'ranking' | 'currentRatingScore'> & Pick<User.Profile, 'nickname' | 'UUID'>)[]; count: number; }>((page) => {
+        const query = queryBuilder.select('user/rating_data', () => ({
+            ranking: 'ranking',
+            currentRatingScore: 'currentRatingScore'
+        }))
+            .join(
+                'user/profile',
+                () => ({ nickname: 'nickname', UUID: 'UUID' }),
+                'left',
+                ({ compare, column }) => [compare(column('user/rating_data.UUID'), '=', column('user/profile.UUID'))]
+            )
+            .orderBy('user/rating_data.ranking', 'asc')
+            .limit(50, (page - 1) * 50);
+        const countQuery = queryBuilder.select('user/rating_data', ({ count }) => ({ count: count() }))
+        return async (run) => {
+            const datas = await query.execute(run);
+            const count = await countQuery.execute(run).then((r) => r[0].count);
+            return {
+                datas,
+                count
+            }
+        }
+    });
 }
 
 /**

@@ -17,6 +17,11 @@
 <header class={`theme-${$theme}`} class:isMobile={$isMobile}>
     <div class="left" class:isMobile={$isMobile}>
         <img class="logo" src={logo} alt="logo" />
+        {#if !$isMobile}
+            <a class="navBtn" href="/ranking">
+                <span>랭킹</span>
+            </a>
+        {/if}
     </div>
     <div class="right" class:isMobile={$isMobile}>
         {#if !$isMobile}
@@ -81,7 +86,7 @@
         justify-content: center;
         align-items: center;
 
-        column-gap: 5px;
+        column-gap: 10px;
 
         &.isMobile {
             column-gap: 10px;
@@ -137,6 +142,7 @@
         & span {
             transform: translateY(-1px);
         }
+        /*
         & .icon {
             width: 20px;
             height: 20px;
@@ -144,5 +150,6 @@
                 filter: invert(100%);
             }
         }
+        */
     }
 </style>
