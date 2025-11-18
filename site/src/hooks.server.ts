@@ -1,5 +1,5 @@
 import { queryBuilder } from "$lib/module/db/server";
-import { authHook, themeHook, userDataHook } from "$lib/module/hooks/server";
+import { authHook, internalApiHook, themeHook, userDataHook } from "$lib/module/hooks/server";
 import { type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 import { runQuery } from "@yowza/db-handler";
@@ -7,7 +7,7 @@ import { runQuery } from "@yowza/db-handler";
 export const handle: Handle = async ({ event, resolve }) => {
     const now = new Date();
     try {
-        const s = sequence(authHook, userDataHook, themeHook);
+        const s = sequence(authHook, userDataHook, themeHook, internalApiHook);
         const response = await s({ event, resolve });
 
         await runQuery(async (run) => {

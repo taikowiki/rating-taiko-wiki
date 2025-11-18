@@ -2,6 +2,7 @@ import type { Handle } from "@sveltejs/kit";
 import { userDBController, wikiUserDBController } from "../user/server";
 import auth from "@sveltekit-board/oauth";
 import { getThemeCookie } from "../layout/server";
+import { error } from "@sveltejs/kit";
 
 /**
  * 특정 Origin에서의 요청 허용
@@ -55,7 +56,7 @@ export const userDataHook: Handle = async ({ event, resolve }) => {
         event.locals.userData = null;
     }
 
-    if(event.locals.userData){
+    if (event.locals.userData) {
         const profile = await userDBController.getProfile(event.locals.userData.UUID);
         event.locals.profile = profile ?? null;
     }
@@ -72,9 +73,30 @@ export interface AllowOriginOption {
  */
 export const themeHook: Handle = async ({ event, resolve }) => {
     const theme = getThemeCookie(event);
-    return resolve(event, {
+    return await resolve(event, {
         transformPageChunk({ html }) {
             return html.replace('$theme$', theme ?? 'light');
         },
     })
+}
+
+/**
+ * Internal API Key 검사
+ * @param param0 
+ * @returns 
+ */
+export const internalApiHook: Handle = async ({ event, resolve }) => {
+    if (!event.url.pathname.startsWith('/api/internal/')) {
+        return await resolve(event);
+    }
+
+    const apiKey = event.request.headers.get('x-internal-key');
+    if (!apiKey) {
+        throw error(401);
+    }
+    if (apiKey !== process.env.INTERNAL_API_KEY) {
+        throw error(403);
+    }
+
+    return await resolve(event);
 }

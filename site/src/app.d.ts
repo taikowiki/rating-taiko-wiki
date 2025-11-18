@@ -25,8 +25,15 @@ declare global {
 			WIKI_DB_USER: string;
 			WIKI_DB_TIMEZONE: string;
 			WIKI_DB_PASSWORD: string;
+			DB_HOST: string;
+			DB_PORT: string;
+			DB_DATABASE: string;
+			DB_USER: string;
+			DB_TIMEZONE: string;
+			DB_PASSWORD: string;
 			AUTH_KEY: string;
 			TIMEZONE: string;
+			INTERNAL_API_KEY: string;
 		}
 	}
 	interface Window {
