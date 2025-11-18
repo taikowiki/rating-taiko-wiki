@@ -335,6 +335,25 @@ export namespace userDBController {
             }
         }
     });
+    export const deleteData = defineDBHandler<[UUID: string]>((UUID) => {
+        return async (run) => {
+            await queryBuilder.delete('user/profile')
+                .where(({ compare, column, value }) => [compare(column('UUID'), '=', value(UUID))])
+                .execute(run);
+            await queryBuilder.delete('user/rating_data')
+                .where(({ compare, column, value }) => [compare(column('UUID'), '=', value(UUID))])
+                .execute(run);
+            await queryBuilder.delete('user/score_data')
+                .where(({ compare, column, value }) => [compare(column('UUID'), '=', value(UUID))])
+                .execute(run);
+            await queryBuilder.delete('user/song_rating_data')
+                .where(({ compare, column, value }) => [compare(column('UUID'), '=', value(UUID))])
+                .execute(run);
+            await queryBuilder.delete('user/taiko_profile')
+                .where(({ compare, column, value }) => [compare(column('UUID'), '=', value(UUID))])
+                .execute(run);
+        }
+    })
 }
 
 /**
