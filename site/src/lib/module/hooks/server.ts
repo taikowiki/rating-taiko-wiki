@@ -2,7 +2,7 @@ import type { Handle } from "@sveltejs/kit";
 import { userDBController, wikiUserDBController } from "../user/server";
 import auth from "@sveltekit-board/oauth";
 import { getThemeCookie } from "../layout/server";
-import { error } from "console";
+import { error } from "@sveltejs/kit";
 
 /**
  * 특정 Origin에서의 요청 허용
