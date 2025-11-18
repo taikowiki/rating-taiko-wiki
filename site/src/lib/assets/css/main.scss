@@ -9,6 +9,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
 // Noto Sans KR
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+// Kukde
+@font-face {
+    font-family: 'Kukde';
+    src: url('/font/Kukde.otf');
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'Kukde';
+    src: url('/font/Kukde-bold.otf');
+    font-weight: bold;
+}
 
 html,
 body {

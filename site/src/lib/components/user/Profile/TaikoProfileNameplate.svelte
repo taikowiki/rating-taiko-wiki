@@ -95,7 +95,8 @@
     }
     .nickname {
         font-size: 30px;
-        font-family: "Mochiy Pop One";
+        font-family: "Mochiy Pop One", "Kukde";
+        font-weight: bold;
         margin-top: -7px;
     }
 
