@@ -63,5 +63,5 @@ jobs:
               run: |
                 curl -X POST "https://rating-deploy.taiko.wiki" \
                 -H "Content-Type: application/json" \
-                -H "X-Internal-Key: ${{ secrets.INTERNAL_API_KEY }}"
+                -H "X-Internal-Key: ${{ secrets.INTERNAL_API_KEY }}" \
                 -d "{\"tag\": \"${{ github.ref_name }}\"}"
