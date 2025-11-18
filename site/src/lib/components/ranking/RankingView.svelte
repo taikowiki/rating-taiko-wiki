@@ -43,7 +43,7 @@
 
         box-sizing: border-box;
         text-decoration: none;
-        color: inherit;
+        color: white;
 
         border-radius: 5px;
 

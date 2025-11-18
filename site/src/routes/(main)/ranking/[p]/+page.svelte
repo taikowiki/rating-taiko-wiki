@@ -9,7 +9,7 @@
 
 <PageTitle title={`랭킹 ${data.page}`} />
 <div class="container">
-    {#each data.rankingData.datas as d}
+    {#each data.rankingData.datas as d (d.UUID)}
         <RankingView
             ranking={d.ranking}
             nickname={d.nickname}
