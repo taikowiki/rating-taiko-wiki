@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PageTitle from "$lib/components/layout/main/Page-title.svelte";
     import UserCapture from "$lib/components/user/Capture/UserCapture.svelte";
     import Profile from "$lib/components/user/Profile/Profile.svelte";
     import RatingSong from "$lib/components/user/RatingSong/RatingSong.svelte";
@@ -45,8 +46,8 @@
         drawRatingScore();
         drawProgressLeftText();
 
-        const imageDataURL = canvas.toDataURL('image/png');
-        const anchor = document.createElement('a');
+        const imageDataURL = canvas.toDataURL("image/png");
+        const anchor = document.createElement("a");
         anchor.href = imageDataURL;
         anchor.download = `Rating-${data.profile.nickname}.png`;
         anchor.click();
@@ -153,7 +154,12 @@
 
                     context.font = `bold ${16 * ratio}px 'Noto Sans JP'`;
                     context.textBaseline = "top";
-                    const color = COLOR.RATING.TIER[i === 0 ? nextTier.nextTierName : nextTier.nextGrade.tierName];
+                    const color =
+                        COLOR.RATING.TIER[
+                            i === 0
+                                ? nextTier.nextTierName
+                                : nextTier.nextGrade.tierName
+                        ];
                     if (Array.isArray(color)) {
                         const measure = context.measureText(text);
                         const gradient = context.createLinearGradient(
@@ -178,6 +184,7 @@
     const theme = getTheme();
 </script>
 
+<PageTitle title={data.profile.nickname} />
 <div class="container">
     <Profile
         profile={data.profile}

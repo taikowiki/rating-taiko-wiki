@@ -7,10 +7,11 @@ export async function load({ locals, url }: RequestEvent) {
         throw redirect(302, `https://taiko.wiki/auth/login?redirect_to=${encodeURIComponent(url.href)}`);
     }
 
-    let profile = await userDBController.getProfile(locals.userData.UUID);
+    let profile = locals.profile;
     if (profile) {
         throw redirect(302, `/me`);
     }
+    
     profile = {
         UUID: locals.userData.UUID,
         nickname: locals.userData.UUID,

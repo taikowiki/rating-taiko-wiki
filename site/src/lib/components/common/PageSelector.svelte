@@ -1,19 +1,7 @@
-<script lang="ts" module>
-    function getDisplayPages(pageNum: number, maxPage: number) {
-        let p: number[] = [];
-        for (
-            let i = Math.floor((pageNum - 1) / 10) * 10 + 1;
-            i <= Math.min(Math.ceil(pageNum / 10) * 10, maxPage);
-            i++
-        ) {
-            p.push(i);
-        }
-        return p;
-    }
-</script>
-
 <script lang="ts">
-    import { getIsMobile } from '$lib/module/layout';
+    import { getIsMobile } from "$lib/module/layout";
+    import arrow1 from '$lib/assets/icon/page_arrow1.svg';
+    import arrow2 from '$lib/assets/icon/page_arrow2.svg';
 
     interface Props {
         pageNum: number;
@@ -33,6 +21,18 @@
     let displayPages = getDisplayPages(pageNum, maxPage);
 
     const isMobile = getIsMobile();
+
+    function getDisplayPages(pageNum: number, maxPage: number) {
+        let p: number[] = [];
+        for (
+            let i = Math.floor((pageNum - 1) / 10) * 10 + 1;
+            i <= Math.min(Math.ceil(pageNum / 10) * 10, maxPage);
+            i++
+        ) {
+            p.push(i);
+        }
+        return p;
+    }
 </script>
 
 {#snippet goStart()}
@@ -44,7 +44,7 @@
                 movePage(1);
             }}
         >
-            <img src="/assets/icon/page_arrow2.svg" alt="" class=" scale" />
+            <img src={arrow2} alt="" class=" scale" />
         </div>
     {/if}
 {/snippet}
@@ -57,7 +57,7 @@
                 movePage(displayPages[0] - 10);
             }}
         >
-            <img src="/assets/icon/page_arrow1.svg" alt="" />
+            <img src={arrow1} alt="" />
         </div>
     {/if}
 {/snippet}
@@ -102,7 +102,7 @@
                 movePage(displayPages[displayPages.length - 1] + 1);
             }}
         >
-            <img src="/assets/icon/page_arrow1.svg" alt="" class="rotated" />
+            <img src={arrow1} alt="" class="rotated" />
         </div>
     {/if}
 {/snippet}
@@ -116,7 +116,7 @@
             }}
         >
             <img
-                src="/assets/icon/page_arrow2.svg"
+                src={arrow2}
                 alt=""
                 class="rotated scale"
             />

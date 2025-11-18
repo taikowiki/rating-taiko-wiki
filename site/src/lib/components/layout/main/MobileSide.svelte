@@ -10,7 +10,9 @@
     let { mobileSideOpened = $bindable() }: Props = $props();
 
     afterNavigate(() => {
-        mobileSideOpened = false;
+        if (mobileSideOpened) {
+            mobileSideOpened = false;
+        }
     });
 
     let swipeData = $state<{
@@ -79,8 +81,16 @@
             </div>
         </h2>
     {:else}
-        ㅗ
+        <a
+            class="navBtn"
+            href={`//taiko.wiki/auth/login?redirect_to=${encodeURIComponent(page.url.href)}`}
+        >
+            <span>로그인</span>
+        </a>
     {/if}
+    <a class="navBtn" href={`/ranking`}>
+        <span>랭킨</span>
+    </a>
     <a class="navBtn" href={`/myrating`}>
         <span>내 레이팅</span>
     </a>
@@ -139,9 +149,9 @@
         row-gap: 5px;
         margin-bottom: 20px;
 
-        & .btn-container{
+        & .btn-container {
             flex: 1 0 auto;
-            display:flex;
+            display: flex;
             column-gap: 5px;
             align-items: center;
             justify-content: flex-end;

@@ -6,11 +6,11 @@ export async function load({ params, locals }: RequestEvent) {
     const UUID = params.UUID;
 
     const profile = await userDBController.getProfile(UUID);
-    if (!profile) return await redirectWhenDataNotExists();
+    if (!profile) throw await redirectWhenDataNotExists();
     const taikoProfile = await userDBController.getTaikoProfile(UUID);
-    if (!taikoProfile) return await redirectWhenDataNotExists();
+    if (!taikoProfile) throw await redirectWhenDataNotExists();
     const ratingData = await userDBController.getRatingData(UUID);
-    if (!ratingData) return await redirectWhenDataNotExists();
+    if (!ratingData) throw await redirectWhenDataNotExists();
 
     return {
         taikoProfile,
@@ -20,15 +20,15 @@ export async function load({ params, locals }: RequestEvent) {
 
     async function redirectWhenDataNotExists() {
         if (!locals.userData || locals.userData.UUID !== UUID) {
-            throw error(404)
+            return error(404)
         }
 
         const { canMigrate } = await testMigrate(UUID);
         if (canMigrate) {
-            throw redirect(302, '/migrate');
+            return redirect(302, '/migrate');
         }
 
-        throw redirect(302, '/guide/upload');
+        return redirect(302, '/guide/upload');
     }
 }
 
