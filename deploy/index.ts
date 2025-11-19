@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { copyFileSync } from "fs";
+import { copyFileSync, existsSync, rmSync } from "fs";
 import { join } from "path";
 
 Bun.serve({
@@ -19,6 +19,9 @@ Bun.serve({
             }
 
             const dir = `/home/ubuntu/server/rating/build/${tag}`;
+            if (existsSync(dir)) {
+                rmSync(dir, { recursive: true, force: true });
+            }
 
             await Bun.write(
                 join(dir, 'build.zip'),
@@ -42,5 +45,5 @@ Bun.serve({
             return new Response();
         }
     },
-    port: 3001
+    port: process.env.PORT
 })
