@@ -121,7 +121,7 @@ class Uploader {
 
         // scoreData
         let firstRecentPlayed: RecentPlayed | undefined;
-        const scoreData: { [songNo: string]: ScoreData } = {};
+        const scoreData: { [songNo: string]: ScoreData } = this.scoreDataStore.getAll();
         for (let page = 1; ; page++) {
             const recentPlayedArr = await DonderHiroba.func.getRecentPlayed({ page });
             let stop = false;
@@ -174,7 +174,7 @@ class Uploader {
                     ...recentPlayed.data,
                     ranking: 0
                 }
-                this.scoreDataStore.set(song.songNo, recentPlayed.diff, diffScoreData);
+                this.scoreDataStore.set(song.songNo, recentPlayed.diff, diffScoreData, song.title);
                 if (recentPlayed.diff === "oni" || recentPlayed.diff === "ura") {
                     scoreData[song.songNo].difficulty[recentPlayed.diff] = diffScoreData;
                 }
@@ -274,7 +274,7 @@ class UploaderView {
 }
 
 class ScoreDataStore {
-    private data: { [songNo: string]: Omit<ScoreData, 'title'> };
+    private data: { [songNo: string]: ScoreData };
 
     constructor() {
         const dataInLocalStorage = window.localStorage.getItem('scoreData');
@@ -289,9 +289,10 @@ class ScoreDataStore {
     get(songNo: string, diff: Difficulty): DifficultyScoreData | null {
         return this.data?.[songNo]?.difficulty?.[diff] ?? null;
     }
-    set(songNo: string, diff: Difficulty, diffScoreData: DifficultyScoreData) {
+    set(songNo: string, diff: Difficulty, diffScoreData: DifficultyScoreData, title: string) {
         if (!this.data?.[songNo]) {
             this.data[songNo] = {
+                title,
                 songNo,
                 difficulty: {}
             }
@@ -305,6 +306,9 @@ class ScoreDataStore {
     reset() {
         this.data = {};
         this.update();
+    }
+    getAll(){
+        return structuredClone(this.data);
     }
 }
 
