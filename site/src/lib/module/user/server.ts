@@ -262,7 +262,7 @@ export namespace userDBController {
                 bronze: raw('VALUES(bronze)'),
                 white: raw('VALUES(white)'),
             }));
-        console.log(query.build())
+        //console.log(query.build())
         return async (run) => {
             await query.execute(run);
         }
