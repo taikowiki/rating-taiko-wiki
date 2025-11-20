@@ -5,6 +5,7 @@ import { sequence } from "@sveltejs/kit/hooks";
 import { runQuery } from "@yowza/db-handler";
 
 export const handle: Handle = async ({ event, resolve }) => {
+    console.log('cookie', event.cookies.getAll());
     const now = new Date();
     try {
         const s = sequence(
