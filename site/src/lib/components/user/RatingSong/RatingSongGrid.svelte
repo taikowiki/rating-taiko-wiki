@@ -63,7 +63,7 @@
 {#snippet songRatingDataView(data: User.SongRatingData, index: number)}
     {@const diffcolor = diffColor(data.difficulty)}
     {@const songScoreData =
-        scoreData[data.songNo].difficulty?.[data.difficulty]}
+        scoreData?.[data.songNo]?.difficulty?.[data.difficulty]}
     <a
         class={`ratingsong-data ${data.difficulty}`}
         style={`background-color: ${diffcolor};`}
