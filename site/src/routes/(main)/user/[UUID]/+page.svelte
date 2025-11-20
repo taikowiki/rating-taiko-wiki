@@ -184,43 +184,45 @@
     const theme = getTheme();
 </script>
 
-<PageTitle title={data.profile.nickname} />
-<div class="container">
-    <Profile
-        profile={data.profile}
-        taikoProfile={data.taikoProfile}
-        lastUpdate={data.ratingData.lastUpload}
-        currentRatingScore={data.ratingData.currentRatingScore}
-        currentExp={data.ratingData.currentExp}
-        ranking={data.ratingData.ranking}
-        {currentTier}
-        {nextTier}
-    />
-    <!--
+{#key data.taikoProfile}
+    <PageTitle title={data.profile.nickname} />
+    <div class="container">
+        <Profile
+            profile={data.profile}
+            taikoProfile={data.taikoProfile}
+            lastUpdate={data.ratingData.lastUpload}
+            currentRatingScore={data.ratingData.currentRatingScore}
+            currentExp={data.ratingData.currentExp}
+            ranking={data.ratingData.ranking}
+            {currentTier}
+            {nextTier}
+        />
+        <!--
     <RatingScore
         currentRatingScore={data.ratingData.currentRatingScore}
         currentExp={data.ratingData.currentExp}
         ranking={data.ratingData.ranking}
     />
     -->
-    <RatingSong
-        songRatingDatas={data.ratingData.songRatingDatas}
+        <RatingSong
+            songRatingDatas={data.ratingData.songRatingDatas}
+            scoreData={data.ratingData.scoreData}
+            {downloadImg}
+        />
+        <Statistics {top50} {ratingScoreHistory} />
+    </div>
+    <UserCapture
+        {top50}
         scoreData={data.ratingData.scoreData}
-        {downloadImg}
+        profile={data.profile}
+        taikoProfile={data.taikoProfile}
+        currentRatingScore={data.ratingData.currentRatingScore}
+        currentExp={data.ratingData.currentExp}
+        ranking={data.ratingData.ranking}
+        {currentTier}
+        {nextTier}
     />
-    <Statistics {top50} {ratingScoreHistory} />
-</div>
-<UserCapture
-    {top50}
-    scoreData={data.ratingData.scoreData}
-    profile={data.profile}
-    taikoProfile={data.taikoProfile}
-    currentRatingScore={data.ratingData.currentRatingScore}
-    currentExp={data.ratingData.currentExp}
-    ranking={data.ratingData.ranking}
-    {currentTier}
-    {nextTier}
-/>
+{/key}
 
 <style>
     .container {
