@@ -1,4 +1,4 @@
-import { CardData, DaniNo, Difficulty, DifficultyScoreData, DonderHiroba, RecentPlayed, ScoreData, Summary } from 'hiroba-js';
+import { CardData, ClearData, DaniNo, Difficulty, DifficultyScoreData, DonderHiroba, RecentPlayed, ScoreData, Summary } from 'hiroba-js';
 //@ts-expect-error
 import style from './main.css' with {type: 'text'};
 import TaikowikiApi, { REGULAR_DAN } from '@taiko-wiki/taikowiki-api';
@@ -30,7 +30,7 @@ class Uploader {
         }
 
         this.view.displayUploadBtn(() => this.upload(cd));
-        this.view.displayCacheResetBtn(() => this.scoreDataStore.reset());
+        this.view.displayCacheResetBtn(() => this.resetCache());
     }
 
     private async checkWikiLogined(): Promise<boolean> {
@@ -74,16 +74,18 @@ class Uploader {
 
             const clearData = await DonderHiroba.func.getClearData();
 
-            const scoreData = await this.fetchScoreData();
+            const scoreData = await this.fetchScoreData(clearData);
+
+            const uploadData = {
+                taikoProfile,
+                clearData,
+                scoreData
+            };
 
             this.view.displayAlert("Uploading...");
             await fetch('https://rating.taiko.wiki/api/v1/rating/upload', {
                 method: 'post',
-                body: LZUTF8.compress(JSON.stringify({
-                    taikoProfile,
-                    clearData,
-                    scoreData
-                }), { outputEncoding: 'Base64' }),
+                body: LZUTF8.compress(JSON.stringify(uploadData), { outputEncoding: 'Base64' }),
                 credentials: 'include',
                 headers: {
                     'content-type': 'application/json'
@@ -97,7 +99,7 @@ class Uploader {
         }
 
         this.view.displayUploadBtn(() => this.upload(cardData));
-        this.view.displayCacheResetBtn(() => this.scoreDataStore.reset());
+        this.view.displayCacheResetBtn(() => this.resetCache());
     }
 
     private async fetchDani() {
@@ -115,7 +117,7 @@ class Uploader {
         return null;
     }
 
-    private async fetchScoreData() {
+    private async fetchScoreData(clearData: ClearData[]) {
         const taikowiki = new TaikowikiApi();
         const songs = await taikowiki.songAll();
 
@@ -128,8 +130,19 @@ class Uploader {
 
             for (let i = 0; i < recentPlayedArr.length; i++) {
                 const recentPlayed = recentPlayedArr[i];
-                const song = songs.find((d) => d.title === recentPlayed.title);
-                if (!song) continue;
+                if(recentPlayed.diff !== "oni" && recentPlayed.diff !== "ura") continue;
+
+                let song = songs.find((song) => {
+                    const titleSame = song.title === recentPlayed.title;
+                    if (titleSame) return titleSame;
+                    const songNoFromClearData = clearData.find((c) => c.title === recentPlayed.title)?.songNo;
+                    if (!songNoFromClearData) return false;
+                    return song.songNo === songNoFromClearData;
+                })
+                if (!song) {
+                    console.error(recentPlayed);
+                    continue;
+                };
 
                 // 처음 데이터와 비교
                 if (firstRecentPlayed
@@ -175,13 +188,16 @@ class Uploader {
                     ranking: 0
                 }
                 this.scoreDataStore.set(song.songNo, recentPlayed.diff, diffScoreData, song.title);
-                if (recentPlayed.diff === "oni" || recentPlayed.diff === "ura") {
-                    scoreData[song.songNo].difficulty[recentPlayed.diff] = diffScoreData;
-                }
+                scoreData[song.songNo].difficulty[recentPlayed.diff] = diffScoreData;
             }
             if (stop) break;
         }
         return scoreData;
+    }
+
+    private resetCache() {
+        this.scoreDataStore.reset();
+        this.view.displayAlert("Cache reset.")
     }
 }
 
@@ -263,7 +279,7 @@ class UploaderView {
         this.cacheResetBtnContainer.innerHTML = '';
 
         const cacheResetBtn = document.createElement('button');
-        cacheResetBtn.innerText = 'CacheReset';
+        cacheResetBtn.innerText = 'Cache reset';
         cacheResetBtn.addEventListener('click', clickHandler);
         this.cacheResetBtnContainer.appendChild(cacheResetBtn);
     }
@@ -307,7 +323,7 @@ class ScoreDataStore {
         this.data = {};
         this.update();
     }
-    getAll(){
+    getAll() {
         return structuredClone(this.data);
     }
 }
