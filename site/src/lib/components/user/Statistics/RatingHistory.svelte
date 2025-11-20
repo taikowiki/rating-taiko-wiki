@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { User } from "$lib/module/user";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { Chart } from "chart.js";
     import { getTheme, getTimezone } from "$lib/module/layout";
     import type { Unsubscriber } from "svelte/store";
@@ -15,46 +15,74 @@
     let canvas = $state<HTMLCanvasElement>();
     let unsubscriber = $state<Unsubscriber>();
 
+    let observer: IntersectionObserver;
+
     onMount(() => {
-        const ctx = canvas?.getContext("2d");
-        if (!ctx) return;
-        Chart.defaults.color = $theme === "light" ? "black" : "white";
-        Chart.defaults.borderColor = "gray";
-        let labels = [null, ...ratingScoreHistory.map(([date]) => DateTime.fromJSDate(date, {zone: getTimezone()}).toFormat('yyyy-MM-dd')), null];
-        let data = [null, ...ratingScoreHistory.map(([_, score]) => score), null];
-        const chart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels,
-                datasets: [
-                    {
-                        label: "Rating score",
-                        data,
-                        borderColor: "skyblue",
+        observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!(entry.target instanceof HTMLCanvasElement)) return;
+                const ctx = entry.target?.getContext("2d");
+                if (!ctx) return;
+                Chart.defaults.color = $theme === "light" ? "black" : "white";
+                Chart.defaults.borderColor = "gray";
+                let labels = [
+                    null,
+                    ...ratingScoreHistory.map(([date]) =>
+                        DateTime.fromJSDate(date, {
+                            zone: timezone,
+                        }).toFormat("yyyy-MM-dd"),
+                    ),
+                    null,
+                ];
+                let data = [
+                    null,
+                    ...ratingScoreHistory.map(([_, score]) => score),
+                    null,
+                ];
+                const chart = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels,
+                        datasets: [
+                            {
+                                label: "Rating score",
+                                data,
+                                borderColor: "skyblue",
+                            },
+                        ],
                     },
-                ],
-            },
-            options: {
-                responsive: false,
-            },
+                    options: {
+                        responsive: false,
+                    },
+                });
+                unsubscriber = theme.subscribe((value) => {
+                    if (chart.options) {
+                        chart.options.color =
+                            value === "light" ? "black" : "white";
+                        if (chart.options.scales?.x?.ticks) {
+                            chart.options.scales.x.ticks.color &&=
+                                value === "light" ? "black" : "white";
+                        }
+                        if (chart.options.scales?.y?.ticks) {
+                            chart.options.scales.y.ticks.color =
+                                value === "light" ? "black" : "white";
+                        }
+                    }
+                    chart.update();
+                });
+                observer.unobserve(entry.target);
+            });
         });
-        unsubscriber = theme.subscribe((value) => {
-            if (chart.options) {
-                chart.options.color = value === "light" ? "black" : "white";
-                if (chart.options.scales?.x?.ticks) {
-                    chart.options.scales.x.ticks.color &&=
-                        value === "light" ? "black" : "white";
-                }
-                if (chart.options.scales?.y?.ticks) {
-                    chart.options.scales.y.ticks.color =
-                        value === "light" ? "black" : "white";
-                }
-            }
-            chart.update();
-        });
+        if (canvas) {
+            observer.observe(canvas);
+        }
     });
+    onDestroy(() => {
+        observer?.disconnect();
+    })
 
     const theme = getTheme();
+    const timezone = getTimezone();
 </script>
 
 <h2>히스토리</h2>
