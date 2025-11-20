@@ -13,23 +13,26 @@ export function allowOrigin(allowedOrigin: string, allowedPath: string, option?:
         if (!origin) return await resolve(event);
 
         if ((allowedOrigin === "*" || origin === allowedOrigin) && event.url.pathname.startsWith(allowedPath)) {
-            event.setHeaders({
-                "Access-Control-Allow-Origin": origin,
-                "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-                "Access-Control-Allow-Headers": "Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
-            })
-            if (option) {
-                if (option?.credentials === true) {
-                    event.setHeaders({
-                        "Access-Control-Allow-Credentials": "true"
-                    })
+            try {
+                event.setHeaders({
+                    "Access-Control-Allow-Origin": origin,
+                    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                    "Access-Control-Allow-Headers": "Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
+                })
+                if (option) {
+                    if (option?.credentials === true) {
+                        event.setHeaders({
+                            "Access-Control-Allow-Credentials": "true"
+                        })
+                    }
+                }
+                if (event.request.method === "OPTIONS") {
+                    return new Response(null, {
+                        status: 204
+                    });
                 }
             }
-            if (event.request.method === "OPTIONS") {
-                return new Response(null, {
-                    status: 204
-                });
-            }
+            catch { }
         }
 
         return await resolve(event);
