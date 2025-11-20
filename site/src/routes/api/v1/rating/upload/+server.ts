@@ -7,7 +7,7 @@ import LZUTF8 from "lzutf8";
 import z from "zod";
 
 export async function POST(event: RequestEvent) {
-    console.log(event.locals);
+    console.log(event.cookies.getAll());
     if (!event.locals.userData) {
         throw error(403);
     }
