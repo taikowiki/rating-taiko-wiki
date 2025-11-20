@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@taiko-wiki/taikowiki-api": "^1.1.2",
+    "hiroba-js": "2.3.0",
+    "lzutf8": "^0.6.3"
+  },
+  "scripts": {
+    "build": "bun build index.ts --outdir=dist --bundle --minify --target=browser"
+  }
+}

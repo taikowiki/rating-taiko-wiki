@@ -1,0 +1,56 @@
+.uploader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 5px;
+
+    width: 100%;
+    max-width: 310px;
+
+    margin-left: auto;
+    margin-right: auto;
+    
+    box-sizing: border-box;
+    padding-inline: 5px;
+    padding-block: 10px;
+
+    & .cardData-container {
+        width: 100%;
+        display:flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: 5px;
+
+        & .mydon {
+            width: 150px;
+            height: auto;
+        }
+
+        & .profile-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            border: 1px solid black;
+            border-radius: 10px;
+
+            & .taikono {
+                font-size: 13px;
+            }
+
+            & .nickname {
+                font-weight: bold;
+            }
+        }
+    }
+
+    & .alert {
+        text-align: center;
+
+        &.error {
+            color: red;
+            font-weight: bold;
+        }
+    }
+}
