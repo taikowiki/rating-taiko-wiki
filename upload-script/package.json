@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@taiko-wiki/taikowiki-api": "^1.1.2",
-    "hiroba-js": "2.3.0",
+    "hiroba-js": "2.3.1",
     "lzutf8": "^0.6.3"
   },
   "scripts": {

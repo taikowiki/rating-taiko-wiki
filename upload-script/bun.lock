@@ -4,7 +4,7 @@
     "": {
       "dependencies": {
         "@taiko-wiki/taikowiki-api": "^1.1.2",
-        "hiroba-js": "2.3.0",
+        "hiroba-js": "2.3.1",
         "lzutf8": "^0.6.3",
       },
     },
@@ -120,7 +120,7 @@
 
     "he": ["he@1.2.0", "", { "bin": { "he": "bin/he" } }, "sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw=="],
 
-    "hiroba-js": ["hiroba-js@2.3.0", "", { "dependencies": { "cheerio": "^1.0.0-rc.12", "fs": "^0.0.1-security", "jimp": "^1.6.0", "node-html-parser": "^7.0.1", "npm": "^11.4.2", "set-cookie-parser": "^2.7.1" } }, "sha512-ZY6q9l4GAtu36hV/I60zN9nRE2kBUwRCJERFl9a251KFwuygT0WHyFov1YUYNv8NIGvM5+qakCoqg84P6xXtAA=="],
+    "hiroba-js": ["hiroba-js@2.3.1", "", { "dependencies": { "cheerio": "^1.0.0-rc.12", "fs": "^0.0.1-security", "jimp": "^1.6.0", "node-html-parser": "^7.0.1", "npm": "^11.4.2", "set-cookie-parser": "^2.7.1" } }, "sha512-ulSgZjO5SBx1ICLxLWbO2MSS9+oBAUJGfgAmnSYftdlv9SY3dmeEPnHVEFItN6XmrWcFjn3Bl0znE5NvFyTSUA=="],
 
     "htmlparser2": ["htmlparser2@10.0.0", "", { "dependencies": { "domelementtype": "^2.3.0", "domhandler": "^5.0.3", "domutils": "^3.2.1", "entities": "^6.0.0" } }, "sha512-TwAZM+zE5Tq3lrEHvOlvwgj1XLWQCtaaibSN11Q+gGBAS7Y1uZSWwXXRe4iF6OXnaq1riyQAPFOBtYc77Mxq0g=="],
 
