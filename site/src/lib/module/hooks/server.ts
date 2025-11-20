@@ -27,9 +27,11 @@ export function allowOrigin(allowedOrigin: string, allowedPath: string, option?:
                     }
                 }
                 if (event.request.method === "OPTIONS") {
+                    const response = await resolve(event);
                     return new Response(null, {
+                        ...response,
                         status: 204
-                    });
+                    })
                 }
             }
             catch { }
