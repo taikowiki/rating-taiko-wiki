@@ -127,6 +127,11 @@ export namespace userDBController {
         return async (run) => {
             await query.execute(run);
         }
+    });
+    export const updateAllRanking = defineDBHandler(() => {
+        return async(run) => {
+            await run("UPDATE `user/rating_data` t1 SET `ranking` = (SELECT COUNT(*) + 1 FROM `user/rating_data` t2 WHERE t2.`currentRatingScore` > t1.`currentRatingScore`)")
+        }
     })
     export const updateRatingData = defineDBHandler<[UUID: string, ratingData: User.RatingData]>((UUID, ratingData) => {
         const dbRatingData = dbConverter.toDB.ratingData(ratingData);
@@ -207,10 +212,6 @@ export namespace userDBController {
                     ratingScore: raw('VALUES(ratingScore)'),
                 }));
         });
-        const rankingUpdateQuery = queryBuilder.update('user/rating_data', ({ raw }) => ({
-            ranking: raw('`ranking` + 1')
-        }))
-            .where(({ compare, column, value }) => [compare(value(dbRatingData.currentRatingScore), '>', column('currentRatingScore'))]);
 
         return async (run) => {
             await ratingDataQuery.execute(run);
@@ -220,7 +221,7 @@ export namespace userDBController {
             for (const query of songRatingDataQuery) {
                 await query.execute(run);
             }
-            await rankingUpdateQuery.execute(run);
+            await userDBController.updateAllRanking.getCallback()(run);
         }
     });
     export const updateTaikoProfile = defineDBHandler<[UUID: string, taikoProfile: User.TaikoProfile]>((UUID, taikoProfile) => {
