@@ -50,7 +50,7 @@ class Uploader {
 
         try {
             this.view.displayAlert("Fetching...");
-            const dani = await this.fetchDani();
+            const dani = await this.fetchDani(cardData);
 
             const taikoProfile: TaikoProfile = {
                 nickname: cardData.nickname,
@@ -102,8 +102,8 @@ class Uploader {
         this.view.displayCacheResetBtn(() => this.resetCache());
     }
 
-    private async fetchDani() {
-        const daniPass = await DonderHiroba.func.getDaniPass({});
+    private async fetchDani(cardData: CardData) {
+        const daniPass = await DonderHiroba.func.getDaniPass({taikoNo: cardData.taikoNumber});
         for (let i = 19; i >= 1; i--) {
             const pass = daniPass?.[i as DaniNo];
             if (!pass) continue;
