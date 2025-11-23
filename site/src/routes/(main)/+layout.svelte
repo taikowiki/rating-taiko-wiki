@@ -10,6 +10,8 @@
         initTheme,
         setProfile,
         setTimezone,
+        initLang,
+        getLang
     } from "$lib/module/layout/index.js";
     import { navigating } from "$app/state";
     import loading from "$lib/assets/icon/loading.svg";
@@ -20,8 +22,10 @@
     initIsMobile(data.isMobile);
     setTimezone(data.timezone);
     setProfile(data.user?.profile);
+    initLang(data.lang);
 
     const theme = getTheme();
+    const lang = getLang();
 </script>
 
 <Meta />

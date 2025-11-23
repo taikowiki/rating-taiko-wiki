@@ -8,7 +8,7 @@
 ### `POST` `/api/internal/delete-user/`
 ```ts
 type Body = {
-    UUID: string
+    UUID: string;
 }
 ```
 특정 유저를 삭제할 때 사용. DB에서 해당 유저와 관련된 모든 데이터 삭제.

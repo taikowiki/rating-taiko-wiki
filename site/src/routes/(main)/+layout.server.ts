@@ -1,9 +1,10 @@
-import { getIsMobileFromUA, getThemeCookie } from "$lib/module/layout/server";
+import { getIsMobileFromUA, getLangCookie, getThemeCookie } from "$lib/module/layout/server";
 import { redirect } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 
 export async function load(event: RequestEvent) {
     const theme = getThemeCookie(event);
+    const lang = getLangCookie(event);
     const isMobile = getIsMobileFromUA(event);
 
     if(event.url.pathname !== "/start" && event.locals.userData && !event.locals.profile){
@@ -12,6 +13,7 @@ export async function load(event: RequestEvent) {
 
     return {
         theme,
+        lang,
         isMobile,
         timezone: process.env.TIMEZONE,
         user: event.locals.userData ? {

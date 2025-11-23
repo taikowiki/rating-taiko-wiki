@@ -129,7 +129,7 @@ export namespace userDBController {
         }
     });
     export const updateAllRanking = defineDBHandler(() => {
-        return async(run) => {
+        return async (run) => {
             await run("UPDATE `user/rating_data` t1 SET `ranking` = (SELECT COUNT(*) + 1 FROM `user/rating_data` t2 WHERE t2.`currentRatingScore` > t1.`currentRatingScore`)")
         }
     })
@@ -354,6 +354,7 @@ export namespace userDBController {
             await queryBuilder.delete('user/taiko_profile')
                 .where(({ compare, column, value }) => [compare(column('UUID'), '=', value(UUID))])
                 .execute(run);
+            await userDBController.updateAllRanking.getCallback()(run);
         }
     })
 }

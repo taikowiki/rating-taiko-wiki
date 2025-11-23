@@ -256,7 +256,13 @@ export namespace CONST {
             bronze: TIER_INTERVAL * 1,
             pearl: 0
         } as const;
-    }
+    };
+    export const LANG = ['ko', 'ja', 'en'] as const;
+    export const LANG_CODE_MAP = {
+        'ko-KR': 'ko',
+        'ja-JP': 'ja',
+        'en-US': 'en'
+    } as const;
 }
 
 /* String.prototype.capitalize */
@@ -268,4 +274,8 @@ declare global {
 String.prototype.capitalize = function () {
     if (!this) return this;
     return this[0].toUpperCase() + this.slice(1);
+}
+
+export namespace Util{
+    export type LANG = typeof CONST.LANG[number];
 }
