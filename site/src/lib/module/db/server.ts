@@ -272,7 +272,7 @@ export const dbConverter = {
                 purple: taikoProfile.badge.purple,
                 pink: taikoProfile.badge.pink,
                 gold: taikoProfile.badge.gold,
-                silver: taikoProfile.badge.rainbow,
+                silver: taikoProfile.badge.silver,
                 bronze: taikoProfile.badge.bronze,
                 white: taikoProfile.badge.white,
             }

@@ -109,11 +109,11 @@
      * 표준편차 구하기
      */
     function getSD(AVG: number) {
-        let variance = 0;
+        let deviationSquareSum = 0;
         for (let x = 0; x < top50.length; x++) {
-            variance += (top50[x].ratingScore - AVG) ** 2;
+            deviationSquareSum += (top50[x].ratingScore - AVG) ** 2;
         }
-        return Math.sqrt(variance / top50.length);
+        return Math.sqrt(deviationSquareSum / top50.length);
     }
 
     /**
