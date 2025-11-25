@@ -21,7 +21,7 @@ export namespace userRequestor {
         }
     }
 
-    export async function updateProfile(profile: User.Profile): Promise<RequestResult<void>> {
+    export async function updateProfile(profile: User.Profile & { option?: User.ProfileOption }): Promise<RequestResult<void>> {
         const response = await fetch('/api/private/profile', {
             method: 'post',
             body: JSON.stringify(profile)

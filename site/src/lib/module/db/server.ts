@@ -72,6 +72,10 @@ export const queryBuilder = new QueryBuilder({
         nickname: ['string'],
         bio: ['string']
     },
+    'user/profile_option': {
+        UUID: ['string'],
+        hideDan: ['number']
+    },
     'user/taiko_profile': {
         order: ['number'],
         UUID: ['string'],
@@ -246,7 +250,7 @@ export const dbConverter = {
                 ratingScore: data.ratingScore
             };
         },
-        ratingData(data: Omit<DBSchema['user/rating_data'], 'UUID'>): Omit<User.RatingData, 'scoreData' | 'songRatingDatas'>{
+        ratingData(data: Omit<DBSchema['user/rating_data'], 'UUID'>): Omit<User.RatingData, 'scoreData' | 'songRatingDatas'> {
             return {
                 currentRatingScore: data.currentRatingScore,
                 currentExp: data.currentExp,
@@ -254,6 +258,11 @@ export const dbConverter = {
                 ratingScoreHistory: (JSON.parse(data.ratingScoreHistory) as [number, number][]).map((e) => [new Date(e[0]), e[1]]),
                 lastUpload: data.lastUpload
 
+            }
+        },
+        profileOption(data: Omit<DBSchema['user/profile_option'], 'UUID'>): User.ProfileOption {
+            return {
+                hideDan: Boolean(data.hideDan)
             }
         }
     },
@@ -303,7 +312,7 @@ export const dbConverter = {
             });
             return datas;
         },
-        songRatingData(data: User.SongRatingData): Omit<DBSchema['user/song_rating_data'], 'UUID'>{
+        songRatingData(data: User.SongRatingData): Omit<DBSchema['user/song_rating_data'], 'UUID'> {
             return {
                 title: data.title,
                 songNo: data.songNo,
@@ -315,13 +324,18 @@ export const dbConverter = {
                 ratingScore: data.ratingScore
             }
         },
-        ratingData(data: Omit<User.RatingData, 'scoreData' | 'songRatingDatas'>): Omit<DBSchema['user/rating_data'], 'UUID'>{
+        ratingData(data: Omit<User.RatingData, 'scoreData' | 'songRatingDatas'>): Omit<DBSchema['user/rating_data'], 'UUID'> {
             return {
                 currentRatingScore: data.currentRatingScore,
                 currentExp: data.currentExp,
                 ranking: data.ranking,
                 lastUpload: data.lastUpload,
                 ratingScoreHistory: JSON.stringify(data.ratingScoreHistory.map(([date, score]) => [date.getTime(), score]))
+            }
+        },
+        profileOption(data: User.ProfileOption): Omit<DBSchema['user/profile_option'], 'UUID'> {
+            return {
+                hideDan: Number(data.hideDan)
             }
         }
     }

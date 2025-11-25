@@ -10,7 +10,7 @@ export namespace wikiUserDBController {
     export const getDataByProvider = wikiDBConnector.defineDBHandler<[provider: string, providerId: string], User.Data | null>((provider, providerId) => {
         return async (run) => {
             const rows = await wikiQueryBuilder
-                .select('user/data', () => ({ provider: 'provider', providerId: 'providerId', UUID: 'UUID', lang: 'lang' }))
+                .select('user/data', () => ({ provider: 'provider', providerId: 'providerId', UUID: 'UUID', lang: 'lang', grade: 'grade' }))
                 .where(({ compare, column, value }) => [
                     compare(column('provider'), '=', value(provider)),
                     compare(column('providerId'), '=', value(providerId))
@@ -128,6 +128,22 @@ export namespace userDBController {
             await query.execute(run);
         }
     });
+
+    export const updateProfileOption = defineDBHandler<[UUID: string, option: User.ProfileOption]>((UUID, option) => {
+        const dbData = dbConverter.toDB.profileOption(option);
+        const query = queryBuilder.insert('user/profile_option')
+            .set(({ value }) => ({
+                UUID: value(UUID),
+                hideDan: value(dbData.hideDan)
+            }))
+            .onDuplicate('update', ({ raw }) => ({
+                hideDan: raw('VALUES(`hideDan`)')
+            }));
+        return async (run) => {
+            await query.execute(run);
+        }
+    })
+
     export const updateAllRanking = defineDBHandler(() => {
         return async (run) => {
             await run("UPDATE `user/rating_data` t1 SET `ranking` = (SELECT COUNT(*) + 1 FROM `user/rating_data` t2 WHERE t2.`currentRatingScore` > t1.`currentRatingScore`)")
@@ -279,7 +295,18 @@ export namespace userDBController {
                 bio: rows[0].bio
             }
         }
-    })
+    });
+
+    export const getProfileOption = defineDBHandler<[UUID: string], User.ProfileOption | null>((UUID) => {
+        const query = queryBuilder.select('user/profile_option', '*')
+            .where(({ compare, column, value }) => [compare(column('UUID'), '=', value(UUID))]);
+        return async (run) => {
+            const rows = await query.execute(run);
+            if (rows.length === 0) return null;
+            return dbConverter.fromDB.profileOption(rows[0]);
+        }
+    });
+
     export const getTaikoProfile = defineDBHandler<[UUID: string], User.TaikoProfile | null>((UUID) => {
         const query = queryBuilder.select('user/taiko_profile', '*')
             .where(({ compare, column, value }) => [compare(column('UUID'), '=', value(UUID))]);

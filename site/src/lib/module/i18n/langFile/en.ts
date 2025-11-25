@@ -1,4 +1,7 @@
 export const en = {
+    main: {
+        WIP: 'Under construction...'
+    },
     header: {
         ranking: 'Ranking',
         docs: 'Docs',
@@ -52,7 +55,8 @@ export const en = {
         bio: 'Status Message',
         save: 'Save',
         success_alert: 'Your profile has been changed.',
-        error_alert: 'An error has occurred.'
+        error_alert: 'An error has occurred.',
+        hideDan: 'Hide dan-i'
     },
     ranking: {
         title: 'Ranking %s'

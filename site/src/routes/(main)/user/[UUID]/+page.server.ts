@@ -12,6 +12,15 @@ export async function load({ params, locals }: RequestEvent) {
     const ratingData = await userDBController.getRatingData(UUID);
     if (!ratingData) throw await redirectWhenDataNotExists();
 
+    const profileOption = await userDBController.getProfileOption(UUID);
+    if(profileOption?.hideDan && 
+        (locals.userData ? 
+            (locals.userData.grade < 10 && locals.userData.UUID !== UUID): true
+        )
+    ){
+        taikoProfile.dani = null;
+    }
+
     return {
         taikoProfile,
         profile,

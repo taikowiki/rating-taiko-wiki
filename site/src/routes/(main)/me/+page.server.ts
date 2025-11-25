@@ -16,10 +16,13 @@ export async function load({ locals }: RequestEvent) {
         }
     }
 
+    const profileOption = await userDBController.getProfileOption(locals.userData.UUID);
+
     const taikoProfile = await userDBController.getTaikoProfile(locals.userData.UUID);
 
     return {
         profile,
-        taikoProfile
+        taikoProfile,
+        profileOption
     }
 }

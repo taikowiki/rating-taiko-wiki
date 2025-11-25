@@ -226,7 +226,8 @@ export namespace User {
             provider: z.string(),
             providerId: z.string(),
             UUID: z.string(),
-            lang: z.string()
+            lang: z.string(),
+            grade: z.number()
         });
         export const Profile = z.object({
             UUID: z.string(),
@@ -324,6 +325,10 @@ export namespace User {
                 oni: z.optional(Clear),
                 ura: z.optional(Clear)
             })
+        });
+
+        export const ProfileOption = z.object({
+            hideDan: z.boolean()
         })
     }
 
@@ -342,4 +347,5 @@ export namespace User {
     export type TierName = z.infer<typeof Schema.TierName>;
 
     export type ClearData = z.infer<typeof Schema.ClearData>;
+    export type ProfileOption = z.infer<typeof Schema.ProfileOption>;
 }

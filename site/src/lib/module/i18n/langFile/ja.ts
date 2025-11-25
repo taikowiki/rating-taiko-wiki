@@ -1,4 +1,7 @@
 export const ja = {
+    main: {
+        WIP: '工事中...'
+    },
     header: {
         ranking: 'ランキング',
         docs: 'ドキュメント',
@@ -52,7 +55,8 @@ export const ja = {
         bio: 'ステータスメッセージ',
         save: '保存する',
         success_alert: 'プロフィールが変更されました。',
-        error_alert: 'エラーが発生しました。'
+        error_alert: 'エラーが発生しました。',
+        hideDan: '段位を隠す'
     },
     ranking: {
         title: 'ランキング %s'

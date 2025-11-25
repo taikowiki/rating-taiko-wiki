@@ -1,4 +1,7 @@
 export const ko = {
+    main: {
+        WIP: '공사중...'
+    },
     header: {
         ranking: '랭킹',
         docs: '문서',
@@ -52,7 +55,8 @@ export const ko = {
         bio: '상태 메시지',
         save: '저장하기',
         success_alert: '프로필이 변경되었습니다.',
-        error_alert: '오류가 발생했습니다.'
+        error_alert: '오류가 발생했습니다.',
+        hideDan: '단위 숨기기'
     },
     ranking: {
         title: '랭킹 %s'

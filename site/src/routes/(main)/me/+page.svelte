@@ -1,9 +1,9 @@
 <script lang="ts">
-    import PageTitle from '$lib/components/layout/main/Page-title.svelte';
+    import PageTitle from "$lib/components/layout/main/Page-title.svelte";
     import TaikoProfileBadge from "$lib/components/user/Profile/TaikoProfileBadge.svelte";
     import TaikoProfileCrown from "$lib/components/user/Profile/TaikoProfileCrown.svelte";
     import TaikoProfileNameplate from "$lib/components/user/Profile/TaikoProfileNameplate.svelte";
-    import { getI18n } from '$lib/module/i18n/index.js';
+    import { getI18n } from "$lib/module/i18n/index.js";
     import { getIsMobile, getLang, getProfile } from "$lib/module/layout";
     import { userRequestor } from "$lib/module/user/client.js";
     import { alertDialog } from "$lib/module/util/client.js";
@@ -11,6 +11,7 @@
     let { data } = $props();
     let profile = $state(data.profile);
     let taikoProfile = $state(data.taikoProfile);
+    let profileOption = $state(data.profileOption ?? { hideDan: false });
 
     const isMobile = getIsMobile();
     const profileStore = getProfile();
@@ -18,7 +19,10 @@
     let i18n = $derived(getI18n($lang).me);
 
     async function updateProfile() {
-        const result = await userRequestor.updateProfile(profile);
+        const result = await userRequestor.updateProfile({
+            ...profile,
+            option: profileOption
+        });
         if (result.status === "success") {
             alertDialog(i18n.success_alert);
             profileStore.set(profile);
@@ -46,6 +50,10 @@
         <div>{i18n.bio}</div>
         <textarea class="standard" bind:value={profile.bio}></textarea>
     </label>
+    <div>
+        <input type="checkbox" bind:checked={profileOption.hideDan}/>
+        {i18n.hideDan}
+    </div>
     <button class="standard" onclick={updateProfile}>{i18n.save}</button>
 </div>
 
