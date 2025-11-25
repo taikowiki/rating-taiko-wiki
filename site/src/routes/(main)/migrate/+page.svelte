@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { getTheme } from "$lib/module/layout";
+    import { getI18n } from "$lib/module/i18n/index.js";
+    import { getLang, getTheme } from "$lib/module/layout";
     import { userRequestor } from "$lib/module/user/client.js";
 
     let { data } = $props();
@@ -10,6 +11,8 @@
     let status = $state<0 | 1 | 2 | 3>(0);
 
     const theme = getTheme();
+    const lang = getLang();
+    let i18n = $derived(getI18n($lang).migrate);
 
     async function migrate() {
         status = 1;
@@ -25,24 +28,24 @@
 <div>
     {#if data.canMigrate}
         {#if status === 0}
-            <div>데이터 이전이 가능합니다. 이전하시겠습니까?</div>
+            <div>{i18n.confirm}</div>
             <button class={`standard theme-${$theme}`} onclick={migrate}>
-                이전하기
+                {i18n.button}
             </button>
         {:else if status === 1}
-            데이터 이전 중...
+            {i18n.migrating}
         {:else if status === 2}
-            데이터 이전 성공!
+            {i18n.success}
             {#if data.user}
-                <a href={`/user/${data.user?.UUID}`}>내 레이팅</a>
+                <a href={`/user/${data.user?.UUID}`}>{i18n.my_rating}</a>
             {/if}
         {:else}
-            데이터 이전 오류
+            {i18n.success}
         {/if}
     {:else if data.reason === "RATING_DATA_ALREADY_EXISTS"}
-        이미 레이팅 데이터가 존재합니다.
+        {i18n.already_exists}
     {:else}
-        데이터 이전이 불가능합니다.
+        {i18n.not_possible}
     {/if}
 </div>
 

@@ -2,6 +2,7 @@ import { browser } from "$app/environment";
 import { getContext, setContext } from "svelte";
 import { writable, type Writable } from "svelte/store";
 import type { User } from "../user";
+import { LANG, LANG_CODE_MAP, type I18n } from "../i18n";
 
 /**
  * 테마 초기화 후 store을 context에 저장
@@ -50,7 +51,12 @@ export function initIsMobile(initValue?: boolean) {
         const isMobile = writable(window.innerWidth <= 767);
         window.addEventListener('resize', () => {
             isMobile.set(window.innerWidth <= 767);
-        }); setContext('isMobile', isMobile);
+        });
+        isMobile.subscribe((value) => {
+            window.localStorage.setItem('isMobile', value ? 'true' : 'false');
+            window.cookieStore.set('isMobile', value ? 'true' : 'false');
+        })
+        setContext('isMobile', isMobile);
     }
     else {
         const isMobile = writable(initValue ?? false);
@@ -89,4 +95,35 @@ export function setProfile(profile?: User.Profile | null) {
  */
 export function getProfile() {
     return getContext('profile') as Writable<User.Profile | null>;
+}
+
+/**
+ * 언어 store 초기화
+ */
+export function initLang(initValue?: I18n.Lang) {
+    const lang = writable<I18n.Lang>(initValue ?? 'ko');
+    if (browser) {
+        const storagedLang = window.localStorage.getItem('lang');
+        lang.set(LANG.includes(storagedLang as I18n.Lang) ? storagedLang as I18n.Lang : getLangFromLangCode());
+        lang.subscribe((value) => {
+            window.localStorage.setItem('lang', value);
+            window.cookieStore.set('lang', value);
+        });
+    }
+    setContext('lang', lang);
+
+    function getLangFromLangCode() {
+        if (!("navigator" in window)) return 'ko';
+        const langCode = window.navigator.language;
+        if (langCode in LANG_CODE_MAP) {
+            return LANG_CODE_MAP[langCode as keyof typeof LANG_CODE_MAP];
+        }
+        return 'ko';
+    }
+}
+/**
+ * context에서 언어 store 가져오기
+ */
+export function getLang() {
+    return getContext('lang') as Writable<I18n.Lang>;
 }

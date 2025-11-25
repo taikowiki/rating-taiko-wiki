@@ -3,7 +3,8 @@
     import TaikoProfileBadge from "$lib/components/user/Profile/TaikoProfileBadge.svelte";
     import TaikoProfileCrown from "$lib/components/user/Profile/TaikoProfileCrown.svelte";
     import TaikoProfileNameplate from "$lib/components/user/Profile/TaikoProfileNameplate.svelte";
-    import { getIsMobile, getProfile } from "$lib/module/layout";
+    import { getI18n } from '$lib/module/i18n/index.js';
+    import { getIsMobile, getLang, getProfile } from "$lib/module/layout";
     import { userRequestor } from "$lib/module/user/client.js";
     import { alertDialog } from "$lib/module/util/client.js";
 
@@ -13,41 +14,43 @@
 
     const isMobile = getIsMobile();
     const profileStore = getProfile();
+    const lang = getLang();
+    let i18n = $derived(getI18n($lang).me);
 
     async function updateProfile() {
         const result = await userRequestor.updateProfile(profile);
         if (result.status === "success") {
-            alertDialog("프로필이 변경되었습니다.");
+            alertDialog(i18n.success_alert);
             profileStore.set(profile);
         } else {
-            alertDialog("오류가 발생했습니다.");
+            alertDialog(i18n.error_alert);
         }
     }
 </script>
 
-<PageTitle title="내 프로필" />
+<PageTitle title={i18n.title} />
 
-<h1>프로필</h1>
+<h1>{i18n.profile}</h1>
 <div class="profile-container">
     <label class="nickname">
-        <div>닉네임</div>
+        <div>{i18n.nickname}</div>
         <input
             class="standard"
             type="text"
-            placeholder="닉네임을 입력해주세요"
+            placeholder={i18n.nickname_placeholder}
             bind:value={profile.nickname}
             maxlength="20"
         />
     </label>
     <label class="bio">
-        <div>상태 메시지</div>
+        <div>{i18n.bio}</div>
         <textarea class="standard" bind:value={profile.bio}></textarea>
     </label>
-    <button class="standard" onclick={updateProfile}>저장하기</button>
+    <button class="standard" onclick={updateProfile}>{i18n.save}</button>
 </div>
 
 {#if taikoProfile}
-    <h1>태고 프로필</h1>
+    <h1>{i18n.taiko_profile}</h1>
     <div class={`taikoProfile-container`} class:isMobile={$isMobile}>
         <div class="layer-1">
             <img

@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { getIsMobile, getTheme } from "$lib/module/layout";
+    import { getI18n } from "$lib/module/i18n";
+    import { getIsMobile, getLang, getTheme } from "$lib/module/layout";
     import type { getNextTier, getTier, User } from "$lib/module/user";
     import { COLOR } from "$lib/module/util";
     import TierImage from "../TierImage.svelte";
@@ -17,6 +18,8 @@
 
     const theme = getTheme();
     const isMobile = getIsMobile();
+    const lang = getLang();
+    const i18n = $derived(getI18n($lang).user_page);
 </script>
 
 <div class="info-container" class:isMobile={$isMobile}>
@@ -48,7 +51,7 @@
 
 {#snippet rankingDisplay()}
     <div class={`ranking-container theme-${$theme}`} class:isMobile={$isMobile}>
-        <div class="ranking-header" class:isMobile={$isMobile}>랭킹</div>
+        <div class="ranking-header" class:isMobile={$isMobile}>{i18n.profile.ranking}</div>
         <div class="ranking">
             #{ranking}
         </div>
@@ -56,7 +59,7 @@
 {/snippet}
 {#snippet tierDisplay()}
     <div class="tier-container">
-        <div class="tier-header">현재 티어</div>
+        <div class="tier-header">{i18n.profile.current_tier}</div>
         <div
             class="tier"
             style={`background-image:${COLOR.RATING.TIER_BG(currentTier.tierName)};`}
@@ -71,7 +74,7 @@
         <div class="exp">
             Exp {exp}
         </div>
-        <div class="rating-header">레이팅</div>
+        <div class="rating-header">{i18n.profile.rating}</div>
         <div
             class="rating"
             style={`background-image:${COLOR.RATING.TIER_BG(currentTier.tierName)};`}

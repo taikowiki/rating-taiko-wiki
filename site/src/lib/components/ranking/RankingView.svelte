@@ -106,5 +106,7 @@
         flex: 1 0 0;
         transform: translateY(-1px);
         word-break: break-all;
+        box-sizing: border-box;
+        padding-right: 7px;
     }
 </style>

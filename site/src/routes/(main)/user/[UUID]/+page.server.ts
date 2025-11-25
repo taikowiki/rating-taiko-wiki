@@ -28,7 +28,7 @@ export async function load({ params, locals }: RequestEvent) {
             return redirect(302, '/migrate');
         }
 
-        return redirect(302, '/guide/upload');
+        return redirect(302, '/docs/upload');
     }
 }
 

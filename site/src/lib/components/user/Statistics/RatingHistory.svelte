@@ -2,9 +2,10 @@
     import type { User } from "$lib/module/user";
     import { onDestroy, onMount } from "svelte";
     import { Chart } from "chart.js";
-    import { getTheme, getTimezone } from "$lib/module/layout";
+    import { getLang, getTheme, getTimezone } from "$lib/module/layout";
     import type { Unsubscriber } from "svelte/store";
     import { DateTime } from "luxon";
+    import { getI18n } from "$lib/module/i18n";
 
     // Coefficient of Determination
     interface Props {
@@ -82,10 +83,12 @@
     })
 
     const theme = getTheme();
+    const lang = getLang();
+    const i18n = $derived(getI18n($lang).user_page);
     const timezone = getTimezone();
 </script>
 
-<h2>히스토리</h2>
+<h2>{i18n.statistics.history}</h2>
 <div class="canvas-container">
     <canvas
         bind:this={canvas}
