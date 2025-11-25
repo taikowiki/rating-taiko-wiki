@@ -36,7 +36,7 @@
         <img class="loading" src={loading} alt="loading" />
     </div>
 {/if}
-<main class={`theme-${$theme}`}>
+<main class={`theme-${$theme}`} class:hide={Boolean(navigating.type)}>
     {@render children()}
 </main>
 
@@ -49,6 +49,9 @@
         box-sizing: border-box;
         margin-left: auto;
         margin-right: auto;
+        &.hide{
+            display: none;
+        }
     }
 
     .loading-container {

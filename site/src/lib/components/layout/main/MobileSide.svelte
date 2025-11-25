@@ -2,6 +2,7 @@
     import { afterNavigate, goto } from "$app/navigation";
     import { page } from "$app/state";
     import { getIsMobile, getProfile, getTheme } from "$lib/module/layout";
+    import LangSelector from "./LangSelector.svelte";
 
     interface Props {
         mobileSideOpened: boolean;
@@ -64,6 +65,23 @@
     class={`mobileside theme-${$theme}`}
     class:show={$isMobile && mobileSideOpened}
 >
+    {@render userView()}
+    <a class="navBtn" href={`/myrating`}>
+        <span>내 레이팅</span>
+    </a>
+    <a class="navBtn" href={`/me`}>
+        <span>내 프로필</span>
+    </a>
+    <a class="navBtn" href={`/ranking`}>
+        <span>랭킹</span>
+    </a>
+    <a class="navBtn" href={`/docs`}>
+        <span>문서</span>
+    </a>
+    <LangSelector />
+</div>
+
+{#snippet userView()}
     {#if $profile}
         <h2>
             {$profile.nickname}
@@ -88,16 +106,7 @@
             <span>로그인</span>
         </a>
     {/if}
-    <a class="navBtn" href={`/ranking`}>
-        <span>랭킨</span>
-    </a>
-    <a class="navBtn" href={`/myrating`}>
-        <span>내 레이팅</span>
-    </a>
-    <a class="navBtn" href={`/me`}>
-        <span>내 프로필</span>
-    </a>
-</div>
+{/snippet}
 
 <style>
     .mobileside-background {

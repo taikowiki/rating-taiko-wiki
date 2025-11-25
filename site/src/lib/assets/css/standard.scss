@@ -113,3 +113,14 @@ body.theme-dark textarea.standard {
         outline: 1px solid rgb(100, 100, 100);
     }
 }
+
+// select
+select.standard{
+    border-radius: 5px;
+    padding-block: 2px;
+    padding-inline: 1px;
+    &.theme-dark{
+        background-color: black;
+        color: white;
+    }
+}

@@ -4,6 +4,7 @@
     import logo from "$lib/assets/img/logo.png";
     import MobileSide from "./MobileSide.svelte";
     import { page } from "$app/state";
+    import LangSelector from "./LangSelector.svelte";
 
     const theme = getTheme();
     const isMobile = getIsMobile();
@@ -16,30 +17,22 @@
 
 <header class={`theme-${$theme}`} class:isMobile={$isMobile}>
     <div class="left" class:isMobile={$isMobile}>
-        <img class="logo" src={logo} alt="logo" />
+        <a class="logo" href="/">
+            <img class="logo" src={logo} alt="logo" />
+        </a>
         {#if !$isMobile}
             <a class="navBtn" href="/ranking">
                 <span>랭킹</span>
             </a>
+            <a class="navBtn" href="/docs">
+                <span>문서</span>
+            </a>
         {/if}
     </div>
     <div class="right" class:isMobile={$isMobile}>
+        {@render userView()}
         {#if !$isMobile}
-            {#if page.data.user}
-                <a class="navBtn" href="/myrating">
-                    <span>내 레이팅</span>
-                </a>
-                <a class="navBtn" href="/me">
-                    <span>내 프로필</span>
-                </a>
-            {:else}
-                <a
-                    class="navBtn"
-                    href={`//taiko.wiki/auth/login?redirect_to=${encodeURIComponent(page.url.toString())}`}
-                >
-                    <span>로그인</span>
-                </a>
-            {/if}
+            <LangSelector />
         {/if}
         <ThemeToggler />
         {#if $isMobile}
@@ -55,6 +48,25 @@
         <div class={`bar theme-${$theme}`}></div>
         <div class={`bar theme-${$theme}`}></div>
     </div>
+{/snippet}
+{#snippet userView()}
+    {#if !$isMobile}
+        {#if page.data.user}
+            <a class="navBtn" href="/myrating">
+                <span>내 레이팅</span>
+            </a>
+            <a class="navBtn" href="/me">
+                <span>내 프로필</span>
+            </a>
+        {:else}
+            <a
+                class="navBtn"
+                href={`//taiko.wiki/auth/login?redirect_to=${encodeURIComponent(page.url.toString())}`}
+            >
+                <span>로그인</span>
+            </a>
+        {/if}
+    {/if}
 {/snippet}
 
 <style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getIsMobile } from "$lib/module/layout";
+    import { getIsMobile, getTheme } from "$lib/module/layout";
     import arrow1 from '$lib/assets/icon/page_arrow1.svg';
     import arrow2 from '$lib/assets/icon/page_arrow2.svg';
 
@@ -21,6 +21,7 @@
     let displayPages = getDisplayPages(pageNum, maxPage);
 
     const isMobile = getIsMobile();
+    const theme = getTheme();
 
     function getDisplayPages(pageNum: number, maxPage: number) {
         let p: number[] = [];
@@ -80,6 +81,7 @@
 {#snippet mobilePageNumbersView()}
     {#if $isMobile}
         <select
+            class={`standard theme-${$theme}`}
             bind:value={pageNum}
             onchange={() => {
                 movePage(pageNum);

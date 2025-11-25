@@ -1,7 +1,44 @@
 import type { Genre } from "@taiko-wiki/taikowiki-api";
 import type { Difficulty } from "hiroba-js";
 import type { User } from "../user";
+import path from "path-browserify";
+import { browser } from "process";
+import * as NodeHTMLParser from 'node-html-parser';
 
+export function baseify<T extends Record<string, any>>(obj: T) {
+    const newObj: any = {};
+    Object.entries(obj).forEach(([key, value]) => {
+        newObj[path.basename(key)] = value;
+    });
+    return newObj as T;
+}
+
+export function parseHTML(html: string): NodeHTMLParser.HTMLElement | HTMLElement {
+    if (browser) {
+        const dom = document.createElement('div');
+        dom.innerHTML = html;
+        return dom;
+    }
+    else {
+        return NodeHTMLParser.parse(html);
+    }
+}
+export function serializeHTML(dom: NodeHTMLParser.HTMLElement | HTMLElement) {
+    return dom.innerHTML;
+}
+
+/* String.prototype.capitalize */
+declare global {
+    interface String {
+        capitalize(): string;
+    }
+}
+String.prototype.capitalize = function () {
+    if (!this) return this;
+    return this[0].toUpperCase() + this.slice(1);
+}
+
+// Color & Const
 export namespace COLOR {
     export class RGB {
         r: number;
@@ -20,8 +57,8 @@ export namespace COLOR {
             return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a ?? 1})`
         }
 
-        [Symbol.toPrimitive](hint: string){
-            if(hint === "string"){
+        [Symbol.toPrimitive](hint: string) {
+            if (hint === "string") {
                 return this.toString();
             }
         }
@@ -193,6 +230,7 @@ export namespace COLOR {
         "ura": new RGB(148, 106, 222)
     } as const;
 }
+
 export namespace CONST {
     export namespace SONG {
         export const GENRE = ["pops", "anime", "kids", "game", "variety", "namco", "vocaloid", "classic"] as const
@@ -257,25 +295,11 @@ export namespace CONST {
             pearl: 0
         } as const;
     };
-    export const LANG = ['ko', 'ja', 'en'] as const;
-    export const LANG_CODE_MAP = {
-        'ko-KR': 'ko',
-        'ja-JP': 'ja',
-        'en-US': 'en'
-    } as const;
 }
 
-/* String.prototype.capitalize */
-declare global {
-    interface String {
-        capitalize(): string;
-    }
-}
-String.prototype.capitalize = function () {
-    if (!this) return this;
-    return this[0].toUpperCase() + this.slice(1);
-}
-
-export namespace Util{
-    export type LANG = typeof CONST.LANG[number];
+// types
+export type Shared<T, U> = {
+    [K in keyof T as K extends keyof U ?
+    T[K] extends U[K] ? K : never
+    : never]: T[K];
 }

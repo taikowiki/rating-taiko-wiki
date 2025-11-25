@@ -37,7 +37,7 @@ declare global {
 		}
 	}
 	interface Window {
-		localStorage: KeyedStorage<'theme' |'lang'>;
+		localStorage: KeyedStorage<'theme' | 'lang' | 'isMobile'>;
 	}
 }
 
