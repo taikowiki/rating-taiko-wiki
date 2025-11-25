@@ -9,9 +9,6 @@
     import bronze from "$lib/assets/icon/tier/bronze.png";
     import pearl from "$lib/assets/icon/tier/pearl.png";
     import type { User } from "$lib/module/user";
-    import CssFilterConveter from "css-filter-converter";
-    import { COLOR } from "$lib/module/util";
-    import { browser } from "process";
 
     const img = {
         omega,

@@ -2,7 +2,7 @@ import type { Genre } from "@taiko-wiki/taikowiki-api";
 import type { Difficulty } from "hiroba-js";
 import type { User } from "../user";
 import path from "path-browserify";
-import { browser } from "process";
+import { browser } from '$app/environment';
 import * as NodeHTMLParser from 'node-html-parser';
 
 export function baseify<T extends Record<string, any>>(obj: T) {
