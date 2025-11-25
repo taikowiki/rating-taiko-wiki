@@ -1,4 +1,4 @@
-export function preventUndefined(obj: RecursiveStringObject): RecursiveStringObject {
+export function preventUndefined<T extends RecursiveStringObject>(obj: T): T {
     const emptyStringObject = new Proxy({}, {
         get(target, p, receiver) {
             if (p === "toString" || p === Symbol.toPrimitive) {
@@ -27,13 +27,13 @@ export function preventUndefined(obj: RecursiveStringObject): RecursiveStringObj
         });
     }
 
-    return proxify(obj);
+    return proxify(obj) as T;
 }
 interface RecursiveStringObject {
     [key: string]: any;
 }
 
-import { ko } from "./ko";
+import { ko } from './ko';
 import { en } from './en';
 import { ja } from './ja';
 
