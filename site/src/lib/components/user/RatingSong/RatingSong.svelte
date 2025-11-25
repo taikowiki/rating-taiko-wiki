@@ -4,7 +4,8 @@
     import RatingSongList from "./RatingSongList.svelte";
     // import gridImg from "$lib/assets/icon/rating-song-mode/grid.svg";
     // import listImg from "$lib/assets/icon/rating-song-mode/list.svg";
-    import { getTheme } from "$lib/module/layout";
+    import { getLang, getTheme } from "$lib/module/layout";
+    import { getI18n } from "$lib/module/i18n";
 
     interface Props {
         songRatingDatas: User.RatingData["songRatingDatas"];
@@ -20,7 +21,8 @@
     let mode = $state<"grid" | "list">("grid");
     let after50Opened = $state(false);
 
-    const theme = getTheme();
+    const lang = getLang();
+    const i18n = $derived(getI18n($lang).user_page);
 
     function setMode(mode_: "grid" | "list") {
         mode = mode_;
@@ -50,7 +52,7 @@
 
 {#snippet mainHeading()}
     <h1>
-        <div class="left">곡 레이팅</div>
+        <div class="left">{i18n.rating_song.title}</div>
         <div class="right">
             <!--
             <img
@@ -73,13 +75,13 @@
 {/snippet}
 {#snippet top50Heading()}
     <h2>
-        <div class="left">상위 50곡</div>
-        <div class="right download" onclick={downloadImg}>다운로드</div>
+        <div class="left">{i18n.rating_song.top_50}</div>
+        <div class="right download" onclick={downloadImg}>{i18n.rating_song.download}</div>
     </h2>
 {/snippet}
 {#snippet after50Heading()}
     <h2 class="after50Heading" onclick={toggleAfter50Opened}>
-        이외의 곡 {after50Opened ? "▲" : "▼"}
+        {i18n.rating_song.others} {after50Opened ? "▲" : "▼"}
     </h2>
 {/snippet}
 

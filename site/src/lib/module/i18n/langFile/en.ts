@@ -1,4 +1,13 @@
 export const en = {
+    header: {
+        ranking: 'Ranking',
+        docs: 'Docs',
+        my_profile: 'My Profile',
+        my_rating: 'My Rating',
+        login: 'Login',
+        logout: 'Logout',
+        close: 'Close'
+    },
     docs: {
         doc: 'Documents',
         titles: [
@@ -54,7 +63,10 @@ export const en = {
         },
         profile: {
             last_update: 'Last updated:',
-            no_bio: 'No status message.'
+            no_bio: 'No status message.',
+            ranking: 'Ranking',
+            current_tier: 'Current Tier',
+            rating: 'Rating'
         },
         rating_song: {
             title: 'Song Rating',
@@ -68,9 +80,6 @@ export const en = {
             history: 'History'
         },
         rating_info: {
-            ranking: 'Ranking',
-            current_tier: 'Current Tier',
-            rating: 'Rating'
         }
     },
     migrate: {

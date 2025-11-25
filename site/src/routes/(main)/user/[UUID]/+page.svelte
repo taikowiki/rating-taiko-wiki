@@ -4,7 +4,8 @@
     import Profile from "$lib/components/user/Profile/Profile.svelte";
     import RatingSong from "$lib/components/user/RatingSong/RatingSong.svelte";
     import Statistics from "$lib/components/user/Statistics/Statistics.svelte";
-    import { getIsMobile, getTheme } from "$lib/module/layout/index.js";
+    import { getI18n } from "$lib/module/i18n/index.js";
+    import { getIsMobile, getLang, getTheme } from "$lib/module/layout/index.js";
     import { getNextTier, getTier } from "$lib/module/user/index.js";
     import { alertDialog } from "$lib/module/util/client.js";
     import { COLOR } from "$lib/module/util/index.js";
@@ -19,12 +20,15 @@
         getNextTier(currentTier.tierName, currentTier.tierGrade),
     );
 
+    const lang = getLang();
+    const i18n = $derived(getI18n($lang).user_page);
+
     let captureContainer = writable<HTMLDivElement>();
     setContext("captureContainer", captureContainer);
     async function downloadImg() {
         if (!$captureContainer) return;
 
-        alertDialog("이미지가 곧 다운로드됩니다.");
+        alertDialog(i18n.alert.image_download);
 
         const { default: html2canvas } = await import("html2canvas");
         const htmlCanvas = await html2canvas($captureContainer, {

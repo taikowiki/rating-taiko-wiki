@@ -1,4 +1,13 @@
 export const ja = {
+    header: {
+        ranking: 'ランキング',
+        docs: 'ドキュメント',
+        my_profile: 'マイプロフィール',
+        my_rating: 'マイレーティング',
+        login: 'ログイン',
+        logout: 'ログアウト',
+        close: '閉じる'
+    },
     docs: {
         doc: 'ドキュメント',
         titles: [
@@ -27,7 +36,7 @@ export const ja = {
                 plain: 'ユーザーがアップロードしたデータは、%sで退会時にすべて削除されます。',
                 child: 'こちら'
             },
-            line3: 'ユーザーがアップ로드したデータはすべて公開されることがあります。',
+            line3: 'ユーザーがアップロードしたデータはすべて公開されることがあります。',
             line4: 'ユーザーがアップロードしたデータは、匿名化された形で統計分析に使用されることがあります。',
             agree: '上記の条項に同意します。'
         },
@@ -54,7 +63,10 @@ export const ja = {
         },
         profile: {
             last_update: '最終更新:',
-            no_bio: 'ステータスメッセージがありません。'
+            no_bio: 'ステータスメッセージがありません。',
+            ranking: 'ランキング',
+            current_tier: '現在のティア',
+            rating: 'レーティング'
         },
         rating_song: {
             title: '曲レーティング',
@@ -66,11 +78,6 @@ export const ja = {
             title: '統計',
             top_50: '上位50曲',
             history: '履歴'
-        },
-        rating_info: {
-            ranking: 'ランキング',
-            current_tier: '現在のティア',
-            rating: 'レーティング'
         }
     },
     migrate: {

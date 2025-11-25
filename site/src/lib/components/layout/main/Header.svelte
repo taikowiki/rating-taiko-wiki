@@ -1,13 +1,16 @@
 <script lang="ts">
-    import { getIsMobile, getTheme } from "$lib/module/layout";
+    import { getIsMobile, getLang, getTheme } from "$lib/module/layout";
     import ThemeToggler from "./ThemeToggler.svelte";
     import logo from "$lib/assets/img/logo.png";
     import MobileSide from "./MobileSide.svelte";
     import { page } from "$app/state";
     import LangSelector from "./LangSelector.svelte";
+    import { getI18n } from "$lib/module/i18n";
 
     const theme = getTheme();
     const isMobile = getIsMobile();
+    const lang = getLang();
+    const i18n = $derived(getI18n($lang).header);
 
     let mobileSideOpened = $state(false);
     function toggleMobileSide() {
@@ -22,10 +25,10 @@
         </a>
         {#if !$isMobile}
             <a class="navBtn" href="/ranking">
-                <span>랭킹</span>
+                <span>{i18n.ranking}</span>
             </a>
             <a class="navBtn" href="/docs">
-                <span>문서</span>
+                <span>{i18n.docs}</span>
             </a>
         {/if}
     </div>
@@ -53,17 +56,17 @@
     {#if !$isMobile}
         {#if page.data.user}
             <a class="navBtn" href="/myrating">
-                <span>내 레이팅</span>
+                <span>{i18n.my_rating}</span>
             </a>
             <a class="navBtn" href="/me">
-                <span>내 프로필</span>
+                <span>{i18n.my_profile}</span>
             </a>
         {:else}
             <a
                 class="navBtn"
                 href={`//taiko.wiki/auth/login?redirect_to=${encodeURIComponent(page.url.toString())}`}
             >
-                <span>로그인</span>
+                <span>{i18n.login}</span>
             </a>
         {/if}
     {/if}

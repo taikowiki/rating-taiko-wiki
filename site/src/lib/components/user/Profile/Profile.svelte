@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { getIsMobile, getTheme, getTimezone } from "$lib/module/layout";
+    import { getI18n } from "$lib/module/i18n";
+    import { getIsMobile, getLang, getTheme, getTimezone } from "$lib/module/layout";
     import { type getNextTier, type getTier, User } from "$lib/module/user";
     import RatingInfo from "../RatingScore/RatingInfo.svelte";
     import RatingScore from "../RatingScore/RatingScore.svelte";
@@ -25,7 +26,7 @@
         currentExp,
         ranking,
         currentTier,
-        nextTier
+        nextTier,
     }: Props = $props();
     let lastUpdateString = $derived(
         DateTime.fromJSDate(lastUpdate, { zone: getTimezone() }).toFormat(
@@ -35,6 +36,9 @@
 
     const theme = getTheme();
     const isMobile = getIsMobile();
+
+    const lang = getLang();
+    const i18n = $derived(getI18n($lang).user_page);
 </script>
 
 <div class="container" class:isMobile={$isMobile}>
@@ -45,25 +49,31 @@
         <TaikoProfile {taikoProfile} />
         {#if !$isMobile}
             <div class="lastupdate">
-                마지막 업데이트: {lastUpdateString} (UTC+9)
+                {i18n.profile.last_update}: {lastUpdateString} (UTC+9)
             </div>
         {/if}
     </div>
     <div class="right-container">
-        <RatingScore {currentExp} {currentRatingScore} {ranking} {currentTier} {nextTier}/>
+        <RatingScore
+            {currentExp}
+            {currentRatingScore}
+            {ranking}
+            {currentTier}
+            {nextTier}
+        />
         {#if profile.bio}
             <div class={`bio theme-${$theme}`}>
                 {profile.bio}
             </div>
         {:else}
             <div class={`no-bio theme-${$theme}`}>
-                {"상태메시지가 없습니다."}
+                {i18n.profile.no_bio}
             </div>
         {/if}
     </div>
     {#if $isMobile}
         <div class="lastupdate">
-            마지막 업데이트: {lastUpdateString} (UTC+9)
+            {i18n.profile.last_update}: {lastUpdateString} (UTC+9)
         </div>
     {/if}
 </div>
@@ -95,7 +105,7 @@
 
     .right-container {
         flex: 1 0 auto;
-        display:flex;
+        display: flex;
         flex-direction: column;
         row-gap: 10px;
     }

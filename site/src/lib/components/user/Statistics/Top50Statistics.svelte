@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { getTheme } from "$lib/module/layout";
+    import { getI18n } from "$lib/module/i18n";
+    import { getLang, getTheme } from "$lib/module/layout";
     import type { User } from "$lib/module/user";
     import { Chart } from "chart.js/auto";
     import { onDestroy, onMount } from "svelte";
@@ -126,9 +127,11 @@
     }
 
     const theme = getTheme();
+    const lang = getLang();
+    const i18n = $derived(getI18n($lang).user_page);
 </script>
 
-<h2>상위 50곡</h2>
+<h2>{i18n.statistics.top_50}</h2>
 <div class="canvas-container">
     <canvas bind:this={canvas} width={`${top50.length * 30}px`} height="500px"></canvas>
 </div>

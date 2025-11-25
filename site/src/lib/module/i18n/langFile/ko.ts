@@ -1,4 +1,13 @@
 export const ko = {
+    header: {
+        ranking: '랭킹',
+        docs: '문서',
+        my_profile: '내 프로필',
+        my_rating: '내 레이팅',
+        login: '로그인',
+        logout: '로그아웃',
+        close: '닫기'
+    },
     docs: {
         doc: '문서',
         titles: [
@@ -54,7 +63,10 @@ export const ko = {
         },
         profile: {
             last_update: '마지막 업데이트:',
-            no_bio: '상태메시지가 없습니다.'
+            no_bio: '상태메시지가 없습니다.',
+            ranking: '랭킹',
+            current_tier: '현재 티어',
+            rating: '레이팅'
         },
         rating_song: {
             title: '곡 레이팅',

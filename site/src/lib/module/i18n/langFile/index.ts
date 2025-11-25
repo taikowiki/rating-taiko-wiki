@@ -36,9 +36,10 @@ interface RecursiveStringObject {
 import { ko } from './ko';
 import { en } from './en';
 import { ja } from './ja';
+import type { I18n } from '..';
 
 export const i18n = preventUndefined({
     ko,
     en,
     ja
-})
+}) as Record<I18n.Lang, typeof ko>;

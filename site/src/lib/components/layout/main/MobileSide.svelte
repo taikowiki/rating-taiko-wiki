@@ -1,7 +1,8 @@
 <script lang="ts">
     import { afterNavigate, goto } from "$app/navigation";
     import { page } from "$app/state";
-    import { getIsMobile, getProfile, getTheme } from "$lib/module/layout";
+    import { getI18n } from "$lib/module/i18n";
+    import { getIsMobile, getLang, getProfile, getTheme } from "$lib/module/layout";
     import LangSelector from "./LangSelector.svelte";
 
     interface Props {
@@ -47,6 +48,8 @@
     const isMobile = getIsMobile();
     const theme = getTheme();
     const profile = getProfile();
+    const lang = getLang();
+    const i18n = $derived(getI18n($lang).header);
 
     function toggleMobileSide() {
         mobileSideOpened = !mobileSideOpened;
@@ -67,16 +70,16 @@
 >
     {@render userView()}
     <a class="navBtn" href={`/myrating`}>
-        <span>내 레이팅</span>
+        <span>{i18n.my_rating}</span>
     </a>
     <a class="navBtn" href={`/me`}>
-        <span>내 프로필</span>
+        <span>{i18n.my_profile}</span>
     </a>
     <a class="navBtn" href={`/ranking`}>
-        <span>랭킹</span>
+        <span>{i18n.ranking}</span>
     </a>
     <a class="navBtn" href={`/docs`}>
-        <span>문서</span>
+        <span>{i18n.docs}</span>
     </a>
     <LangSelector />
 </div>
@@ -91,10 +94,10 @@
                     onclick={() =>
                         (window.location.href = "//taiko.wiki/auth/logout")}
                 >
-                    로그아웃
+                    {i18n.logout}
                 </button>
                 <button class="standard" onclick={toggleMobileSide}>
-                    닫기
+                    {i18n.close}
                 </button>
             </div>
         </h2>
@@ -103,7 +106,7 @@
             class="navBtn"
             href={`//taiko.wiki/auth/login?redirect_to=${encodeURIComponent(page.url.href)}`}
         >
-            <span>로그인</span>
+            <span>{i18n.login}</span>
         </a>
     {/if}
 {/snippet}
