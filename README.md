@@ -1,38 +1,27 @@
-# sv
+# Taiko no Tatsujin Unofficial Rating (rating.taiko.wiki)
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+[rating.taiko.wiki](https://rating.taiko.wiki) is an unofficial rating site that quantifies the skills of arcade 'Taiko no Tatsujin' players into objective scores based on their play data.
 
-## Creating a project
+## Objective
 
-If you're seeing this, you've probably already done this step. Congrats!
+The project's goal is to quantitatively display players' skills through unofficial ratings and provide various data analyses. Based on play records from 'Donder Hiroba', you can precisely analyze your skills and compare them with other players.
 
-```sh
-# create a new project in the current directory
-npx sv create
+## Key Features
 
-# create a new project in my-app
-npx sv create my-app
-```
+- **Rating Score Calculation**: Calculates a user's overall skill as a 'Rating Score' based on data from 'Donder Hiroba'.
+- **Per-Song Rating Score**: Calculates a 'Per-Song Rating Score' based on the play record for each song, allowing for an understanding of proficiency per song.
+- **Data Analysis**: Provides multifaceted skill analysis data utilizing the calculated rating scores.
 
-## Developing
+## Data Collected
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+The following data is collected for rating calculation:
 
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- **Donder Hiroba Profile Information**
+    - Nickname
+    - Taiko Number (Drum Number)
+    - Dan-i Dojo clear information
+    - Play record summary
+        - Number of Clears / Full Combos / All Perfects (Oni)
+        - Number of crowns per score rank
+- **Detailed Song Play Data**
+    - Score, clear type (crown), score rank, etc., for each song
