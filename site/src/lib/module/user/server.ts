@@ -75,6 +75,9 @@ export namespace wikiUserDBController {
         if (data.lang) {
             userData.lang = data.lang;
         }
+        if(data.grade){
+            userData.grade = data.grade;
+        }
 
         return userData as Return;
     }
