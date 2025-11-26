@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Samsung Internet Extension Example",
+  "version": "1.0",
+  "description": "삼성 인터넷용 확장 예제입니다.",
+  "icons": {
+    "48": "icons/icon-48.webp",
+    "128": "icons/icon-128.webp"
+  },
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://donderhiroba.jp/*",
+    "https://taiko.wiki/*"
+  ],
+  "background": {
+    "service_worker": "src/background.ts"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "example@samsung.com"
+    }
+  },
+  "action": {}
+}
