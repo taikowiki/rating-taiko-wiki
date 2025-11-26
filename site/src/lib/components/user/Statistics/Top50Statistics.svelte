@@ -137,7 +137,7 @@
 </div>
 <div class="figure-container">
     <div class="figure">
-        Ø: {AVG.toFixed(2)}
+        x̄: {AVG.toFixed(2)}
     </div>
     <div class="figure">
         σ: {SD.toFixed(2)}
