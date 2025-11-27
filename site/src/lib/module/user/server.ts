@@ -1,10 +1,11 @@
 import type { InferDBSchema } from "@yowza/db-handler/types";
-import type { User } from ".";
+import { calcualteRating, type User } from ".";
 import { dbConverter, queryBuilder, wikiDBConnector, wikiQueryBuilder, type DBSchema, type WikiDBSchema } from "../db/server";
 import { defineDBHandler, runQuery } from "@yowza/db-handler";
 import type { ScoreData } from "hiroba-js";
 import type { RatingData } from "@taiko-wiki/taikowiki-api";
 import { songDBController } from "../song/server";
+import { fetchMeasures } from "@taiko-wiki/taiko-rating";
 
 export namespace wikiUserDBController {
     export const getDataByProvider = wikiDBConnector.defineDBHandler<[provider: string, providerId: string], User.Data | null>((provider, providerId) => {
@@ -75,7 +76,7 @@ export namespace wikiUserDBController {
         if (data.lang) {
             userData.lang = data.lang;
         }
-        if(data.grade){
+        if (data.grade) {
             userData.grade = data.grade;
         }
 
@@ -387,6 +388,101 @@ export namespace userDBController {
             await userDBController.updateAllRanking.getCallback()(run);
         }
     })
+}
+
+export async function updateRatingData({ UUID, taikoProfile, scoreData, clearData }: { UUID: string, taikoProfile: User.TaikoProfile, scoreData?: User.ScoreData, clearData?: User.ClearData[] }) {
+    let currentRatingScore: number | null = null;
+
+    // 프로필
+    /* DB 업로드 */
+    await userDBController.updateTaikoProfile(UUID, taikoProfile);
+
+    const now = new Date();
+    const songs = await songDBController.getAllSongDatas();
+
+    // scoreData
+    if (scoreData) {
+        /* 이전 레이팅 데이터 가져오기 */
+        const formerRatingData = await userDBController.getRatingData(UUID);
+        /* scoreData 병합 */
+        const scoreData = formerRatingData?.scoreData ?? {};
+        Object.entries(scoreData).forEach(([songNo, songScoreData]) => {
+            if (!(songNo in scoreData)) {
+                scoreData[songNo] = {
+                    songNo,
+                    title: songs.find((song) => song.songNo === songNo)?.title ?? '',
+                    difficulty: {}
+                }
+            };
+
+            Object.entries(songScoreData.difficulty).forEach(([diff, diffScoreData]) => {
+                scoreData[songNo].difficulty[diff as 'oni' | 'ura'] = diffScoreData;
+            })
+        });
+        /* songRatingData 병합을 위한 객체 */
+        const songRatingDataMap: {
+            [songNo: string]: Partial<Record<'oni' | 'ura', User.SongRatingData>>
+        } = {};
+        formerRatingData?.songRatingDatas?.forEach((data) => {
+            if (!(data.songNo in songRatingDataMap)) {
+                songRatingDataMap[data.songNo] = {}
+            };
+
+            songRatingDataMap[data.songNo][data.difficulty] = data;
+        })
+
+        /* 새 레이팅 계산 */
+        const measures = await fetchMeasures();
+        const result = calcualteRating(scoreData, measures, songs);
+        /* ratingScoreHistory 병합 */
+        const ratingScoreHistory = formerRatingData?.ratingScoreHistory ?? [];
+        if (ratingScoreHistory.length >= 2 && ratingScoreHistory.at(-1)?.[1] === ratingScoreHistory.at(-2)?.[1] && ratingScoreHistory.at(-1)?.[1] === result.currentRatingScore) {
+            ratingScoreHistory.pop();
+        }
+        ratingScoreHistory.push([now, result.currentRatingScore]);
+        /* songRatingData 병합 */
+        result.songRatingDatas.forEach((data) => {
+            if (!(data.songNo in songRatingDataMap)) {
+                songRatingDataMap[data.songNo] = {}
+            };
+
+            if (songRatingDataMap[data.songNo]?.[data.difficulty]?.ratingScore ?? 0 <= data.ratingScore) {
+                songRatingDataMap[data.songNo][data.difficulty] = data;
+            }
+        });
+        const songRatingDatas: User.SongRatingData[] = [];
+        Object.values(songRatingDataMap).forEach((s) => {
+            Object.values(s).forEach((data) => {
+                songRatingDatas.push(data);
+            })
+        });
+        songRatingDatas.sort((a, b) => b.ratingScore - a.ratingScore);
+
+        /* 새 랭킹 계산 */
+        const ranking = await userDBController.getRankingByRatingScore(result.currentRatingScore);
+
+        // 새로 저장할 데이터
+        // scoreData나 songRatingData는 업로드 된 것만 수정/추가되므로 병합 방식으로 작동함
+        const ratingData: User.RatingData = {
+            currentRatingScore: result.currentRatingScore,
+            currentExp: result.currentExp,
+            ratingScoreHistory,
+            scoreData,
+            songRatingDatas,
+            ranking,
+            lastUpload: now
+        };
+
+        await userDBController.updateRatingData(UUID, ratingData);
+        currentRatingScore = result.currentRatingScore;
+    }
+
+    // clearData
+    if (clearData) {
+        await wikiUserDBController.updateClearData(UUID, taikoProfile, clearData);
+    }
+
+    return currentRatingScore;
 }
 
 /**
