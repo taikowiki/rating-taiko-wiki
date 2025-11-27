@@ -12,3 +12,15 @@ type Body = {
 }
 ```
 특정 유저를 삭제할 때 사용. DB에서 해당 유저와 관련된 모든 데이터 삭제.
+
+### `POST` `/api/internal/upload-rating-data/`
+```ts
+// LZUTF8(Base64)로 압축
+type Body = {
+    UUID: string;
+    taikoProfile: User.TaikoProfile;
+    scoreData: User.ScoreData;
+    clearData: User.ClearData;
+}
+```
+특정 유저로 레이팅 계산 데이터 업로드

@@ -5,3 +5,5 @@ build-manager
 key
 
 .env
+
+node_modules
