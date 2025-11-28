@@ -7,18 +7,26 @@ Bun.serve({
     development: false,
     routes: {
         async '/'(request) {
-            let requestData;
-            try {
-                requestData = z.object({
-                    UUID: z.string(),
-                    taikoNo: z.string()
-                }).parse(await request.json())
+            if (request.method === "POST") {
+                let requestData;
+                try {
+                    requestData = z.object({
+                        UUID: z.string(),
+                        taikoNo: z.string()
+                    }).parse(await request.json())
+                }
+                catch {
+                    return new Response(null, { status: 400 });
+                }
+                crawlQueue.enqueue(requestData);
+                return new Response();
             }
-            catch {
-                return new Response(null, { status: 400 });
-            }
-            crawlQueue.enqueue(requestData);
-            return new Response();
+
+            return new Response(null, { status: 400 });
+        },
+        async "/current"() {
+            return new Response(JSON.stringify(crawlQueue.current))
         }
-    }
+    },
+    port: 3000
 })

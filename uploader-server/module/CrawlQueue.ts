@@ -102,13 +102,20 @@ export class CrawlQueue {
             }
 
             await fetch('https://rating.taiko.wiki/api/internal/upload-rating-data', {
+                method: 'POST',
                 headers: {
                     'x-internal-key': process.env.INTERNAL_API_KEY,
                     'content-type': 'application/json'
                 },
                 body: LZUTF8.compress(JSON.stringify({
                     UUID: this.current.UUID,
-                    taikoProfile: cardData,
+                    taikoProfile: {
+                        taikoNo: cardData.taikoNumber,
+                        nickname: cardData.nickname,
+                        crown: cardData.summary?.crown,
+                        badge: cardData.summary?.badge,
+                        dani: null
+                    },
                     clearData,
                     scoreData: scoreDataMap
                 }))
