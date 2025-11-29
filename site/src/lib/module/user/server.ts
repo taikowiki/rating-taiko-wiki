@@ -390,25 +390,24 @@ export namespace userDBController {
     })
 }
 
-export async function updateRatingData({ UUID, taikoProfile, scoreData, clearData }: { UUID: string, taikoProfile: User.TaikoProfile, scoreData?: User.ScoreData, clearData?: User.ClearData[] }) {
+export async function updateRatingData(data: { UUID: string, taikoProfile: User.TaikoProfile, scoreData?: User.ScoreData, clearData?: User.ClearData[] }) {
     let currentRatingScore: number | null = null;
-
-    console.log(`UUID:`, UUID, `scoreData`, Boolean(scoreData), 'clearData', Boolean(clearData));
+    const UUID = data.UUID;
 
     // 프로필
     /* DB 업로드 */
-    await userDBController.updateTaikoProfile(UUID, taikoProfile);
+    await userDBController.updateTaikoProfile(UUID, data.taikoProfile);
 
     const now = new Date();
     const songs = await songDBController.getAllSongDatas();
 
     // scoreData
-    if (scoreData) {
+    if (data.scoreData) {
         /* 이전 레이팅 데이터 가져오기 */
         const formerRatingData = await userDBController.getRatingData(UUID);
         /* scoreData 병합 */
         const scoreData = formerRatingData?.scoreData ?? {};
-        Object.entries(scoreData).forEach(([songNo, songScoreData]) => {
+        Object.entries(data.scoreData).forEach(([songNo, songScoreData]) => {
             if (!(songNo in scoreData)) {
                 scoreData[songNo] = {
                     songNo,
@@ -480,9 +479,10 @@ export async function updateRatingData({ UUID, taikoProfile, scoreData, clearDat
     }
 
     // clearData
-    if (clearData) {
-        await wikiUserDBController.updateClearData(UUID, taikoProfile, clearData);
+    if (data.clearData) {
+        await wikiUserDBController.updateClearData(UUID, data.taikoProfile, data.clearData);
     }
+
 
     return currentRatingScore;
 }

@@ -27,10 +27,10 @@ export async function POST(event: RequestEvent) {
         throw error(400);
     }
 
-    let currentRatingScore = await updateRatingData({
+    const currentRatingScore = await updateRatingData({
         ...requestData,
         UUID
-    })
+    });
 
     return new Response(JSON.stringify({
         currentRatingScore

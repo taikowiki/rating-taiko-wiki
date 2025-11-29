@@ -29,7 +29,7 @@
         nextTier,
     }: Props = $props();
     let lastUpdateString = $derived(
-        DateTime.fromJSDate(lastUpdate, { zone: getTimezone() }).toFormat(
+        DateTime.fromJSDate(lastUpdate, { zone: "+09:00" }).toFormat(
             "yyyy-MM-dd HH:mm:ss",
         ),
     );
