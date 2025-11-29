@@ -393,6 +393,8 @@ export namespace userDBController {
 export async function updateRatingData({ UUID, taikoProfile, scoreData, clearData }: { UUID: string, taikoProfile: User.TaikoProfile, scoreData?: User.ScoreData, clearData?: User.ClearData[] }) {
     let currentRatingScore: number | null = null;
 
+    console.log(`UUID:`, UUID, `scoreData`, Boolean(scoreData), 'clearData', Boolean(clearData));
+
     // 프로필
     /* DB 업로드 */
     await userDBController.updateTaikoProfile(UUID, taikoProfile);
