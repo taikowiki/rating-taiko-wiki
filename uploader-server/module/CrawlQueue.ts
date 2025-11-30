@@ -1,7 +1,8 @@
 import { Database } from 'bun:sqlite';
 import { TokenManager } from './TokenManager';
-import { DonderHiroba, ScoreData } from 'hiroba-js';
+import { DonderHiroba } from 'hiroba-js';
 import LZUTF8 from 'lzutf8';
+import { ClearData, SongScoreData, TaikoProfile, ScoreData } from './types';
 
 export class CrawlQueue {
     db: Database;
@@ -61,8 +62,8 @@ export class CrawlQueue {
             this.current = this.dequeue();
             if (!this.current) return;
 
-            const cardData = await this.crawlCardData(this.current.taikoNo);
-            if (!cardData) {
+            const taikoProfile = await this.crawlTaikoProfile(this.current.taikoNo);
+            if (!taikoProfile) {
                 return;
             }
 
@@ -83,7 +84,7 @@ export class CrawlQueue {
                 })
             });
 
-            const scoreDataMap: Record<string, ScoreData> = {};
+            const scoreDataMap: Record<string, SongScoreData> = {};
             for (const target of scoreDataCrawlTargets) {
                 const scoreData = await this.crawlScoreData(this.current.taikoNo, target.songNo, target.diff);
                 if (!scoreData) continue;
@@ -101,26 +102,12 @@ export class CrawlQueue {
                 }
             }
 
-            await fetch('https://rating.taiko.wiki/api/internal/upload-rating-data', {
-                method: 'POST',
-                headers: {
-                    'x-internal-key': process.env.INTERNAL_API_KEY,
-                    'content-type': 'application/json'
-                },
-                body: LZUTF8.compress(JSON.stringify({
-                    UUID: this.current.UUID,
-                    taikoProfile: {
-                        taikoNo: cardData.taikoNumber,
-                        nickname: cardData.nickname,
-                        crown: cardData.summary?.crown,
-                        badge: cardData.summary?.badge,
-                        dani: null
-                    },
-                    clearData,
-                    scoreData: scoreDataMap
-                }))
+            await this.upload({
+                UUID: this.current.UUID,
+                scoreData: scoreDataMap,
+                clearData,
+                taikoProfile
             })
-
         }
         catch (err) {
             console.error(err);
@@ -131,23 +118,51 @@ export class CrawlQueue {
         }
     }
 
-    private async crawlCardData(taikoNo: string) {
+    private async crawlTaikoProfile(taikoNo: string): Promise<TaikoProfile | null | false> {
         let retry = 0;
         let token = await TokenManager.getToken();
         for (; retry < 5; retry++) {
             try {
-                return await DonderHiroba.func.getCardData({
+                const cardData = await DonderHiroba.func.getCardData({
                     token,
                     taikoNo
-                })
+                });
+
+                if (!cardData) return null;
+
+                return {
+                    nickname: cardData.nickname,
+                    taikoNo: cardData.taikoNumber,
+                    crown: cardData.summary?.crown ?? defaultCrown(),
+                    badge: cardData.summary?.badge ?? defaultBadge(),
+                    dani: null
+                }
             }
             catch {
                 token = await TokenManager.renewToken();
                 retry++;
             }
         }
-        if (retry >= 5) {
-            return false;
+        return false;
+
+        function defaultCrown() {
+            return {
+                donderfull: 0,
+                gold: 0,
+                silver: 0
+            }
+        }
+
+        function defaultBadge() {
+            return {
+                rainbow: 0,
+                purple: 0,
+                pink: 0,
+                gold: 0,
+                silver: 0,
+                bronze: 0,
+                white: 0
+            }
         }
     }
 
@@ -191,6 +206,23 @@ export class CrawlQueue {
         if (retry >= 5) {
             return false;
         }
+    }
+
+    private async upload({ UUID, taikoProfile, scoreData, clearData }: { UUID: string; taikoProfile: TaikoProfile; scoreData: ScoreData; clearData: ClearData[] }) {
+        //process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+        await fetch('https://rating.taiko.wiki/api/internal/upload-rating-data', {
+            method: 'POST',
+            headers: {
+                'x-internal-key': process.env.INTERNAL_API_KEY,
+                'content-type': 'application/json'
+            },
+            body: LZUTF8.compress(JSON.stringify({
+                UUID,
+                taikoProfile,
+                clearData,
+                scoreData
+            }), {outputEncoding: 'Base64'})
+        })
     }
 }
 

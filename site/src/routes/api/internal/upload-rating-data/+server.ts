@@ -15,11 +15,17 @@ export async function POST({ request }: RequestEvent) {
             clearData: z.array(User.Schema.ClearData)
         }).parse(JSON.parse(LZUTF8.decompress(await request.text(), { inputEncoding: 'Base64' })));
     }
-    catch {
+    catch (err){
+        console.error(err);
         throw error(400);
     }
 
-    await updateRatingData(requestData);
+    try{
+        await updateRatingData(requestData);
+    }
+    catch(err){
+        console.error(err);
+    }
 
     return new Response();
 }
