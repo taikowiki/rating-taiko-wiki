@@ -143,7 +143,7 @@ export class CrawlQueue {
                 retry++;
             }
         }
-        return false;
+        return null;
 
         function defaultCrown() {
             return {
