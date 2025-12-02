@@ -5,6 +5,7 @@ export const ko = {
     header: {
         ranking: '랭킹',
         docs: '문서',
+        statistics: '통계',
         my_profile: '내 프로필',
         my_rating: '내 레이팅',
         login: '로그인',
@@ -98,5 +99,34 @@ export const ko = {
         error: '데이터 이전 오류',
         already_exists: '이미 레이팅 데이터가 존재합니다.',
         not_possible: '데이터 이전이 불가능합니다.'
+    },
+    dani: {
+        '5kyu': '5급',
+        '4kyu': '4급',
+        '3kyu': '3급',
+        '2kyu': '2급',
+        '1kyu': '1급',
+        '1dan': '초단',
+        '2dan': '2단',
+        '3dan': '3단',
+        '4dan': '4단',
+        '5dan': '5단',
+        '6dan': '6단',
+        '7dan': '7단',
+        '8dan': '8단',
+        '9dan': '9단',
+        '10dan': '10단',
+        'kuroto': '현인',
+        'meijin': '명인',
+        'chojin': '초인',
+        'tatsujin': '달인'
+    },
+    statistic: {
+        dani: {
+            title: '단위 관련 통계',
+            daniDistribution: '단위 분포',
+            ratingScoreByDani: '단위 별 레이팅 점수',
+            info: '주황색은 자신의 단위와 레이팅 점수가 포함된 범위입니다.'
+        }
     }
 }

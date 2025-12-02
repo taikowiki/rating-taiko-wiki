@@ -2,7 +2,12 @@
     import { afterNavigate, goto } from "$app/navigation";
     import { page } from "$app/state";
     import { getI18n } from "$lib/module/i18n";
-    import { getIsMobile, getLang, getProfile, getTheme } from "$lib/module/layout";
+    import {
+        getIsMobile,
+        getLang,
+        getProfile,
+        getTheme,
+    } from "$lib/module/layout";
     import LangSelector from "./LangSelector.svelte";
 
     interface Props {
@@ -80,6 +85,9 @@
     </a>
     <a class="navBtn" href={`/docs`}>
         <span>{i18n.docs}</span>
+    </a>
+    <a class="navBtn" href="/statistic">
+        <span>{i18n.statistics}</span>
     </a>
     <LangSelector />
 </div>

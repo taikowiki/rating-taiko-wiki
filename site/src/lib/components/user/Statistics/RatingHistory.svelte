@@ -54,7 +54,7 @@
                     },
                     options: {
                         responsive: false,
-                    },
+                    }
                 });
                 unsubscriber = theme.subscribe((value) => {
                     if (chart.options) {

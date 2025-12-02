@@ -30,6 +30,9 @@
             <a class="navBtn" href="/docs">
                 <span>{i18n.docs}</span>
             </a>
+            <a class="navBtn" href="/statistic">
+                <span>{i18n.statistics}</span>
+            </a>
         {/if}
     </div>
     <div class="right" class:isMobile={$isMobile}>

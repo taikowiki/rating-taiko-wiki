@@ -48,7 +48,8 @@
             options: {
                 responsive: false,
                 backgroundColor: $theme === "light" ? 'white' : '#282828',
-                color: $theme === "light" ? "black" : "white"
+                color: $theme === "light" ? "black" : "white",
+                borderColor: 'gray'
             },
         });
         unsubscriber = theme.subscribe((value) => {
@@ -137,7 +138,7 @@
 </div>
 <div class="figure-container">
     <div class="figure">
-        x̄: {AVG.toFixed(2)}
+        x̅: {AVG.toFixed(2)}
     </div>
     <div class="figure">
         σ: {SD.toFixed(2)}

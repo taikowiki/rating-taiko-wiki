@@ -2,7 +2,7 @@
     import UserCapture from "$lib/components/user/Capture/UserCapture.svelte";
     import Profile from "$lib/components/user/Profile/Profile.svelte";
     import RatingSong from "$lib/components/user/RatingSong/RatingSong.svelte";
-    import Statistics from "$lib/components/user/Statistics/Statistics.svelte";
+    import Statistics from "$lib/components/user/Statistics/UserStatistics.svelte";
     import { getIsMobile, getTheme } from "$lib/module/layout/index.js";
     import { getNextTier, getTier } from "$lib/module/user/index.js";
     import { alertDialog } from "$lib/module/util/client.js";
