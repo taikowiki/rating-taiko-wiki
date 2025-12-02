@@ -150,7 +150,7 @@ export namespace userDBController {
 
     export const updateAllRanking = defineDBHandler(() => {
         return async (run) => {
-            await run("UPDATE `user/rating_data` t1 SET `ranking` = (SELECT COUNT(*) + 1 FROM `user/rating_data` t2 WHERE t2.`currentRatingScore` > t1.`currentRatingScore`)")
+            await run("UPDATE `user/rating_data` t1 SET `ranking` = (SELECT COUNT(*) + 1 FROM `user/rating_data` t2 INNER JOIN `user/profile` p ON p.`UUID` = t2.`UUID` WHERE t2.`currentRatingScore` > t1.`currentRatingScore`)")
         }
     })
     export const updateRatingData = defineDBHandler<[UUID: string, ratingData: User.RatingData]>((UUID, ratingData) => {
@@ -353,7 +353,7 @@ export namespace userDBController {
             .join(
                 'user/profile',
                 () => ({ nickname: 'nickname', UUID: 'UUID' }),
-                'left',
+                'inner',
                 ({ compare, column }) => [compare(column('user/rating_data.UUID'), '=', column('user/profile.UUID'))]
             )
             .orderBy('user/rating_data.ranking', 'asc')
