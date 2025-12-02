@@ -64,7 +64,7 @@ jobs:
 
             - name: Request deploy
               run: |
-                curl -X POST --retry 5 --retry-delay 2 --connect-timeout 180 "https://rating-deploy.taiko.wiki" \
+                curl -X POST --retry 5 --retry-delay 2 --retry-all-errors --connect-timeout 180 "https://rating-deploy.taiko.wiki" \
                 -H "Content-Type: application/json" \
                 -H "X-Internal-Key: ${{ secrets.INTERNAL_API_KEY }}" \
                 -d "{\"tag\": \"${{ github.ref_name }}\"}"
