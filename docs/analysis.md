@@ -67,3 +67,54 @@ The project employs a unique and intelligent architecture for data acquisition, 
 ## 5. Conclusion
 
 The `rating.taiko.wiki` project is a well-structured SvelteKit application that leverages a clever client-side scraping mechanism to provide a robust unofficial rating system for Taiko no Tatsujin players. Its use of clear module separation, strong typing (TypeScript, Zod), and a distinct data processing pipeline makes it maintainable and scalable.
+
+## 6. Theming and Internationalization (i18n) Implementation
+
+The project implements both theming and internationalization using a consistent and modular approach within the SvelteKit framework.
+
+### 6.1. Theming
+
+The theming mechanism allows the application to dynamically switch between different visual themes (e.g., light and dark mode).
+
+1.  **Theme State Management**:
+    *   The current theme (e.g., 'light' or 'dark') is managed via a Svelte store, accessed through the `getTheme()` function located in `$lib/module/layout`. This store provides a reactive way to track the user's selected theme across the application.
+
+2.  **Dynamic Class Application**:
+    *   In Svelte components, the `class` attribute is dynamically bound to include a theme-specific class. For instance, an element might have a class binding like `class={'card theme-${$theme}'}`. When the `$theme` store's value changes, the class on the element updates accordingly (e.g., `theme-light` or `theme-dark`).
+
+3.  **CSS Styling**:
+    *   The component's `<style lang="scss">` block contains SCSS rules that target these dynamically applied theme classes. These rules define specific styles (e.g., `background-color`, `box-shadow`) that apply only when the element has a particular theme class, ensuring the visual appearance changes with the selected theme.
+
+    ```scss
+    .card {
+        /* Common styles for the card */
+
+        &.theme-light {
+            background-color: #f0f0f0; /* Light theme specific styles */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &.theme-dark {
+            background-color: #333;   /* Dark theme specific styles */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+    }
+    ```
+
+### 6.2. Internationalization (i18n)
+
+The internationalization (i18n) mechanism enables the application to display content in multiple languages based on user preference.
+
+1.  **Language State Management**:
+    *   The currently selected language code (e.g., 'en', 'ko', 'ja') is managed by a Svelte store, accessible via the `getLang()` function from `$lib/module/layout`.
+
+2.  **Translation Data Retrieval**:
+    *   The `getI18n()` function, located in `$lib/module/i18n`, takes the current language code as an argument. It returns a Svelte derived store (`i18n`) that contains all the translated strings for that specific language. The use of `$derived` ensures that the translation data reactively updates whenever the language store changes.
+
+3.  **Dynamic Text Display**:
+    *   In Svelte templates, content is displayed by referencing keys within the `i18n` object. For example, `{i18n.statistic.title}` will display the translated title for the "statistics" section based on the active language. This abstraction ensures that the correct text is shown without needing conditional logic in the template.
+
+    ```html
+    <h1>{i18n.statistic.title}</h1>
+    <h2>{i18n.statistic.dani.title}</h2>
+    ```

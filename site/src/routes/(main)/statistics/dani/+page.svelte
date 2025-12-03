@@ -15,7 +15,6 @@
 </div>
 <DaniDistribution
     statisticData={data.statisticData}
-    myRatingData={data.myRatingData}
     myTaikoProfile={data.myTaikoProfiile}
 />
 <RatingByDani

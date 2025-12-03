@@ -5,6 +5,7 @@ export const ja = {
     header: {
         ranking: 'ランキング',
         docs: 'ドキュメント',
+        statistics: '統計',
         my_profile: 'マイプロフィール',
         my_rating: 'マイレーティング',
         login: 'ログイン',
@@ -82,6 +83,11 @@ export const ja = {
             title: '統計',
             top_50: '上位50曲',
             history: '履歴'
+        },
+        rating_info: {
+            ranking: 'ランキング',
+            current_tier: '現在のティア',
+            rating: 'レーティング'
         }
     },
     migrate: {
@@ -93,5 +99,35 @@ export const ja = {
         error: 'データ移行エラー',
         already_exists: 'すでにレーティングデータが存在します。',
         not_possible: 'データ移行は不可能です。'
+    },
+    dani: {
+        '5kyu': '5級',
+        '4kyu': '4級',
+        '3kyu': '3級',
+        '2kyu': '2級',
+        '1kyu': '1級',
+        '1dan': '初段',
+        '2dan': '二段',
+        '3dan': '三段',
+        '4dan': '四段',
+        '5dan': '五段',
+        '6dan': '六段',
+        '7dan': '七段',
+        '8dan': '八段',
+        '9dan': '九段',
+        '10dan': '十段',
+        'kuroto': '玄人',
+        'meijin': '名人',
+        'chojin': '超人',
+        'tatsujin': '達人'
+    },
+    statistic: {
+        dani: {
+            title: '段位関連統計',
+            daniDistribution: '段位分布',
+            ratingScoreByDani: '段位別レーティングスコア',
+            info: 'オレンジ色は自分の段位とレーティングスコアが含まれた範囲です。',
+            description: '自分が現在どの程度の位置にいるか確認し、他の人と比べてみましょう。'
+        }
     }
 }

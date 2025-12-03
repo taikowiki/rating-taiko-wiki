@@ -108,7 +108,8 @@
                         ticks: { color: tickColor, stepSize: 1 },
                     },
                 },
-                responsive: false
+                //responsive: false
+                maintainAspectRatio: false
             },
         });
         unsubscriber = theme.subscribe((value) => {

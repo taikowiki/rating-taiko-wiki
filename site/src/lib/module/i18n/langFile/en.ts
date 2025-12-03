@@ -5,6 +5,7 @@ export const en = {
     header: {
         ranking: 'Ranking',
         docs: 'Docs',
+        statistics: 'Statistics',
         my_profile: 'My Profile',
         my_rating: 'My Rating',
         login: 'Login',
@@ -84,6 +85,9 @@ export const en = {
             history: 'History'
         },
         rating_info: {
+            ranking: 'Ranking',
+            current_tier: 'Current Tier',
+            rating: 'Rating'
         }
     },
     migrate: {
@@ -95,5 +99,35 @@ export const en = {
         error: 'Data migration error',
         already_exists: 'Rating data already exists.',
         not_possible: 'Data migration is not possible.'
+    },
+    dani: {
+        '5kyu': '5th Kyu',
+        '4kyu': '4th Kyu',
+        '3kyu': '3rd Kyu',
+        '2kyu': '2nd Kyu',
+        '1kyu': '1st Kyu',
+        '1dan': '1st Dan',
+        '2dan': '2nd Dan',
+        '3dan': '3rd Dan',
+        '4dan': '4th Dan',
+        '5dan': '5th Dan',
+        '6dan': '6th Dan',
+        '7dan': '7th Dan',
+        '8dan': '8th Dan',
+        '9dan': '9th Dan',
+        '10dan': '10th Dan',
+        'kuroto': 'Kuroto',
+        'meijin': 'Meijin',
+        'chojin': 'Chojin',
+        'tatsujin': 'Tatsujin'
+    },
+    statistic: {
+        dani: {
+            title: 'Dan-i related statistics',
+            daniDistribution: 'Dan-i Distribution',
+            ratingScoreByDani: 'Rating Score by Dan-i',
+            info: 'The orange range indicates your Dan-i and rating score.',
+            description: 'Check your current position and compare yourself with others.'
+        }
     }
 }

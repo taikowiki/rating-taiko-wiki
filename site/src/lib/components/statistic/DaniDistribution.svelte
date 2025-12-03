@@ -76,7 +76,7 @@
                         ticks: { color: tickColor, stepSize: 1 },
                     },
                 },
-                responsive: false
+                maintainAspectRatio: false
             },
         });
         unsubscribers.push(
