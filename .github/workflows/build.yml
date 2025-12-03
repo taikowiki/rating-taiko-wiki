@@ -63,8 +63,4 @@ jobs:
                 asset_content_type: application/zip
 
             - name: Request deploy
-              run: |
-                curl -X POST --retry 5 --retry-delay 2 --retry-all-errors --connect-timeout 180 "https://rating-deploy.taiko.wiki" \
-                -H "Content-Type: application/json" \
-                -H "X-Internal-Key: ${{ secrets.INTERNAL_API_KEY }}" \
-                -d "{\"tag\": \"${{ github.ref_name }}\"}"
+              run: bun ../.github/scripts/build.ts --internal-key ${{ secrets.INTERNAL_API_KEY }} --tag ${{ github.ref_name }}
