@@ -140,6 +140,16 @@ export const queryBuilder = new QueryBuilder({
         url: ['string'],
         status: ['number'],
         error: ['string', 'null']
+    },
+    'measure': {
+        range: ['number'],
+        measureValue: ['number'],
+        level: ['number'],
+        songno: ['string'],
+        diff: ['string'],
+        title: ['string'],
+        notes: ['number'],
+        maxroll: ['number']
     }
 });
 export type DBSchema = InferDBSchema<typeof queryBuilder['dbSchema']>;
