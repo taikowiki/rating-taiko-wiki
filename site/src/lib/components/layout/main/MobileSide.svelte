@@ -89,6 +89,9 @@
     <a class="navBtn" href="/statistic">
         <span>{i18n.statistics}</span>
     </a>
+    <a class="navBtn" href="/measure">
+        <span>{i18n.measure}</span>
+    </a>
     <LangSelector />
 </div>
 
