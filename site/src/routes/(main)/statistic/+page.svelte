@@ -12,7 +12,7 @@
 <div class="statistics-container">
     <h1>{i18n.statistic.title}</h1>
     <div class="card-container">
-        <a href="/statistics/dani" class={`card theme-${$theme}`}>
+        <a href="/statistic/dani" class={`card theme-${$theme}`}>
             <h2>{i18n.statistic.dani.title}</h2>
             <img src={ArrowIcon} alt="arrow" class="arrow-icon" />
         </a>

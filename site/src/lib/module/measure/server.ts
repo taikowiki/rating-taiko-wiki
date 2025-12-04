@@ -6,7 +6,7 @@ export namespace measureDBController {
     export const getAll = defineDBHandler<[], Measure.Measure[]>(() => {
         const query = queryBuilder.select('measure', '*');
         return async (run) => {
-            return await query.execute(run) as Measure.Measure[];
+            return (await query.execute(run)).map((v) => ({ ...v, measureValue: normalizeMeasureValue(v.measureValue) })) as Measure.Measure[];
         }
     });
     export const getBySongNoAndDiff = defineDBHandler<[songNo: string, diff: 'oni' | 'ura'], Measure.Measure | null>((songNo, diff) => {
@@ -17,7 +17,7 @@ export namespace measureDBController {
             ]);
 
         return async (run) => {
-            return (await query.execute(run))[0] as Measure.Measure ?? null;
+            return (await query.execute(run)).map((v) => ({ ...v, measureValue: normalizeMeasureValue(v.measureValue) }))[0] as Measure.Measure ?? null;
         }
     });
     export const update = defineDBHandler<[measures: Measure.Measure[]]>((measures) => {
@@ -50,4 +50,8 @@ export namespace measureDBController {
             }
         }
     })
+
+    function normalizeMeasureValue(value: number) {
+        return Math.round(value * 10) / 10;
+    }
 }

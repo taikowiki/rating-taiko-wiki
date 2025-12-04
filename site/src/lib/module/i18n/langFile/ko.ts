@@ -6,6 +6,7 @@ export const ko = {
         ranking: '랭킹',
         docs: '문서',
         statistics: '통계',
+        measure: '상수표',
         my_profile: '내 프로필',
         my_rating: '내 레이팅',
         login: '로그인',
@@ -130,5 +131,12 @@ export const ko = {
             info: '주황색은 자신의 단위와 레이팅 점수가 포함된 범위입니다.',
             description: '자신이 현재 어느정도의 위치에 있는지 확인하고 다른 사람들과 비교해보세요.'
         }
+    },
+    measure:{
+        title: '상수표',
+        measure: '상수',
+        level: '레벨',
+        song_title: '곡 제목',
+        search_placeholder: '곡 제목으로 검색'
     }
 }

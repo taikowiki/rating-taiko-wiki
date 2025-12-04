@@ -3,9 +3,10 @@ export const ja = {
         WIP: '工事中...'
     },
     header: {
-        ranking: 'ランキング',
-        docs: 'ドキュメント',
+        ranking: '順位',
+        docs: '文書',
         statistics: '統計',
+        measure: '定数表',
         my_profile: 'マイプロフィール',
         my_rating: 'マイレーティング',
         login: 'ログイン',
@@ -13,7 +14,7 @@ export const ja = {
         close: '閉じる'
     },
     docs: {
-        doc: 'ドキュメント',
+        doc: '文書',
         titles: [
             '01. 概要',
             '02. データアップロード'
@@ -122,6 +123,7 @@ export const ja = {
         'tatsujin': '達人'
     },
     statistic: {
+        title: "統計",
         dani: {
             title: '段位関連統計',
             daniDistribution: '段位分布',
@@ -129,5 +131,12 @@ export const ja = {
             info: 'オレンジ色は自分の段位とレーティングスコアが含まれた範囲です。',
             description: '自分が現在どの程度の位置にいるか確認し、他の人と比べてみましょう。'
         }
+    },
+    measure:{
+        title: '定数表',
+        measure: '定数',
+        level: 'レベル',
+        song_title: '曲名',
+        search_placeholder: '曲名で検索'
     }
 }

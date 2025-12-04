@@ -6,6 +6,7 @@ export const en = {
         ranking: 'Ranking',
         docs: 'Docs',
         statistics: 'Statistics',
+        measure: 'Measure Table',
         my_profile: 'My Profile',
         my_rating: 'My Rating',
         login: 'Login',
@@ -122,6 +123,7 @@ export const en = {
         'tatsujin': 'Tatsujin'
     },
     statistic: {
+        title: "Statistics",
         dani: {
             title: 'Dan-i related statistics',
             daniDistribution: 'Dan-i Distribution',
@@ -129,5 +131,12 @@ export const en = {
             info: 'The orange range indicates your Dan-i and rating score.',
             description: 'Check your current position and compare yourself with others.'
         }
+    },
+    measure:{
+        title: 'Measure Table',
+        measure: 'CC',
+        level: 'Level',
+        song_title: 'Song Title',
+        search_placeholder: 'Search by Song Title'
     }
 }

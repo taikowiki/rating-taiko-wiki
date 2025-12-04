@@ -436,6 +436,7 @@ export async function updateRatingData(data: { UUID: string, taikoProfile: User.
         /* 새 레이팅 계산 */
         const measures = await measureDBController.getAll();
         const result = calcualteRating(scoreData, measures, songs);
+        
         /* ratingScoreHistory 병합 */
         const ratingScoreHistory = formerRatingData?.ratingScoreHistory ?? [];
         if (ratingScoreHistory.length >= 2 && ratingScoreHistory.at(-1)?.[1] === ratingScoreHistory.at(-2)?.[1] && ratingScoreHistory.at(-1)?.[1] === result.currentRatingScore) {
@@ -448,9 +449,7 @@ export async function updateRatingData(data: { UUID: string, taikoProfile: User.
                 songRatingDataMap[data.songNo] = {}
             };
 
-            if (songRatingDataMap[data.songNo]?.[data.difficulty]?.ratingScore ?? 0 <= data.ratingScore) {
-                songRatingDataMap[data.songNo][data.difficulty] = data;
-            }
+            songRatingDataMap[data.songNo][data.difficulty] = data;
         });
         const songRatingDatas: User.SongRatingData[] = [];
         Object.values(songRatingDataMap).forEach((s) => {
