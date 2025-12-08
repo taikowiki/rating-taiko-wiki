@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { getI18n } from "$lib/module/i18n";
+    import { getLang } from "$lib/module/layout";
     import type { User } from "$lib/module/user";
 
     interface Props {
@@ -25,8 +27,11 @@
         }
         return ranking;
     }
+
+    const lang = getLang();
+    const i18n = $derived(getI18n($lang).statistic.song)
 </script>
 
 {#if ranking}
-    <h3>내 랭킹: {ranking}위</h3>
+    <h3>{i18n.myRanking(ranking)}</h3>
 {/if}

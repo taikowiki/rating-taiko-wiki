@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { getTheme } from "$lib/module/layout";
+    import { getI18n } from "$lib/module/i18n";
+    import { getLang, getTheme } from "$lib/module/layout";
     import type { User } from "$lib/module/user";
     import { Chart } from "chart.js/auto";
     import { onDestroy, onMount } from "svelte";
@@ -106,10 +107,13 @@
             ],
         };
     }
+
+    const lang = getLang();
+    const i18n = $derived(getI18n($lang).statistic.song);
 </script>
 
 <div class="section">
-    <h2>레이팅 점수 분포</h2>
+    <h2>{i18n.songRatingDistribution}</h2>
     <div class="canvas-container">
         <canvas bind:this={canvas}></canvas>
     </div>

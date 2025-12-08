@@ -127,7 +127,7 @@
                             href={forStatistic
                                 ? `/statistic/song/${data.songNo}?diff=${data.diff}`
                                 : `//taiko.wiki/song/${data.songNo}?diff=${data.diff}`}
-                            target={forStatistic ? "_self" : "_blank"}
+                            target={forStatistic ? "" : "_blank"}
                         >
                             {data.title}
                         </a>

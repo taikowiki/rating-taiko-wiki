@@ -124,15 +124,26 @@ export const en = {
     },
     statistic: {
         title: "Statistics",
+        info: 'The orange range includes your data.',
         dani: {
             title: 'Dan-i related statistics',
             daniDistribution: 'Dan-i Distribution',
             ratingScoreByDani: 'Rating Score by Dan-i',
-            info: 'The orange range indicates your Dan-i and rating score.',
             description: 'Check your current position and compare yourself with others.'
+        },
+        song: {
+            title: 'Song-by-song statistics',
+            songRatingDistribution: 'Song rating score distribution',
+            songRatingByTier: 'Rating score distribution by tier',
+            myRanking: (ranking: number) => `My ranking: ${ranking}${
+                ranking === 1 ? 'st' :
+                ranking === 2 ? 'nd' :
+                ranking === 3 ? 'rd' :
+                'th'
+            }`
         }
     },
-    measure:{
+    measure: {
         title: 'Measure Table',
         measure: 'CC',
         level: 'Level',

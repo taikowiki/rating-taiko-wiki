@@ -13,7 +13,7 @@
     const i18n = $derived(getI18n($lang).statistic);
 </script>
 
-<PageTitle title={`통계 - ${data.measure.title}`} />
+<PageTitle title={`${i18n.title} - ${data.measure.title}`} />
 <h1>
     {data.measure.title}
     <div class="info-container">

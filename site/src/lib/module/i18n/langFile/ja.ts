@@ -124,15 +124,21 @@ export const ja = {
     },
     statistic: {
         title: "統計",
+        info: 'オレンジ色は自分のデータを含む範囲です。',
         dani: {
             title: '段位関連統計',
             daniDistribution: '段位分布',
             ratingScoreByDani: '段位別レーティングスコア',
-            info: 'オレンジ色は自分の段位とレーティングスコアが含まれた範囲です。',
             description: '自分が現在どの程度の位置にいるか確認し、他の人と比べてみましょう。'
+        },
+        song: {
+            title: '曲別統計',
+            songRatingDistribution: '曲レーティング分布',
+            songRatingByTier: 'ティア別レーティング分布',
+            myRanking: (ranking: number) => `マイ ランキング: ${ranking}位`
         }
     },
-    measure:{
+    measure: {
         title: '定数表',
         measure: '定数',
         level: 'レベル',

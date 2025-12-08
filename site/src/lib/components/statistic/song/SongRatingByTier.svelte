@@ -3,6 +3,8 @@
     import { CONST } from "$lib/module/util";
     import { SvelteMap } from "svelte/reactivity";
     import SongRatingByTierElement from "./SongRatingByTierElement.svelte";
+    import { getLang } from "$lib/module/layout";
+    import { getI18n } from "$lib/module/i18n";
 
     interface Props {
         statisticData: {
@@ -33,10 +35,13 @@
         });
         return grouped;
     }
+
+    const lang = getLang();
+    const i18n = $derived(getI18n($lang).statistic.song);
 </script>
 
 <div>
-    <h2>티어 별 분포</h2>
+    <h2>{i18n.songRatingByTier}</h2>
     {#each CONST.RATING.TIER_NAME as tierName}
         {@const datas = grouped.get(tierName)}
         {#if datas}
