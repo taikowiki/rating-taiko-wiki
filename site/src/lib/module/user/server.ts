@@ -369,6 +369,19 @@ export namespace userDBController {
             }
         }
     });
+    export const getSongRatingDataByUUID = defineDBHandler<[UUID: string, songNo: string, diff: 'oni' | 'ura'], User.SongRatingData | null>((UUID, songNo, diff) => {
+        const query = queryBuilder.select('user/song_rating_data', '*')
+        .where(({compare, column, value}) => [
+            compare(column('UUID'), '=', value(UUID)),
+            compare(column('songNo'), '=', value(songNo)),
+            compare(column('difficulty'), '=', value(diff === 'oni' ? 0 : 1))
+        ])
+        return async (run) => {
+            const rows = await query.execute(run);
+            if(rows.length === 0) return null;
+            return dbConverter.fromDB.songRatingData(rows[0])
+        }
+    })
     export const deleteData = defineDBHandler<[UUID: string]>((UUID) => {
         return async (run) => {
             await queryBuilder.delete('user/profile')

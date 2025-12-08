@@ -130,6 +130,9 @@ export const ko = {
             ratingScoreByDani: '단위 별 레이팅 점수',
             info: '주황색은 자신의 단위와 레이팅 점수가 포함된 범위입니다.',
             description: '자신이 현재 어느정도의 위치에 있는지 확인하고 다른 사람들과 비교해보세요.'
+        },
+        song: {
+            title: '곡 별 통계'
         }
     },
     measure:{

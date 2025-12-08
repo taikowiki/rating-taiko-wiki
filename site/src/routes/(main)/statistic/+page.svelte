@@ -16,6 +16,10 @@
             <h2>{i18n.statistic.dani.title}</h2>
             <img src={ArrowIcon} alt="arrow" class="arrow-icon" />
         </a>
+        <a href="/statistic/song" class={`card theme-${$theme}`}>
+            <h2>{i18n.statistic.song.title}</h2>
+            <img src={ArrowIcon} alt="arrow" class="arrow-icon" />
+        </a>
     </div>
 </div>
 

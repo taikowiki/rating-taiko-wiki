@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getI18n } from "$lib/module/i18n";
-    import { getLang, getTheme } from "$lib/module/layout";
+    import { getLang } from "$lib/module/layout";
     import type { Measure } from "$lib/module/measure";
     import { Gana, COLOR } from "$lib/module/util";
     import type { SongData } from "@taiko-wiki/taikowiki-api";
@@ -27,8 +27,6 @@
 
     let searchQuery = $state("");
     const searched = $derived(filterMeasures(generateSearchReg(searchQuery)));
-    const minMeasure = measures[measures.length - 1]?.measureValue ?? 0;
-    const maxMeasure = measures[0]?.measureValue ?? 0;
 
     function generateSearchReg(query: string) {
         const HALF_DAKUON = /[ｶ-ﾄﾊ-ﾎ][ﾞﾟ]/g;
@@ -81,25 +79,6 @@
         return filtered;
     }
 
-    function getMeasureValueColor(value: number): string {
-        if (value === 12) return "rgb(161, 0, 17)";
-        const discreteValue = Math.floor(value) + (value % 1 >= 0.5 ? 0.5 : 0);
-
-        const minDiscreteMeasure =
-            Math.floor(minMeasure) + (minMeasure % 1 >= 0.5 ? 0.5 : 0);
-        const maxDiscreteMeasure =
-            Math.floor(maxMeasure) + (maxMeasure % 1 >= 0.5 ? 0.5 : 0);
-
-        const totalSteps = (maxDiscreteMeasure - minDiscreteMeasure) / 0.5;
-        const currentStep = (discreteValue - minDiscreteMeasure) / 0.5;
-
-        const hueMin = 220;
-        const hueMax = 360;
-
-        let hue = hueMin + (hueMax - hueMin) * (currentStep / totalSteps);
-        return `hsl(${hue}, 80%, 50%)`;
-    }
-
     const lang = getLang();
     const i18n = $derived(getI18n($lang).measure);
 </script>
@@ -125,7 +104,7 @@
                     <td>
                         <span
                             class="badge"
-                            style="background-color: {getMeasureValueColor(
+                            style="background-color: {COLOR.RATING.MEASURE(
                                 data.measureValue,
                             )}"
                         >
@@ -148,7 +127,7 @@
                             href={forStatistic
                                 ? `/statistic/song/${data.songNo}?diff=${data.diff}`
                                 : `//taiko.wiki/song/${data.songNo}?diff=${data.diff}`}
-                            target={forStatistic ? '_self' : '_blank'}
+                            target={forStatistic ? "_self" : "_blank"}
                         >
                             {data.title}
                         </a>
@@ -217,10 +196,10 @@
         line-height: 1;
         box-sizing: border-box;
     }
-    .title{
+    .title {
         color: inherit;
         font-weight: bold;
-        &:hover{
+        &:hover {
             text-decoration: underline;
         }
     }

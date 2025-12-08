@@ -1,6 +1,6 @@
 <script lang="ts">
-    import DaniDistribution from "$lib/components/statistic/DaniDistribution.svelte";
-    import RatingByDani from "$lib/components/statistic/RatingByDani.svelte";
+    import DaniDistribution from "$lib/components/statistic/dani/DaniDistribution.svelte";
+    import RatingByDani from "$lib/components/statistic/dani/RatingByDani.svelte";
     import { getI18n } from "$lib/module/i18n/index.js";
     import { getLang } from "$lib/module/layout/index.js";
 

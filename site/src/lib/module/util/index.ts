@@ -107,11 +107,11 @@ export namespace Gana {
 
     export const map: Record<string, string> = {};
     for (let i = 0; i < hiragana.length; i++) {
-        if(!hiragana[i]) continue;
+        if (!hiragana[i]) continue;
         map[hiragana[i]] = katakana[i];
     }
-    for(let i = 0; i < halfwidthKatakana.length; i++){
-        if(!halfwidthKatakana[i]) continue;
+    for (let i = 0; i < halfwidthKatakana.length; i++) {
+        if (!halfwidthKatakana[i]) continue;
         map[halfwidthKatakana[i]] = katakana[i];
     }
 }
@@ -226,6 +226,27 @@ export namespace COLOR {
             } else {
                 return `linear-gradient(to right, ${COLOR.RATING.TIER[tierName]})`;
             }
+        }
+
+        export function MEASURE(value: number): string {
+            if (value === 12) return "rgb(161, 0, 17)";
+            const discreteValue = Math.floor(value) + (value % 1 >= 0.5 ? 0.5 : 0);
+            const minMeasure = 1;
+            const maxMeasure = 12;
+
+            const minDiscreteMeasure =
+                Math.floor(minMeasure) + (minMeasure % 1 >= 0.5 ? 0.5 : 0);
+            const maxDiscreteMeasure =
+                Math.floor(maxMeasure) + (maxMeasure % 1 >= 0.5 ? 0.5 : 0);
+
+            const totalSteps = (maxDiscreteMeasure - minDiscreteMeasure) / 0.5;
+            const currentStep = (discreteValue - minDiscreteMeasure) / 0.5;
+
+            const hueMin = 220;
+            const hueMax = 360;
+
+            let hue = hueMin + (hueMax - hueMin) * (currentStep / totalSteps);
+            return `hsl(${hue}, 80%, 50%)`;
         }
 
         export const dani = {
