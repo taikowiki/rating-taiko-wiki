@@ -1,13 +1,19 @@
 <script lang="ts">
     import PageTitle from "$lib/components/layout/main/Page-title.svelte";
     import MySongRanking from "$lib/components/statistic/song/MySongRanking.svelte";
-    import SongRatingScoreDistribution from "$lib/components/statistic/song/SongRatingScoreDistribution.svelte";
+    import SongRatingByTier from "$lib/components/statistic/song/SongRatingByTier.svelte";
+    import SongRatingDistribution from "$lib/components/statistic/song/SongRatingDistribution.svelte";
+    import { getI18n } from "$lib/module/i18n/index.js";
+    import { getLang } from "$lib/module/layout/index.js";
     import { COLOR } from "$lib/module/util/index.js";
 
     let { data } = $props();
+
+    const lang = getLang();
+    const i18n = $derived(getI18n($lang).statistic);
 </script>
 
-<PageTitle title={`통계 - ${data.measure.title}`}/>
+<PageTitle title={`통계 - ${data.measure.title}`} />
 <h1>
     {data.measure.title}
     <div class="info-container">
@@ -30,11 +36,21 @@
     </div>
 </h1>
 <div class="info">
-    {'info'}
+    {i18n.info}
 </div>
 
-<MySongRanking statisticData={data.statisticData} myData={data.myData}/>
-<SongRatingScoreDistribution statisticData={data.statisticData} myData={data.myData}/>
+<MySongRanking statisticData={data.statisticData} myData={data.myData} />
+<div class="container">
+    <SongRatingDistribution
+        statisticData={data.statisticData}
+        myData={data.myData}
+    />
+    <SongRatingByTier
+        statisticData={data.statisticData}
+        myData={data.myData}
+        myRatingData={data.myRatingData}
+    />
+</div>
 
 <style>
     h1 {
@@ -66,5 +82,11 @@
         font-size: 13px;
         color: gray;
         margin-bottom: 20px;
+    }
+
+    .container{
+        display:flex;
+        flex-direction: column;
+        row-gap: 50px;
     }
 </style>

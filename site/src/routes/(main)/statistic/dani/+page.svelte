@@ -6,27 +6,35 @@
 
     let { data } = $props();
     const lang = getLang();
-    const i18n = $derived(getI18n($lang).statistic.dani);
+    const i18n = $derived(getI18n($lang).statistic);
 </script>
 
-<h1>{i18n.title}</h1>
+<h1>{i18n.dani.title}</h1>
 <div class="info">
     {i18n.info}
 </div>
-<DaniDistribution
-    statisticData={data.statisticData}
-    myTaikoProfile={data.myTaikoProfiile}
-/>
-<RatingByDani
-    statisticData={data.statisticData}
-    myRatingData={data.myRatingData}
-    myTaikoProfile={data.myTaikoProfiile}
-/>
+<div class="container">
+    <DaniDistribution
+        statisticData={data.statisticData}
+        myTaikoProfile={data.myTaikoProfiile}
+    />
+    <RatingByDani
+        statisticData={data.statisticData}
+        myRatingData={data.myRatingData}
+        myTaikoProfile={data.myTaikoProfiile}
+    />
+</div>
 
 <style>
     .info {
         font-size: 13px;
         color: gray;
         margin-bottom: 20px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        row-gap: 50px;
     }
 </style>
