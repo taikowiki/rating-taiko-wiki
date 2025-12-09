@@ -28,18 +28,19 @@
     let searchQuery = $state("");
     const searched = $derived(filterMeasures(generateSearchReg(searchQuery)));
 
-    function generateSearchReg(query: string) {
+    function normalize(str: string) {
         const HALF_DAKUON = /[ｶ-ﾄﾊ-ﾎ][ﾞﾟ]/g;
         const SINGLE = /[ぁ-ゖｦ-ﾟ]/g;
+        return str
+            .replace(HALF_DAKUON, (m) => Gana.map[m] ?? m)
+            .replace(SINGLE, (m) => Gana.map[m] ?? m)
+            .toLowerCase();
+    }
+    function generateSearchReg(query: string) {
         return new RegExp(
             ["", ...query.trim().split(" "), ""]
                 .map((phrase) =>
-                    RegExp.escape(
-                        phrase
-                            .replace(HALF_DAKUON, (m) => Gana.map[m] ?? m)
-                            .replace(SINGLE, (m) => Gana.map[m] ?? m)
-                            .toLowerCase(),
-                    ),
+                    RegExp.escape(normalize(phrase)),
                 )
                 .join("(.*)"),
         );
@@ -56,17 +57,17 @@
             const titleData = songTitleMap[measure.songno];
             if (!titleData) return;
             const passed =
-                regexp.test(titleData.title.toLowerCase()) ||
+                regexp.test(normalize(titleData.title)) ||
                 (titleData.titleEn &&
-                    regexp.test(titleData.titleEn.toLowerCase())) ||
+                    regexp.test(normalize(titleData.titleEn))) ||
                 (titleData.titleKo &&
-                    regexp.test(titleData.titleKo.toLowerCase())) ||
+                    regexp.test(normalize(titleData.titleKo))) ||
                 (titleData.aliasEn &&
-                    regexp.test(titleData.aliasEn.toLowerCase())) ||
+                    regexp.test(normalize(titleData.aliasEn))) ||
                 (titleData.aliasKo &&
-                    regexp.test(titleData.aliasKo.toLowerCase())) ||
+                    regexp.test(normalize(titleData.aliasKo))) ||
                 (titleData.romaji &&
-                    regexp.test(titleData.romaji.toLowerCase()));
+                    regexp.test(normalize(titleData.romaji)));
             if (!passed) return;
             filtered.push({
                 title: titleData.title,
