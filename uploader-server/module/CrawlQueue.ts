@@ -1,234 +1,117 @@
-import { Database } from 'bun:sqlite';
-import { TokenManager } from './TokenManager';
-import { DonderHiroba } from 'hiroba-js';
-import LZUTF8 from 'lzutf8';
-import { ClearData, SongScoreData, TaikoProfile, ScoreData } from './types';
+import { Crawler } from "./Crawler";
+import { Uploader } from "./Uploader";
 
-export class CrawlQueue {
-    db: Database;
-    current: CrawlQueue.QueueElement | null = null;
+type QueueItem = {
+    order: number;
+    UUID: string;
+    taikoNo: string;
+    status: 'wating' | 'working' | 'success' | 'error';
+}
 
-    constructor() {
-        this.db = new Database('crawl_queue.db');
-        this.db.run(`
-            CREATE TABLE IF NOT EXISTS queue (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                taikoNo TEXT NOT NULL,
-                UUID TEXT NOT NULL UNIQUE,
-                createdTime INTEGER NOT NULL
-            );
-        `);
+/**
+ * @todo status가 'working'인 아이템 가져오기
+ * @todo 만약 특정 UUID를 가진 아이템이 status가 'wating'이면 몇번째 순위인지 가져오기
+ */
+class QueueItemDatabase {
+    currentOrder = 0;
+    items: QueueItem[] = [];
+
+    /**
+     * 아이템 추가
+     */
+    push(UUID: string, taikoNo: string) {
+        this.currentOrder++;
+        this.items.push({
+            order: this.currentOrder,
+            UUID,
+            taikoNo,
+            status: 'wating'
+        });
     }
 
-    enqueue(data: CrawlQueue.QueueElement): boolean {
-        try {
-            this.db.run("INSERT INTO queue (taikoNo, UUID, createdTime) VALUES (?, ?, ?)", [data.taikoNo, data.UUID, Date.now()]);
-            queueMicrotask(() => this.run());
-            return true;
-        }
-        catch {
-            return false;
-        }
-    }
-
-    private dequeue() {
-        const rows = this.db.query<CrawlQueue.QueueElement, []>(`
-            DELETE FROM queue
-            WHERE id = (
-                SELECT id FROM queue
-                ORDER BY id ASC
-                LIMIT 1
-            )
-            RETURNING taikoNo, uuid;
-        `).get();
-        return rows;
-    }
-
-    getPosition(UUID: string) {
-        const row = this.db.query<{ 'position': number } & CrawlQueue.QueueElement, [UUID: string]>(`
-            SELECT COUNT(*) as position, taikoNo, UUID FROM queue
-            WHERE id < (
-                SELECT id FROM queue
-                WHERE UUID = ?
-            )
-        `).get(UUID);
-
-        return row ?? null;
-    }
-
-    private async run() {
-        try {
-            if (this.current) return;
-            this.current = this.dequeue();
-            if (!this.current) return;
-
-            const taikoProfile = await this.crawlTaikoProfile(this.current.taikoNo);
-            if (!taikoProfile) {
-                return;
-            }
-
-            const clearData = await this.crawlClearData(this.current.taikoNo);
-            if (!clearData || !clearData.length) {
-                return;
-            }
-
-            const scoreDataCrawlTargets: { songNo: string, diff: 'oni' | 'ura' }[] = [];
-            clearData.forEach((c) => {
-                (['oni', 'ura'] as const).forEach((diff) => {
-                    if (c.difficulty?.[diff]?.crown) {
-                        scoreDataCrawlTargets.push({
-                            songNo: c.songNo,
-                            diff
-                        });
-                    }
-                })
-            });
-
-            const scoreDataMap: Record<string, SongScoreData> = {};
-            for (const target of scoreDataCrawlTargets) {
-                const scoreData = await this.crawlScoreData(this.current.taikoNo, target.songNo, target.diff);
-                if (!scoreData) continue;
-
-                const diffScoreData = scoreData.difficulty[target.diff];
-                if (diffScoreData) {
-                    diffScoreData.ranking = 0;
-                }
-
-                if (!scoreDataMap[scoreData.songNo]) {
-                    scoreDataMap[scoreData.songNo] = scoreData;
-                }
-                else {
-                    scoreDataMap[scoreData.songNo].difficulty[target.diff] = scoreData.difficulty[target.diff];
-                }
-            }
-
-            await this.upload({
-                UUID: this.current.UUID,
-                scoreData: scoreDataMap,
-                clearData,
-                taikoProfile
-            })
-        }
-        catch (err) {
-            console.error(err);
-        }
-        finally {
-            this.current = null;
-            return setImmediate(() => this.run());
-        }
-    }
-
-    private async crawlTaikoProfile(taikoNo: string): Promise<TaikoProfile | null | false> {
-        let retry = 0;
-        let token = await TokenManager.getToken();
-        for (; retry < 5; retry++) {
-            try {
-                const cardData = await DonderHiroba.func.getCardData({
-                    token,
-                    taikoNo
-                });
-
-                if (!cardData) return null;
-
-                return {
-                    nickname: cardData.nickname,
-                    taikoNo: cardData.taikoNumber,
-                    crown: cardData.summary?.crown ?? defaultCrown(),
-                    badge: cardData.summary?.badge ?? defaultBadge(),
-                    dani: null
-                }
-            }
-            catch {
-                token = await TokenManager.renewToken();
-                retry++;
-            }
+    /**
+     * wating 아이템 가져오기
+     */
+    pop() {
+        for (const item of this.items) {
+            if (item.status === 'wating') return item;
         }
         return null;
-
-        function defaultCrown() {
-            return {
-                donderfull: 0,
-                gold: 0,
-                silver: 0
-            }
-        }
-
-        function defaultBadge() {
-            return {
-                rainbow: 0,
-                purple: 0,
-                pink: 0,
-                gold: 0,
-                silver: 0,
-                bronze: 0,
-                white: 0
-            }
-        }
     }
 
-    private async crawlClearData(taikoNo: string) {
-        let retry = 0;
-        let token = await TokenManager.getToken();
-        for (; retry < 5; retry++) {
-            try {
-                return await DonderHiroba.func.getClearData({
-                    token,
-                    taikoNo
-                })
-            }
-            catch {
-                token = await TokenManager.renewToken();
-                retry++;
+    /**
+     * 완료되지 않은 아이템 중 UUID가 중복되는 게 있는 지 확인
+     */
+    hasDuplicateUUID(UUID: string) {
+        for (const item of this.items) {
+            if (item.UUID === UUID && (item.status === 'wating' || item.status === 'working')) {
+                return true;
             }
         }
-        if (retry >= 5) {
-            return false;
-        }
+        return false;
     }
 
-    private async crawlScoreData(taikoNo: string, songNo: string, diff: 'oni' | 'ura') {
-        let retry = 0;
-        let token = await TokenManager.getToken();
-        for (; retry < 5; retry++) {
-            try {
-                return await DonderHiroba.func.getScoreData({
-                    token,
-                    taikoNo,
-                    songNo,
-                    difficulty: diff
-                })
-            }
-            catch {
-                token = await TokenManager.renewToken();
-                retry++;
+    /**
+     * 아이템의 상태를 변경
+     */
+    changeStatus(order: number, status: QueueItem['status']) {
+        for (const item of this.items) {
+            if (item.order === order) {
+                item.status = status;
+                return;
             }
         }
-        if (retry >= 5) {
-            return false;
-        }
-    }
-
-    private async upload({ UUID, taikoProfile, scoreData, clearData }: { UUID: string; taikoProfile: TaikoProfile; scoreData: ScoreData; clearData: ClearData[] }) {
-        //process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
-        await fetch('https://rating.taiko.wiki/api/internal/upload-rating-data', {
-            method: 'POST',
-            headers: {
-                'x-internal-key': process.env.INTERNAL_API_KEY,
-                'content-type': 'application/json'
-            },
-            body: LZUTF8.compress(JSON.stringify({
-                UUID,
-                taikoProfile,
-                clearData,
-                scoreData
-            }), {outputEncoding: 'Base64'})
-        })
     }
 }
 
-export namespace CrawlQueue {
-    export type QueueElement = {
-        taikoNo: string;
-        UUID: string;
+export class CrawlQueue {
+    database = new QueueItemDatabase();
+    crawler = new Crawler();
+    uploader = new Uploader();
+    queueRunning: boolean = false;
+
+    push(UUID: string, taikoNo: string): boolean {
+        const UUIDDuplicated = this.database.hasDuplicateUUID(UUID);
+        if (UUIDDuplicated) {
+            return false;
+        }
+
+        this.database.push(UUID, taikoNo);
+        if (this.queueRunning) {
+            return true;
+        }
+        setImmediate(() => this.run());
+        return true;
+    }
+
+    async run() {
+        if (this.queueRunning) return;
+        this.queueRunning = true;
+
+        const item = this.database.pop();
+        if (!item) {
+            this.queueRunning = false;
+            return;
+        }
+
+        this.database.changeStatus(item.order, 'working');
+
+        try {
+            const crawledData = await this.crawler.crawl(item.taikoNo);
+            if (!crawledData) {
+                throw new Error("Crawling error.");
+            }
+            await this.uploader.upload({
+                UUID: item.UUID,
+                ...crawledData
+            });
+            this.database.changeStatus(item.order, 'success');
+        }
+        catch (err) {
+            console.error(err);
+            this.database.changeStatus(item.order, 'error');
+        }
+        this.queueRunning = false;
+        setImmediate(() => this.run());
     }
 }

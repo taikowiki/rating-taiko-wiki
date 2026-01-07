@@ -1,32 +1,19 @@
-import z from "zod";
-import { CrawlQueue } from "./module/CrawlQueue";
+import { CrawlQueue } from './module/CrawlQueue';
 
-const crawlQueue = new CrawlQueue();
+const queue = new CrawlQueue();
 
 Bun.serve({
-    development: false,
     routes: {
-        async '/'(request) {
-            if (request.method === "POST") {
-                let requestData;
-                try {
-                    requestData = z.object({
-                        UUID: z.string(),
-                        taikoNo: z.string()
-                    }).parse(await request.json())
-                }
-                catch {
-                    return new Response(null, { status: 400 });
-                }
-                crawlQueue.enqueue(requestData);
-                return new Response();
+        async '/request'(req) {
+            if (req.method !== "POST") {
+                return new Response(null, { status: 400 });
             }
 
-            return new Response(null, { status: 400 });
-        },
-        async "/current"() {
-            return new Response(JSON.stringify(crawlQueue.current))
+            const data = await req.json();
+            queue.push(data.UUID, data.taikoNo);
+
+            return new Response(JSON.stringify(queue.database.items));
         }
     },
     port: 3000
-})
+});
