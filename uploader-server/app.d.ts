@@ -10,6 +10,8 @@ declare global {
             DB_SERVICE: string;
             DB_TIMEZONE: string;
             INTERNAL_API_KEY: string;
+
+            AUTH_KEY: string;
         }
     }
 }

@@ -8,10 +8,6 @@ type QueueItem = {
     status: 'wating' | 'working' | 'success' | 'error';
 }
 
-/**
- * @todo status가 'working'인 아이템 가져오기
- * @todo 만약 특정 UUID를 가진 아이템이 status가 'wating'이면 몇번째 순위인지 가져오기
- */
 class QueueItemDatabase {
     currentOrder = 0;
     items: QueueItem[] = [];
@@ -32,7 +28,7 @@ class QueueItemDatabase {
     /**
      * wating 아이템 가져오기
      */
-    pop() {
+    peek() {
         for (const item of this.items) {
             if (item.status === 'wating') return item;
         }
@@ -62,6 +58,35 @@ class QueueItemDatabase {
             }
         }
     }
+
+    /**
+     * status가 'working'인 아이템 가져오기
+     */
+    getWorkingItem() {
+        for (const item of this.items) {
+            if (item.status === "working") {
+                return item;
+            }
+        }
+    }
+
+    /**
+     * UUID에 해당하는 아이템의 status가 'waiting'이면 대기 순번 가져오기
+     */
+    getPosition(UUID: string) {
+        let workingItemIndex = 0;
+        for (let i = 0; i < this.items.length; i++) {
+            const item = this.items[i];
+            
+            if(item.status === "working"){
+                workingItemIndex = i;
+            }
+            else if(item.status === "wating" && item.UUID === UUID){
+                return i - workingItemIndex;
+            }
+        }
+        return null;
+    }
 }
 
 export class CrawlQueue {
@@ -84,11 +109,15 @@ export class CrawlQueue {
         return true;
     }
 
+    getPosition(UUID: string){
+        return this.database.getPosition(UUID);
+    }
+
     async run() {
         if (this.queueRunning) return;
         this.queueRunning = true;
 
-        const item = this.database.pop();
+        const item = this.database.peek();
         if (!item) {
             this.queueRunning = false;
             return;
