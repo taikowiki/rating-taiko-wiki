@@ -23,7 +23,7 @@ if (
     process.exit(1);
 }
 
-const response = await fetch('https://rating-deploy.taiko.wiki', {
+const response = await fetch('https://deploy.taiko.wiki/rating', {
     method: 'post',
     headers: {
         'x-internal-key': values['internal-key']
