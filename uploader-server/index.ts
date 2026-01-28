@@ -1,4 +1,3 @@
-import { runQuery } from '@yowza/db-handler';
 import { CrawlQueue } from './module/CrawlQueue';
 import { createDecipheriv } from 'node:crypto';
 import { getUserDataByProviderAndProviderId } from './module/db';
@@ -15,7 +14,7 @@ Bun.serve({
             const data = await req.json();
             queue.push(data.UUID, data.taikoNo);
 
-            return new Response(JSON.stringify(queue.database.items));
+            return new Response(JSON.stringify(queue.database.db.query("SELECT * FROM queue_items").all()));
         },
         async '/position'(req){
             if (req.method !== "POST") {

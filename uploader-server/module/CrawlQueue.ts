@@ -1,72 +1,99 @@
 import { Crawler } from "./Crawler";
 import { Uploader } from "./Uploader";
+import { Database } from 'bun:sqlite';
 
 type QueueItem = {
     order: number;
     UUID: string;
     taikoNo: string;
     status: 'wating' | 'working' | 'success' | 'error';
+    createdTime: Date;
+    updatedTime: Date;
+}
+type QueueDBRow = {
+    order: number;
+    uuid: string;
+    taiko_no: string;
+    status: 'wating' | 'working' | 'success' | 'error';
+    created_time: number;
+    updated_time: number;
 }
 
 class QueueItemDatabase {
-    currentOrder = 0;
-    items: QueueItem[] = [];
+    static query = {
+        createTable: `
+        CREATE TABLE IF NOT EXISTS queue_items (
+            "order" INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT NOT NULL,
+            taiko_no TEXT NOT NULL,
+            status TEXT NOT NULL
+                CHECK (status IN ('wating', 'working', 'success', 'error')),
+            created_time INTEGER NOT NULL,
+            updated_time INTEGER NOT NULL
+        );`
+    }
+
+    db = new Database('./queue.db');
+    constructor() {
+        this.db.run(QueueItemDatabase.query.createTable)
+    }
 
     /**
      * 아이템 추가
      */
     push(UUID: string, taikoNo: string) {
-        this.currentOrder++;
-        this.items.push({
-            order: this.currentOrder,
-            UUID,
-            taikoNo,
-            status: 'wating'
-        });
+        const now = Date.now()
+        this.db.run("INSERT INTO queue_items (uuid, taiko_no, status, created_time, updated_time) VALUES (?, ?, ?, ?, ?)", [UUID, taikoNo, 'wating', now, now])
     }
 
     /**
      * wating 아이템 가져오기
      */
-    peek() {
-        for (const item of this.items) {
-            if (item.status === 'wating') return item;
+    peek(): QueueItem | null {
+        const query = this.db.query<QueueDBRow, []>("SELECT * FROM queue_items WHERE status = 'wating' ORDER BY `order` ASC LIMIT 1")
+        const row = query.get()
+
+        if (row) {
+            return this.rowToQueueItem(row);
         }
-        return null;
+        else {
+            return null;
+        }
     }
 
     /**
      * 완료되지 않은 아이템 중 UUID가 중복되는 게 있는 지 확인
      */
     hasDuplicateUUID(UUID: string) {
-        for (const item of this.items) {
-            if (item.UUID === UUID && (item.status === 'wating' || item.status === 'working')) {
-                return true;
-            }
+        const query = this.db.query<QueueDBRow, [string]>("SELECT * FROM queue_items WHERE uuid = ? AND (status = 'wating' OR status = 'working')")
+        const row = query.get(UUID)
+        if (row) {
+            return true;
         }
-        return false;
+        else {
+            return false;
+        }
     }
 
     /**
      * 아이템의 상태를 변경
      */
     changeStatus(order: number, status: QueueItem['status']) {
-        for (const item of this.items) {
-            if (item.order === order) {
-                item.status = status;
-                return;
-            }
-        }
+        this.db.run("UPDATE queue_items SET status = ?, updated_time = ? WHERE `order` = ?", [status, Date.now(), order])
     }
 
     /**
      * status가 'working'인 아이템 가져오기
      */
     getWorkingItem() {
-        for (const item of this.items) {
-            if (item.status === "working") {
-                return item;
-            }
+        const query = this.db.query<QueueDBRow, []>("SELECT * FROM queue_items WHERE status = 'working'");
+        const row = query.get()
+
+        if (row) {
+            return this.rowToQueueItem(row)
+        }
+        else {
+            return null;
         }
     }
 
@@ -74,18 +101,47 @@ class QueueItemDatabase {
      * UUID에 해당하는 아이템의 status가 'waiting'이면 대기 순번 가져오기
      */
     getPosition(UUID: string) {
-        let workingItemIndex = 0;
-        for (let i = 0; i < this.items.length; i++) {
-            const item = this.items[i];
-            
-            if(item.status === "working"){
-                workingItemIndex = i;
-            }
-            else if(item.status === "wating" && item.UUID === UUID){
-                return i - workingItemIndex;
-            }
+        const query = this.db.query<{ count: number }, [string]>(`
+        SELECT COUNT(*) AS \`count\`
+            FROM queue_items
+            WHERE 
+                status IN ('wating', 'working')
+                AND \`order\` < (
+                    SELECT \`order\`
+                    FROM queue_items
+                    WHERE 
+                        uuid = ?
+                        AND status = 'wating'
+                    LIMIT 1
+                );
+        `);
+        const countRow = query.get(UUID)
+        if (!countRow) return null;
+        if (countRow.count === 0) return null;
+        return countRow.count;
+
+        /*
+        const targetQuery = this.db.query<Pick<QueueDBRow, 'order'>, [string]>("SELECT `order` FROM queue_items WHERE uuid = ? AND status = 'wating'");
+        const targetRow = targetQuery.get(UUID);
+        if (!targetRow) {
+            return null;
         }
-        return null;
+
+        const query = this.db.query<{ count: number }, [number]>("SELECT COUNT(*) as `count` FROM queue_items WHERE order < ? AND (status = 'wating' OR status = 'working)");
+        const countRow = query.get(targetRow.order);
+        return countRow?.count ?? null;
+        */
+    }
+
+    rowToQueueItem(row: QueueDBRow): QueueItem {
+        return {
+            order: row.order,
+            UUID: row.uuid,
+            taikoNo: row.taiko_no,
+            status: row.status,
+            createdTime: new Date(row.created_time),
+            updatedTime: new Date(row.updated_time)
+        }
     }
 }
 
@@ -109,7 +165,7 @@ export class CrawlQueue {
         return true;
     }
 
-    getPosition(UUID: string){
+    getPosition(UUID: string) {
         return this.database.getPosition(UUID);
     }
 
