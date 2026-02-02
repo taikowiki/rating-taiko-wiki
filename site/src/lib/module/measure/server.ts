@@ -3,10 +3,10 @@ import { defineDBHandler } from "@yowza/db-handler";
 import { queryBuilder } from "../db/server";
 
 export namespace measureDBController {
-    export const getAll = defineDBHandler<[], Measure.Measure[]>(() => {
+    export const getAll = defineDBHandler<[], (Measure.MeasureWithIndex)[]>(() => {
         const query = queryBuilder.select('measure', '*');
         return async (run) => {
-            return (await query.execute(run)).map((v) => ({ ...v, measureValue: normalizeMeasureValue(v.measureValue) })) as Measure.Measure[];
+            return (await query.execute(run)).map((v) => ({ ...v, measureValue: normalizeMeasureValue(v.measureValue) })) as (Measure.MeasureWithIndex)[];
         }
     });
     export const getBySongNoAndDiff = defineDBHandler<[songNo: string, diff: 'oni' | 'ura'], Measure.Measure | null>((songNo, diff) => {
@@ -21,7 +21,7 @@ export namespace measureDBController {
         }
     });
     export const update = defineDBHandler<[measures: Measure.Measure[]]>((measures) => {
-        const querys = measures.map((measure) =>
+        const querys = measures.map((measure, i) =>
             queryBuilder.insert('measure')
                 .set(({ value }) => ({
                     songno: value(measure.songno),
@@ -32,6 +32,7 @@ export namespace measureDBController {
                     title: value(measure.title),
                     notes: value(measure.notes),
                     maxroll: value(measure.maxroll),
+                    index: value(i)
                 }))
                 .onDuplicate('update', ({ raw }) => ({
                     songno: raw('VALUES(`songno`)'),
@@ -42,6 +43,7 @@ export namespace measureDBController {
                     title: raw('VALUES(`title`)'),
                     notes: raw('VALUES(`notes`)'),
                     maxroll: raw('VALUES(`maxroll`)'),
+                    index: raw('VALUES(`index`)'),
                 }))
         );
         return async (run) => {

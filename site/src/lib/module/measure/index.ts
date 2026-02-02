@@ -11,8 +11,10 @@ export namespace Measure {
             title: z.string(),
             notes: z.number(),
             maxroll: z.number()
-        })
+        });
+        export const MeasureWithIndex = z.intersection(Measure, z.object({index: z.number()}))
     }
 
     export type Measure = z.infer<typeof Schema.Measure>;
+    export type MeasureWithIndex = z.infer<typeof Schema.MeasureWithIndex>
 }
