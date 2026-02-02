@@ -4,7 +4,7 @@ import type { SongData } from "@taiko-wiki/taikowiki-api";
 
 export async function load() {
     const measures = await measureDBController.getAll();
-    measures.sort((a, b) => (b.measureValue - a.measureValue) || (b.index - a.index));
+    measures.sort((a, b) => (b.measureValue - a.measureValue) || (a.index - b.index));
     const songTitles = await songDBController.getAllTitles();
     const songTitleMap: Record<string, Pick<SongData, 'songNo' | 'title' | 'titleEn' | 'titleKo' | 'aliasEn' | 'aliasKo' | 'romaji'>> = {};
     songTitles.forEach((s) => {
