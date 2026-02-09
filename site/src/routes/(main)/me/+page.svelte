@@ -40,7 +40,7 @@
 
         if (response.status === "success") {
             alert("Successfully deleted.");
-            location.href = "taiko.wiki/auth/logout";
+            location.href = "/";
         } else {
             alert("An error occured.");
         }
