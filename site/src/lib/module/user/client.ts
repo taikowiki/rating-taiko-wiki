@@ -44,7 +44,7 @@ export namespace userRequestor {
     }
 
     export async function deleteData(): Promise<RequestResult<void>> {
-        const response = await fetch('/api/private/profile', {
+        const response = await fetch('/api/priuvate/delete-profile', {
             method: 'post',
             body: JSON.stringify({
                 agree: true
