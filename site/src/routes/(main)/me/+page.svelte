@@ -21,13 +21,28 @@
     async function updateProfile() {
         const result = await userRequestor.updateProfile({
             ...profile,
-            option: profileOption
+            option: profileOption,
         });
         if (result.status === "success") {
             alertDialog(i18n.success_alert);
             profileStore.set(profile);
         } else {
             alertDialog(i18n.error_alert);
+        }
+    }
+
+    async function deleteData() {
+        if (!window.confirm("Do you really want to delete your data?")) {
+            return;
+        }
+
+        const response = await userRequestor.deleteData();
+
+        if (response.status === "success") {
+            alert("Successfully deleted.");
+            location.href = "taiko.wiki/auth/logout";
+        } else {
+            alert("An error occured.");
         }
     }
 </script>
@@ -51,7 +66,7 @@
         <textarea class="standard" bind:value={profile.bio}></textarea>
     </label>
     <div>
-        <input type="checkbox" bind:checked={profileOption.hideDan}/>
+        <input type="checkbox" bind:checked={profileOption.hideDan} />
         {i18n.hideDan}
     </div>
     <button class="standard" onclick={updateProfile}>{i18n.save}</button>
@@ -78,6 +93,8 @@
         </div>
     </div>
 {/if}
+
+<button class="standard" onclick={deleteData}>Delete all your datas.</button>
 
 <style>
     .profile-container {
