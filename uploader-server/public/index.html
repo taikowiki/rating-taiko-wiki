@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taiko Wiki Uploader</title>
+    <title>Taiko Rating Uploader</title>
     <style>
         :root {
             --primary-color: #ff4757;
@@ -142,19 +142,18 @@
             color: #bdc3c7;
         }
 
-        .lang-switcher {
-            margin-top: 1rem;
-            font-size: 0.8rem;
-            cursor: pointer;
-            color: #747d8c;
-            text-decoration: underline;
+        .notice-text {
+            font-size: 0.75rem;
+            color: #a4b0be;
+            margin-bottom: 1rem;
+            line-height: 1.4;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1 data-t="title">Taiko Uploader</h1>
+        <h1 data-t="title">Taiko Rating Uploader</h1>
 
         <div class="status-box">
             <span class="label" data-t="labelMyPosition">현재 내 대기 순번</span>
@@ -173,16 +172,16 @@
             </div>
         </div>
 
+        <div class="notice-text" data-t="infoUnlockNotice">해금곡은 집계되지 않습니다.</div>
         <button id="requestBtn" disabled data-t="btnRequest">데이터 업데이트 요청</button>
         <div id="message"></div>
         <div id="ws-status" class="ws-status" data-t="wsConnecting">상태: 연결 중...</div>
-        <div class="lang-switcher" onclick="toggleLang()">Switch Language (KO/EN/JP)</div>
     </div>
 
     <script type="module">
         const i18n = {
             ko: {
-                title: "Taiko Uploader",
+                title: "Taiko Rating Uploader",
                 labelMyPosition: "현재 내 대기 순번",
                 labelTotalQueue: "현재 전체 대기자 수",
                 labelLastSuccess: "최근 성공 시간",
@@ -201,10 +200,11 @@
                 msgServerError: "서버 연결 오류",
                 wsConnecting: "상태: 연결 중...",
                 wsConnected: "상태: 실시간 연결됨",
-                wsDisconnected: "상태: 연결 끊김 (재연결 시도 중...)"
+                wsDisconnected: "상태: 연결 끊김 (재연결 시도 중...)",
+                infoUnlockNotice: "해금곡은 집계되지 않습니다."
             },
             en: {
-                title: "Taiko Uploader",
+                title: "Taiko Rating Uploader",
                 labelMyPosition: "My Queue Position",
                 labelTotalQueue: "Total Queue Count",
                 labelLastSuccess: "Last Successful Update",
@@ -223,12 +223,13 @@
                 msgServerError: "Server connection error",
                 wsConnecting: "Status: Connecting...",
                 wsConnected: "Status: Live Connected",
-                wsDisconnected: "Status: Disconnected (Retrying...)"
+                wsDisconnected: "Status: Disconnected (Retrying...)",
+                infoUnlockNotice: "Unlockable songs are not crawled."
             },
-            jp: {
-                title: "太鼓アップローダー",
+            ja: {
+                title: "太鼓レーティングアップローダー",
                 labelMyPosition: "現在の待ち順位",
-                labelTotalQueue: "現在の全待機者数",
+                labelTotalQueue: "現在の全待機者수",
                 labelLastSuccess: "最終成功時間",
                 unitPerson: "人",
                 statusConnecting: "接続中...",
@@ -245,11 +246,11 @@
                 msgServerError: "サーバー接続エラー",
                 wsConnecting: "状態: 接続中...",
                 wsConnected: "状態: リアルタイム接続中",
-                wsDisconnected: "状態: 接続が切れました (再接続試行中...)"
+                wsDisconnected: "状態: 接続가 切れました (再接続試行中...)",
+                infoUnlockNotice: "解禁曲は集計されません。"
             }
         };
 
-        const langOrder = ['ko', 'en', 'jp'];
         let currentLang = localStorage.getItem('lang') || 'ko';
         if (!i18n[currentLang]) currentLang = 'ko';
 
@@ -264,14 +265,10 @@
                     el.innerText = i18n[currentLang][key];
                 }
             });
-        }
-
-        function toggleLang() {
-            const nextIndex = (langOrder.indexOf(currentLang) + 1) % langOrder.length;
-            currentLang = langOrder[nextIndex];
-            localStorage.setItem('lang', currentLang);
-            updateStaticTexts();
-            checkPositionManual();
+            // Update browser tab title
+            if (i18n[currentLang].title) {
+                document.title = i18n[currentLang].title;
+            }
         }
 
         function joinPath(...paths) {
@@ -292,7 +289,7 @@
         function formatDate(timestamp) {
             if (!timestamp) return "-";
             const date = new Date(timestamp);
-            const locales = { ko: 'ko-KR', en: 'en-US', jp: 'ja-JP' };
+            const locales = { ko: 'ko-KR', en: 'en-US', ja: 'ja-JP' };
             return date.toLocaleString(locales[currentLang] || 'ko-KR');
         }
 
