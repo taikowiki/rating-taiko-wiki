@@ -3,16 +3,34 @@ import { TokenManager } from "./TokenManager";
 import { SongScoreData, TaikoProfile } from "./types";
 
 export class Crawler {
+    private log(message: string) {
+        console.log(`[${new Date().toLocaleTimeString()}] [Crawler] ${message}`);
+    }
+
+    private warn(message: string) {
+        console.warn(`[${new Date().toLocaleTimeString()}] [Crawler] ${message}`);
+    }
+
+    private error(message: string) {
+        console.error(`[${new Date().toLocaleTimeString()}] [Crawler] ${message}`);
+    }
+
     async crawl(taikoNo: string) {
+        this.log(`Starting crawl for TaikoNo: ${taikoNo}`);
+        
         const taikoProfile = await this.crawlTaikoProfile(taikoNo);
         if (!taikoProfile) {
+            this.error(`Failed to get profile for ${taikoNo}`);
             return;
         }
+        this.log(`Profile loaded: ${taikoProfile.nickname}`);
 
         const clearData = await this.crawlClearData(taikoNo);
         if (!clearData || !clearData.length) {
+            this.error(`Failed to get clear data for ${taikoNo}`);
             return;
         }
+        this.log(`Clear data loaded: ${clearData.length} items`);
 
         const scoreDataCrawlTargets: { songNo: string, diff: 'oni' | 'ura' }[] = [];
         clearData.forEach((c) => {
@@ -26,8 +44,16 @@ export class Crawler {
             })
         });
 
+        this.log(`Targets for detailed score: ${scoreDataCrawlTargets.length}`);
+
         const scoreDataMap: Record<string, SongScoreData> = {};
+        let count = 0;
         for (const target of scoreDataCrawlTargets) {
+            count++;
+            if (count % 10 === 0 || count === scoreDataCrawlTargets.length) {
+                this.log(`Progress: ${count}/${scoreDataCrawlTargets.length}`);
+            }
+
             const scoreData = await this.crawlScoreData(taikoNo, target.songNo, target.diff);
             if (!scoreData) continue;
 
@@ -44,6 +70,7 @@ export class Crawler {
             }
         }
 
+        this.log(`Crawl finished for ${taikoNo}`);
         return {
             scoreData: scoreDataMap,
             clearData,
@@ -72,8 +99,8 @@ export class Crawler {
                 }
             }
             catch{
+                this.warn(`Retry profile crawl (${retry + 1}/5)`);
                 token = await TokenManager.renewToken();
-                retry++;
             }
         }
         return null;
@@ -110,8 +137,8 @@ export class Crawler {
                 })
             }
             catch {
+                this.warn(`Retry clear data crawl (${retry + 1}/5)`);
                 token = await TokenManager.renewToken();
-                retry++;
             }
         }
         if (retry >= 5) {
@@ -133,7 +160,6 @@ export class Crawler {
             }
             catch {
                 token = await TokenManager.renewToken();
-                retry++;
             }
         }
         if (retry >= 5) {

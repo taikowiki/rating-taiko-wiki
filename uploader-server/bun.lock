@@ -7,8 +7,9 @@
         "@types/bun": "^1.3.3",
         "@types/node": "^24.10.1",
         "@yowza/db-handler": "^1.1.2",
-        "hiroba-js": "2.3.5",
+        "hiroba-js": "^2.3.8",
         "lzutf8": "^0.6.3",
+        "ndjson-parser": "^1.0.1",
         "zod": "^4.1.13",
       },
     },
@@ -138,7 +139,7 @@
 
     "he": ["he@1.2.0", "", { "bin": { "he": "bin/he" } }, "sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw=="],
 
-    "hiroba-js": ["hiroba-js@2.3.5", "", { "dependencies": { "cheerio": "^1.0.0-rc.12", "fs": "^0.0.1-security", "jimp": "^1.6.0", "node-html-parser": "^7.0.1", "npm": "^11.4.2", "set-cookie-parser": "^2.7.1" } }, "sha512-QnYPUyBfP8btMKipNeLEQpfjphq+Kr/zlO5MphmsMGrXMT1nTJvdKZgnces5OBKvCQYwI9AaTLUfL+8NNNgzCg=="],
+    "hiroba-js": ["hiroba-js@2.3.8", "", { "dependencies": { "cheerio": "^1.0.0-rc.12", "fs": "^0.0.1-security", "jimp": "^1.6.0", "node-html-parser": "^7.0.1", "npm": "^11.4.2", "set-cookie-parser": "^2.7.1" } }, "sha512-ggojsFAP+F8YmnUQuMSTcrrgAYoRgW4Npu0U+vg6mjUmvBXhfGBYD9pdfgTXoJvnfIlK8YGGrC69umCy7cFZOA=="],
 
     "htmlparser2": ["htmlparser2@10.0.0", "", { "dependencies": { "domelementtype": "^2.3.0", "domhandler": "^5.0.3", "domutils": "^3.2.1", "entities": "^6.0.0" } }, "sha512-TwAZM+zE5Tq3lrEHvOlvwgj1XLWQCtaaibSN11Q+gGBAS7Y1uZSWwXXRe4iF6OXnaq1riyQAPFOBtYc77Mxq0g=="],
 
@@ -167,6 +168,8 @@
     "mysql2": ["mysql2@3.16.0", "", { "dependencies": { "aws-ssl-profiles": "^1.1.1", "denque": "^2.1.0", "generate-function": "^2.3.1", "iconv-lite": "^0.7.0", "long": "^5.2.1", "lru.min": "^1.0.0", "named-placeholders": "^1.1.3", "seq-queue": "^0.0.5", "sqlstring": "^2.3.2" } }, "sha512-AEGW7QLLSuSnjCS4pk3EIqOmogegmze9h8EyrndavUQnIUcfkVal/sK7QznE+a3bc6rzPbAiui9Jcb+96tPwYA=="],
 
     "named-placeholders": ["named-placeholders@1.1.6", "", { "dependencies": { "lru.min": "^1.1.0" } }, "sha512-Tz09sEL2EEuv5fFowm419c1+a/jSMiBjI9gHxVLrVdbUkkNUUfjsVYs9pVZu5oCon/kmRh9TfLEObFtkVxmY0w=="],
+
+    "ndjson-parser": ["ndjson-parser@1.0.1", "", {}, "sha512-AlBSwpD6hbN//f4l+PBfXwccixtcaG7bOvue2h5c+Bar9ztAkk20bK/hjAcr1pOID8KorPVLImSyQM8KX0746g=="],
 
     "node-html-parser": ["node-html-parser@7.0.1", "", { "dependencies": { "css-select": "^5.1.0", "he": "1.2.0" } }, "sha512-KGtmPY2kS0thCWGK0VuPyOS+pBKhhe8gXztzA2ilAOhbUbxa9homF1bOyKvhGzMLXUoRds9IOmr/v5lr/lqNmA=="],
 

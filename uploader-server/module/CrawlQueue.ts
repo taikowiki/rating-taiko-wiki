@@ -39,6 +39,13 @@ class QueueItemDatabase {
     }
 
     /**
+     * 서버 재시작 시 working이었던 아이템들을 wating으로 복구
+     */
+    resetWorkingItems() {
+        this.db.run("UPDATE queue_items SET status = 'wating' WHERE status = 'working'");
+    }
+
+    /**
      * 아이템 추가
      */
     push(UUID: string, taikoNo: string) {
@@ -98,39 +105,49 @@ class QueueItemDatabase {
     }
 
     /**
-     * UUID에 해당하는 아이템의 status가 'waiting'이면 대기 순번 가져오기
+     * 최근 성공한 업로드 시간 가져오기
+     */
+    getLastSuccessTime(UUID: string) {
+        const query = this.db.query<QueueDBRow, [string]>("SELECT * FROM queue_items WHERE uuid = ? AND status = 'success' ORDER BY updated_time DESC LIMIT 1");
+        const row = query.get(UUID);
+        return row ? row.updated_time : null;
+    }
+
+    /**
+     * UUID에 해당하는 아이템의 대기 순번 가져오기
+     * - 작업 중: 0
+     * - 대기 중: 1 이상
+     * - 큐에 없음: null
      */
     getPosition(UUID: string) {
-        const query = this.db.query<{ count: number }, [string]>(`
-        SELECT COUNT(*) AS \`count\`
-            FROM queue_items
-            WHERE 
-                status IN ('wating', 'working')
-                AND \`order\` < (
-                    SELECT \`order\`
-                    FROM queue_items
-                    WHERE 
-                        uuid = ?
-                        AND status = 'wating'
-                    LIMIT 1
-                );
-        `);
-        const countRow = query.get(UUID)
-        if (!countRow) return null;
-        if (countRow.count === 0) return null;
-        return countRow.count;
+        // 1. 현재 작업 중인 아이템인지 확인
+        const workingItem = this.db.query<QueueDBRow, []>("SELECT * FROM queue_items WHERE status = 'working'").get();
+        if (workingItem && workingItem.uuid === UUID) {
+            return 0;
+        }
 
-        /*
-        const targetQuery = this.db.query<Pick<QueueDBRow, 'order'>, [string]>("SELECT `order` FROM queue_items WHERE uuid = ? AND status = 'wating'");
-        const targetRow = targetQuery.get(UUID);
+        // 2. 대기 중인 내 아이템의 order 가져오기
+        const targetRow = this.db.query<Pick<QueueDBRow, 'order'>, [string]>("SELECT `order` FROM queue_items WHERE uuid = ? AND status = 'wating' LIMIT 1").get(UUID);
+        
+        // 큐에 없음
         if (!targetRow) {
             return null;
         }
 
-        const query = this.db.query<{ count: number }, [number]>("SELECT COUNT(*) as `count` FROM queue_items WHERE order < ? AND (status = 'wating' OR status = 'working)");
+        // 3. 내 앞에 몇 명이 있는지 계산 (working 포함)
+        const query = this.db.query<{ count: number }, [number]>("SELECT COUNT(*) AS `count` FROM queue_items WHERE status IN ('wating', 'working') AND `order` < ?");
         const countRow = query.get(targetRow.order);
-        return countRow?.count ?? null;
-        */
+        
+        return (countRow?.count ?? 0) + (workingItem ? 0 : 0); // working이 있으면 이미 count에 포함됨
+    }
+
+    /**
+     * 현재 큐에 있는 전체 인원 수 (working + wating)
+     */
+    getTotalQueueCount() {
+        const query = this.db.query<{ count: number }, []>("SELECT COUNT(*) AS `count` FROM queue_items WHERE status IN ('wating', 'working')");
+        const row = query.get();
+        return row?.count ?? 0;
     }
 
     rowToQueueItem(row: QueueDBRow): QueueItem {
@@ -150,6 +167,19 @@ export class CrawlQueue {
     crawler = new Crawler();
     uploader = new Uploader();
     queueRunning: boolean = false;
+    onUpdate?: () => void;
+
+    private log(message: string) {
+        console.log(`[${new Date().toLocaleTimeString()}] [Queue] ${message}`);
+    }
+
+    private error(message: string, err?: any) {
+        if (err) {
+            console.error(`[${new Date().toLocaleTimeString()}] [Queue] ${message}`, err);
+        } else {
+            console.error(`[${new Date().toLocaleTimeString()}] [Queue] ${message}`);
+        }
+    }
 
     push(UUID: string, taikoNo: string): boolean {
         const UUIDDuplicated = this.database.hasDuplicateUUID(UUID);
@@ -158,6 +188,7 @@ export class CrawlQueue {
         }
 
         this.database.push(UUID, taikoNo);
+        this.onUpdate?.();
         if (this.queueRunning) {
             return true;
         }
@@ -179,13 +210,16 @@ export class CrawlQueue {
             return;
         }
 
+        this.log(`Processing order #${item.order} (TaikoNo: ${item.taikoNo})`);
         this.database.changeStatus(item.order, 'working');
+        this.onUpdate?.();
 
         try {
             const crawledData = await this.crawler.crawl(item.taikoNo);
             if (!crawledData) {
                 throw new Error("Crawling error.");
             }
+            this.log(`Uploading data for ${item.taikoNo}...`);
             await this.uploader.upload({
                 UUID: item.UUID,
                 ...crawledData
@@ -193,9 +227,10 @@ export class CrawlQueue {
             this.database.changeStatus(item.order, 'success');
         }
         catch (err) {
-            console.error(err);
+            this.error(`Error processing order #${item.order}:`, err);
             this.database.changeStatus(item.order, 'error');
         }
+        this.onUpdate?.();
         this.queueRunning = false;
         setImmediate(() => this.run());
     }
