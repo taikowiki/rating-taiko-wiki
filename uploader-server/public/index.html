@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +28,7 @@
             background: var(--card-bg);
             padding: 2rem;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
             text-align: center;
@@ -59,7 +60,8 @@
             display: block;
         }
 
-        .total-value, .last-success-value {
+        .total-value,
+        .last-success-value {
             font-size: 0.9rem;
             font-weight: 500;
             margin-top: 0.3rem;
@@ -107,7 +109,7 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+            border: 3px solid rgba(255, 255, 255, .3);
             border-radius: 50%;
             border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
@@ -116,7 +118,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         #message {
@@ -124,9 +128,14 @@
             font-size: 0.85rem;
         }
 
-        .error { color: #eb4d4b; }
-        .success { color: #2ecc71; }
-        
+        .error {
+            color: #eb4d4b;
+        }
+
+        .success {
+            color: #2ecc71;
+        }
+
         .ws-status {
             font-size: 0.7rem;
             margin-top: 1rem;
@@ -142,17 +151,18 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1 data-t="title">Taiko Uploader</h1>
-        
+
         <div class="status-box">
             <span class="label" data-t="labelMyPosition">현재 내 대기 순번</span>
             <span id="position" class="position-value">-</span>
             <div id="status-text" class="info-text" data-t="statusConnecting">연결 중...</div>
-            
+
             <div class="divider"></div>
-            
+
             <span class="label" data-t="labelTotalQueue">현재 전체 대기자 수</span>
             <span id="total-count" class="total-value">0<span data-t="unitPerson">명</span></span>
 
@@ -169,7 +179,7 @@
         <div class="lang-switcher" onclick="toggleLang()">Switch Language (KO/EN/JP)</div>
     </div>
 
-    <script>
+    <script type="module">
         const i18n = {
             ko: {
                 title: "Taiko Uploader",
@@ -264,6 +274,10 @@
             checkPositionManual();
         }
 
+        function joinPath(...paths) {
+            return paths.join('/').replace(/\/+/g, '/');
+        }
+
         const positionEl = document.getElementById('position');
         const statusTextEl = document.getElementById('status-text');
         const totalCountEl = document.getElementById('total-count');
@@ -321,7 +335,7 @@
         function connectWS() {
             const url = new URL(window.location.href);
             url.protocol = 'https:' ? 'wss:' : 'ws:';
-            url.pathname = (url.pathname.endsWith('/') ? url.pathname.slice(0, -1) : url.pathname) + '/ws';
+            url.pathname = joinPath(window.location.pathname, 'ws')
             socket = new WebSocket(url.href);
 
             socket.onopen = () => {
@@ -347,7 +361,7 @@
 
         async function checkPositionManual() {
             try {
-                const res = await fetch('/position', { method: 'POST' });
+                const res = await fetch(joinPath(location.pathname, 'position'), { method: 'POST' });
                 const data = await res.json();
                 updateUI(data);
             } catch (err) {
@@ -361,7 +375,7 @@
             messageEl.innerText = "";
 
             try {
-                const res = await fetch('/request', { method: 'POST' });
+                const res = await fetch(joinPath(location.pathname, 'request'), { method: 'POST' });
                 if (res.status === 409) {
                     messageEl.innerText = t('msgAlreadyInQueue');
                     messageEl.className = "error";
@@ -383,10 +397,11 @@
         }
 
         requestBtn.addEventListener('click', requestCrawl);
-        
+
         // 초기 실행
         updateStaticTexts();
         connectWS();
     </script>
 </body>
+
 </html>
