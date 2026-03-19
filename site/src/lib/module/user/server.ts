@@ -2,7 +2,7 @@ import type { InferDBSchema } from "@yowza/db-handler/types";
 import { calcualteRating, type User } from ".";
 import { dbConverter, queryBuilder, wikiDBConnector, wikiQueryBuilder, type DBSchema, type WikiDBSchema } from "../db/server";
 import { defineDBHandler, runQuery } from "@yowza/db-handler";
-import type { ScoreData } from "hiroba-js";
+import type { Clear, ClearData, Difficulty, ScoreData } from "hiroba-js";
 import type { RatingData } from "@taiko-wiki/taikowiki-api";
 import { songDBController } from "../song/server";
 import { fetchMeasures } from "@taiko-wiki/taiko-rating";
@@ -371,14 +371,14 @@ export namespace userDBController {
     });
     export const getSongRatingDataByUUID = defineDBHandler<[UUID: string, songNo: string, diff: 'oni' | 'ura'], User.SongRatingData | null>((UUID, songNo, diff) => {
         const query = queryBuilder.select('user/song_rating_data', '*')
-        .where(({compare, column, value}) => [
-            compare(column('UUID'), '=', value(UUID)),
-            compare(column('songNo'), '=', value(songNo)),
-            compare(column('difficulty'), '=', value(diff === 'oni' ? 0 : 1))
-        ])
+            .where(({ compare, column, value }) => [
+                compare(column('UUID'), '=', value(UUID)),
+                compare(column('songNo'), '=', value(songNo)),
+                compare(column('difficulty'), '=', value(diff === 'oni' ? 0 : 1))
+            ])
         return async (run) => {
             const rows = await query.execute(run);
-            if(rows.length === 0) return null;
+            if (rows.length === 0) return null;
             return dbConverter.fromDB.songRatingData(rows[0])
         }
     })
@@ -415,10 +415,11 @@ export async function updateRatingData(data: { UUID: string, taikoProfile: User.
     const now = new Date();
     const songs = await songDBController.getAllSongDatas();
 
+    /* 이전 레이팅 데이터 가져오기 */
+    const formerRatingData = await userDBController.getRatingData(UUID);
+
     // scoreData
     if (data.scoreData) {
-        /* 이전 레이팅 데이터 가져오기 */
-        const formerRatingData = await userDBController.getRatingData(UUID);
         /* scoreData 병합 */
         const scoreData = formerRatingData?.scoreData ?? {};
         Object.entries(data.scoreData).forEach(([songNo, songScoreData]) => {
@@ -449,7 +450,7 @@ export async function updateRatingData(data: { UUID: string, taikoProfile: User.
         /* 새 레이팅 계산 */
         const measures = await measureDBController.getAll();
         const result = calcualteRating(scoreData, measures, songs);
-        
+
         /* ratingScoreHistory 병합 */
         const ratingScoreHistory = formerRatingData?.ratingScoreHistory ?? [];
         if (ratingScoreHistory.length >= 2 && ratingScoreHistory.at(-1)?.[1] === ratingScoreHistory.at(-2)?.[1] && ratingScoreHistory.at(-1)?.[1] === result.currentRatingScore) {
@@ -491,9 +492,40 @@ export async function updateRatingData(data: { UUID: string, taikoProfile: User.
         currentRatingScore = result.currentRatingScore;
     }
 
+    const formerClearData = new Map<string, ClearData>();
+    formerRatingData?.songRatingDatas?.forEach((song) => {
+        let songClearData = formerClearData.get(song.songNo);
+        if (!songClearData) {
+            songClearData = {
+                title: song.title,
+                songNo: song.songNo,
+                difficulty: {}
+            }
+            formerClearData.set(song.songNo, songClearData);
+        }
+        songClearData.difficulty[song.difficulty] = {
+            crown: song.crown,
+            badge: song.badge
+        }
+    });
+    data.clearData?.forEach((song) => {
+        let songClearData = formerClearData.get(song.songNo);
+        if (!songClearData) {
+            songClearData = {
+                title: song.title,
+                songNo: song.songNo,
+                difficulty: {}
+            }
+            formerClearData.set(song.songNo, songClearData);
+        }
+        Object.entries(song.difficulty).forEach(([diff, diffData]) => {
+            songClearData.difficulty[diff as Difficulty] = diffData;
+        })
+    });
+
     // clearData
     if (data.clearData) {
-        await wikiUserDBController.updateClearData(UUID, data.taikoProfile, data.clearData);
+        await wikiUserDBController.updateClearData(UUID, data.taikoProfile, Array.from(formerClearData.values()));
     }
 
 
