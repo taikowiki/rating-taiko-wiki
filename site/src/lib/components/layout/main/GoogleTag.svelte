@@ -19,7 +19,7 @@
     });
 
     afterNavigate((nav) => {
-        gtag("config", gtag, {
+        window.gtag?.("config", gtag, {
             page_title: document.title,
             page_path: nav.to.url.pathname,
         });
