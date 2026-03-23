@@ -1,0 +1,44 @@
+<script>
+    import { browser } from "$app/environment";
+    import { afterNavigate } from "$app/navigation";
+    import { onMount } from "svelte";
+
+    /**@type {{gtm: string, gtag: string, pubId: string}}*/let {gtm, gtag, pubId} = $props();
+
+    onMount(() => {
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != "dataLayer" ? "&l=" + l : "";
+            j.async = true;
+            j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, "script", "dataLayer", gtm);
+    });
+
+    afterNavigate((nav) => {
+        gtag("config", gtag, {
+            page_title: document.title,
+            page_path: nav.to.url.pathname,
+        });
+    });
+</script>
+
+<svelte:head>
+    <meta name="google-adsense-account" content={pubId} />
+    <script
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag}`}
+    ></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+
+        gtag("config", gtag);
+    </script>
+</svelte:head>

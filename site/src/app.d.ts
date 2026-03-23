@@ -34,6 +34,9 @@ declare global {
 			AUTH_KEY: string;
 			TIMEZONE: string;
 			INTERNAL_API_KEY: string;
+			GTM: string;
+			GTAG: string;
+			GPUB_ID: string;
 		}
 	}
 	interface Window {
