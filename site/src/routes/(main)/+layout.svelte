@@ -11,10 +11,11 @@
         setProfile,
         setTimezone,
         initLang,
-        getLang
+        getLang,
     } from "$lib/module/layout/index.js";
     import { navigating } from "$app/state";
     import loading from "$lib/assets/icon/loading.svg";
+    import GoogleTag from "$lib/components/layout/main/GoogleTag.svelte";
 
     let { children, data } = $props();
 
@@ -29,6 +30,7 @@
 </script>
 
 <Meta />
+<GoogleTag gtm={data.gtm} gtag={data.gtag} pubId={data.gpubId} />
 <Favicon />
 <Header />
 {#if navigating.type}
@@ -49,7 +51,7 @@
         box-sizing: border-box;
         margin-left: auto;
         margin-right: auto;
-        &.hide{
+        &.hide {
             display: none;
         }
     }

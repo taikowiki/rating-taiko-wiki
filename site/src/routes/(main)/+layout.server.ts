@@ -19,6 +19,9 @@ export async function load(event: RequestEvent) {
         user: event.locals.userData ? {
             UUID: event.locals.userData.UUID,
             profile: event.locals.profile
-        } : null
+        } : null,
+        gtm: process.env.GTM,
+        gtag: process.env.GTAG,
+        gpubId: process.env.GPUB_ID
     }
 }
