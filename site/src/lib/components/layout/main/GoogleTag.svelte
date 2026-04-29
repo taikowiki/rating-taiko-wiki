@@ -30,6 +30,12 @@
     <meta name="google-adsense-account" content={pubId} />
     <script
         async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${pubId}`}
+        crossorigin="anonymous"
+    ></script>
+    <!---->
+    <script
+        async
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag}`}
     ></script>
     <script>
