@@ -1,6 +1,22 @@
 export const ko = {
     main: {
-        WIP: '공사중...'
+        title: '태고 레이팅',
+        description: '태고의 달인 실력을 측정하고 관리하는 사이트입니다.',
+        start: '시작하기',
+        features: [
+            {
+                title: '레이팅 측정',
+                description: '동더히로바 데이터를 업로드하여 자신의 레이팅을 확인할 수 있습니다.'
+            },
+            {
+                title: '랭킹',
+                description: '다른 사용자들과 레이팅을 비교해 보세요.'
+            },
+            {
+                title: '통계',
+                description: '곡별, 단위별 통계 데이터를 확인해 보세요.'
+            }
+        ]
     },
     header: {
         ranking: '랭킹',

@@ -1,6 +1,22 @@
 export const ja = {
     main: {
-        WIP: '工事中...'
+        title: '太鼓レーティング',
+        description: '太鼓の達人の実力を測定し、管理するサイトです。',
+        start: '始める',
+        features: [
+            {
+                title: 'レーティング測定',
+                description: 'ドンだーひろばのデータをアップロードして、自分のレーティングを確認できます。'
+            },
+            {
+                title: 'ランキング',
+                description: '他のユーザーとレーティングを比較してみましょう。'
+            },
+            {
+                title: '統計',
+                description: '曲別、段位別の統計データを確認してみましょう。'
+            }
+        ]
     },
     header: {
         ranking: '順位',

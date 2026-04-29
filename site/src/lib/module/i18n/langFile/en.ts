@@ -1,6 +1,22 @@
 export const en = {
     main: {
-        WIP: 'Under construction...'
+        title: 'Taiko Rating',
+        description: 'A website for measuring and managing your Taiko no Tatsujin skills.',
+        start: 'Getting Started',
+        features: [
+            {
+                title: 'Rating Measurement',
+                description: 'You can check your rating by uploading your Donder Hiroba data.'
+            },
+            {
+                title: 'Ranking',
+                description: 'Compare your rating with other users.'
+            },
+            {
+                title: 'Statistics',
+                description: 'Check statistical data by song and by dan-i.'
+            }
+        ]
     },
     header: {
         ranking: 'Ranking',
