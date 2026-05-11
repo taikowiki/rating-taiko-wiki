@@ -30,7 +30,7 @@
 </script>
 
 <Meta />
-<GoogleTag gtm={data.gtm} gtag={data.gtag} pubId={data.gpubId} />
+<GoogleTag gtm={data.gtm} gtag={data.gtag} pubId={data.gpubId} user={data.user}/>
 <Favicon />
 <Header />
 {#if navigating.type}
