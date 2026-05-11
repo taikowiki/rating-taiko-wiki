@@ -3,7 +3,12 @@
     import { afterNavigate } from "$app/navigation";
     import { onMount } from "svelte";
 
-    /**@type {{gtm: string, gtag: string, pubId: string}}*/let {gtm, gtag, pubId} = $props();
+    /**@type {{gtm: string, gtag: string, pubId: string, user: {UUID: string} | null}}*/ let {
+        gtm,
+        gtag,
+        pubId,
+        user,
+    } = $props();
 
     onMount(() => {
         (function (w, d, s, l, i) {
@@ -19,10 +24,13 @@
     });
 
     afterNavigate((nav) => {
-        window.gtag?.("config", gtag, {
-            page_title: document.title,
-            page_path: nav.to.url.pathname,
-        });
+        if (nav.type !== "enter" && typeof window.gtag === "function") {
+            window.gtag?.("config", gtag, {
+                page_title: document.title,
+                page_path: nav.to.url.pathname,
+                user_id: user.UUID,
+            });
+        }
     });
 </script>
 
