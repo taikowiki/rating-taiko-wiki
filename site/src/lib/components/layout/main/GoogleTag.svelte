@@ -28,7 +28,7 @@
             window.gtag?.("config", gtag, {
                 page_title: document.title,
                 page_path: nav.to.url.pathname,
-                user_id: user.UUID,
+                uuid: user.UUID,
             });
         }
     });
