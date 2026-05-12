@@ -24,6 +24,9 @@
     });
 
     afterNavigate((nav) => {
+        window.gtag?.('set', gtag, {
+            user_id: user.UUID ?? "null"
+        })
         window.gtag?.("config", gtag, {
             page_title: document.title,
             page_path: nav.to.url.pathname,
