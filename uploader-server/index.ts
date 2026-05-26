@@ -2,6 +2,7 @@ import { CrawlQueue } from './module/CrawlQueue';
 import { createDecipheriv } from 'node:crypto';
 import ndJson from 'ndjson-parser';
 import { BunRequest } from 'bun';
+import { decipher } from '@sveltekit-board/oauth';
 
 const queue = new CrawlQueue();
 
@@ -166,11 +167,5 @@ async function checkUser(req: Bun.BunRequest) {
     }
     else {
         return null;
-    }
-
-    function decipher(encrypted: string, key: string) {
-        const bufferKey = Buffer.from(key, 'hex');
-        const decrypt = createDecipheriv('aes-256-gcm', bufferKey, bufferKey);
-        return decrypt.update(encrypted, 'hex', 'utf-8');
     }
 }
