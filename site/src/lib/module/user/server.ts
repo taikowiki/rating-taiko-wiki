@@ -7,6 +7,7 @@ import type { RatingData } from "@taiko-wiki/taikowiki-api";
 import { songDBController } from "../song/server";
 import { fetchMeasures } from "@taiko-wiki/taiko-rating";
 import { measureDBController } from "../measure/server";
+import type { Measure } from "../measure";
 
 export namespace wikiUserDBController {
     export const getDataByProvider = wikiDBConnector.defineDBHandler<[provider: string, providerId: string], User.Data | null>((provider, providerId) => {
@@ -404,7 +405,7 @@ export namespace userDBController {
     })
 }
 
-export async function updateRatingData(data: { UUID: string, taikoProfile: User.TaikoProfile, scoreData?: User.ScoreData, clearData?: User.ClearData[] }) {
+export async function updateRatingData(data: { UUID: string, taikoProfile: User.TaikoProfile, scoreData?: User.ScoreData, clearData?: User.ClearData[], measures?: Measure.Measure[] }) {
     let currentRatingScore: number | null = null;
     const UUID = data.UUID;
 
@@ -448,7 +449,7 @@ export async function updateRatingData(data: { UUID: string, taikoProfile: User.
         })
 
         /* 새 레이팅 계산 */
-        const measures = await measureDBController.getAll();
+        const measures = data.measures ?? await measureDBController.getAll();
         const result = calcualteRating(scoreData, measures, songs);
 
         /* ratingScoreHistory 병합 */
